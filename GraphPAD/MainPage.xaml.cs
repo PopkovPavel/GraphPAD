@@ -82,8 +82,8 @@ namespace GraphPAD
                 userRoleString.Text = "Гость";
                 
             }
-            //nameString.Text = UserInfo.Name;
-            //userRoleString.Text = "Пользователь";
+            nameString.Text = UserInfo.Name;
+            userRoleString.Text = "Пользователь";
             ControlCanvas.Visibility = Visibility.Hidden;
             infoTextBlock.Visibility = Visibility.Visible;
             leaveButton.Visibility = Visibility.Hidden;
