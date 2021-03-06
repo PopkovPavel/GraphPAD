@@ -2,24 +2,12 @@
 using GraphPAD.Data.User;
 using Newtonsoft.Json;
 using RestSharp;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace GraphPAD
 {
@@ -42,11 +30,16 @@ namespace GraphPAD
                 request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
                 request.AddHeader("x-access-token", $"{tempUser.Token}");
                 IRestResponse response = client.Execute(request);
-                HttpStatusCode statusCode = response.StatusCode; int numericStatusCode = (int)statusCode;
-                if (numericStatusCode == 200)
+                HttpStatusCode statusCode = response.StatusCode; 
+                if (response.IsSuccessful)
                 {
-                    UserInfo.Email = tempUser.Data.Email;
-                    UserInfo.Name = tempUser.Data.Email;
+                    JSONauth user = JsonConvert.DeserializeObject<JSONauth>(response.Content.ToString());
+                    
+                    UserInfo.Email = user.Data.Email;
+                    UserInfo.Name = user.Data.Name;
+                    UserInfo.ID = tempUser.Data.userId;
+                    UserInfo.Token = tempUser.Token;
+                    UserInfo.Role = tempUser.Data.Role;
                     MessageBox.Show("Здравствуйте, " + tempUser.Data.Email, "Успешный вход", MessageBoxButton.OK);
                     MainPage mainPage = new MainPage();
                     this.Visibility = Visibility.Hidden;
