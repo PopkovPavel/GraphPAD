@@ -30,6 +30,9 @@ namespace GraphPAD
         private bool _flag; //Флаг для логики микрофона (Проверка на то, был ли выключен микрофон до выключения звука)
         public int lobbyCount;
         public int lobbyButtonsMargin = -70;
+        public int chatCount;
+        public int lobbyButtonsMargin;
+        public int chatTextblockMargin;
 
         Brush _customBrush;
         Random _rand = new Random();
@@ -56,7 +59,9 @@ namespace GraphPAD
             isVideoOn = false;
             _flag = false;
             lobbyCount = 0;
+            chatCount = 0;
             lobbyButtonsMargin = 10;
+            chatTextblockMargin = 5;
             voiceChatTextBlock.Text = "Голосовой чат подключен";
             videoTextBlock.Text = "Видео отключено";
             videoTextBlock.Foreground = Brushes.DarkGray;
@@ -686,6 +691,7 @@ namespace GraphPAD
                 }
             }
         }
+        //-------------------------------------------------------------------------------------------
         private void AddVertex_Click(object sender, RoutedEventArgs e)
         {
             if (!isAddVetexOn)
@@ -761,6 +767,42 @@ namespace GraphPAD
             var brush = new ImageBrush();
             brush.ImageSource = temp;
             btn.Background = brush;
+        }
+
+        private void chatTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string userInput = chatTextBox.Text;
+            char charCount;
+            if (userInput != "")
+            {
+                charCount = userInput[0];
+            }
+            
+            CharCountTextBlock.Text = "Символов " + userInput.Length.ToString() + "/200";
+        }
+
+        private void SendButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            
+            chatCount += 1;
+            if (chatCount > 6)
+            {
+                ChatsCanvas.Height = ChatsCanvas.Height + 40;
+                ChatsScrollView.ScrollToEnd();
+            }
+            TextBlock textBlock = new TextBlock();
+            textBlock.Text = chatTextBox.Text;
+            textBlock.Height = 36;
+            textBlock.Width = 380;
+            textBlock.Background = Brushes.Black;
+            textBlock.Foreground = Brushes.White;
+            textBlock.FontSize = 20;
+            textBlock.Margin = new Thickness(0, chatTextblockMargin, 0, 0);
+            textBlock.TextAlignment = TextAlignment.Right;
+            ChatsCanvas.Children.Add(textBlock);
+            chatTextblockMargin += 40;
+            chatTextBox.Text = "";
+            //ChatTextBlock.Text = chatTextBox.Text;
         }
     }
 }

@@ -127,7 +127,7 @@
             </Grid>
 
         </Grid>
-        <Grid Grid.Column="2" Background="#141424">
+        <Grid Grid.Column="2" Background="#FF141424">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="50"/>
@@ -136,12 +136,8 @@
             <Button Click="TextChatButton_Clicked" Content="Текстовый чат" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatAccentButton}" Foreground="White" Background="#FF232E4A"/>
             <Button Click="VideoChatButton_Clicked" Content="Видео-чат" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A"/>
             <Button Content="Участники" HorizontalAlignment="Right" VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A"/>
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,434,0,0" Grid.Row="2" Foreground="White" Background="#FF420F0F">
-                <Canvas Focusable="True" Height="999">
-                    <Button Content="look down" Canvas.Left="102" Canvas.Top="32" Width="174"/>
-                    <Button Content="hello" Canvas.Left="102" Canvas.Top="948" Width="174"/>
-                    <TextBlock Text="Scroll Test" TextAlignment="Center" Canvas.Left="102" Canvas.Top="3" Width="174" Background="{x:Null}" Foreground="#DDFFFFFF"/>
-                </Canvas>
+            <ScrollViewer x:Name="ChatsScrollView" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,434,0,0" Grid.Row="2" Foreground="White" Background="#FF420F0F">
+                <Canvas x:Name="ChatsCanvas" Focusable="True" Height="257" />
             </ScrollViewer>
             <Canvas x:Name="VideoChatCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="450" Margin="1,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="407" Grid.RowSpan="2">
                 <Image x:Name="Camera" HorizontalAlignment="Left" Height="200" Width="200" VerticalAlignment="Top" Source="Resources/avatar1.jpg" Stretch="Fill" Canvas.Top="46"/>
@@ -170,6 +166,9 @@
                         </TransformGroup>
                     </TextBlock.RenderTransform>
                 </TextBlock>
+                <TextBox x:Name="chatTextBox" Height="100" Width="350" materialDesign:HintAssist.Hint="Напишите сообщение ..." Background="#FF323232" Canvas.Top="360" FontSize="16" MaxLength="200" MaxLines="20" MinLines="1" TextWrapping="Wrap" CaretBrush="{x:Null}" Foreground="White" TextChanged="chatTextBox_TextChanged"/>
+                <TextBlock x:Name="CharCountTextBlock" TextWrapping="Wrap" Text="Символов 0/200" Canvas.Top="340" Height="20" Width="350" Foreground="White"/>
+                <Button x:Name="sendButton" Click="SendButton_Clicked" Content="->" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="43" Canvas.Left="355" Canvas.Top="417" FontSize="16"/>
             </Canvas>
 
         </Grid>
