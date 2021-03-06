@@ -1,0 +1,29 @@
+﻿<Window x:Class="GraphPAD.RegPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GraphPAD"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="GraphPAD (Регистрация)" Height="500" Width="450" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+    <Grid Background="#303030">
+        <Border MinWidth="300" MinHeight="300" Margin="15" Background="White" VerticalAlignment="Center" Padding="30" CornerRadius="20">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0"/>
+            </Border.Effect>
+            <StackPanel>
+                <TextBlock Text="GraphPAD" FontSize="30" FontWeight="Bold" Margin="0 0 0 10" TextAlignment="Center"/>
+                <TextBox x:Name="textboxName" materialDesign:HintAssist.Hint="Введите отображаемое имя" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaxLines="1" MaxLength="30"/>
+                <TextBox x:Name="textboxEmail" materialDesign:HintAssist.Hint="Введите Email" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaxLines="1" MaxLength="30"/>
+                <PasswordBox x:Name="passwordbox_1" materialDesign:HintAssist.Hint="Введите пароль" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" MaxLength="40"/>
+                <PasswordBox x:Name="passwordbox_2" materialDesign:HintAssist.Hint="Введите пароль ещё раз" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" MaxLength="40"/>
+                <Button Content="Зарегистрироваться" Margin="0 20" Click="RegButton_Clicked"/>
+                <Grid Height="60">
+                    <TextBlock HorizontalAlignment="Center" Text="Уже есть аккаунт?" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" Margin="0,6,0,0" />
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="Войти" FontSize="16" Click="OpenAuthPage" Style="{StaticResource MaterialDesignFlatButton}"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
