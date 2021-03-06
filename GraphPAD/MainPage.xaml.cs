@@ -7,6 +7,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -31,7 +32,6 @@ namespace GraphPAD
         public int lobbyCount;
         public int lobbyButtonsMargin = -70;
         public int chatCount;
-        public int lobbyButtonsMargin;
         public int chatTextblockMargin;
 
         Brush _customBrush;
@@ -248,7 +248,15 @@ namespace GraphPAD
         }
         public void OpenRoom(string roomId) 
         {
-            MessageBox.Show($"Тут типа должна открываться комната {roomId}","Да.");
+          
+            SocketConnector.InitializeClientAsync();
+            SocketConnector.SetSettings(roomId, UserInfo.Name);
+            SocketConnector.client.On("chat-message", async response => 
+            {
+                var text =  JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
+                Console.WriteLine($"{text[0].UserId}: {text[0].Message}");
+            });
+        
         }
         private void CreateLobby_Click(object sender, RoutedEventArgs e)
         {
@@ -781,27 +789,31 @@ namespace GraphPAD
             CharCountTextBlock.Text = "Символов " + userInput.Length.ToString() + "/200";
         }
 
+
         private void SendButton_Clicked(object sender, RoutedEventArgs e)
         {
-            
             chatCount += 1;
             if (chatCount > 6)
             {
                 ChatsCanvas.Height = ChatsCanvas.Height + 40;
                 ChatsScrollView.ScrollToEnd();
             }
-            TextBlock textBlock = new TextBlock();
-            textBlock.Text = chatTextBox.Text;
-            textBlock.Height = 36;
-            textBlock.Width = 380;
-            textBlock.Background = Brushes.Black;
-            textBlock.Foreground = Brushes.White;
-            textBlock.FontSize = 20;
-            textBlock.Margin = new Thickness(0, chatTextblockMargin, 0, 0);
-            textBlock.TextAlignment = TextAlignment.Right;
+            var textBlock = new TextBlock()
+            {
+                Text = chatTextBox.Text,
+                Height = 36,
+                Width = 380,
+                Background = Brushes.DarkGray,
+                Foreground = Brushes.Gray,
+                FontSize = 20,
+                Margin = new Thickness(0, chatTextblockMargin, 0, 0),
+                TextAlignment = TextAlignment.Right
+            };
             ChatsCanvas.Children.Add(textBlock);
+            SocketConnector.SendMessage(chatTextBox.Text);
             chatTextblockMargin += 40;
             chatTextBox.Text = "";
+
             //ChatTextBlock.Text = chatTextBox.Text;
         }
     }

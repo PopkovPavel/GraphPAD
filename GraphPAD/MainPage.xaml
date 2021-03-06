@@ -136,7 +136,7 @@
             <Button Click="TextChatButton_Clicked" Content="Текстовый чат" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatAccentButton}" Foreground="White" Background="#FF232E4A"/>
             <Button Click="VideoChatButton_Clicked" Content="Видео-чат" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A"/>
             <Button Content="Участники" HorizontalAlignment="Right" VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A"/>
-            <ScrollViewer x:Name="ChatsScrollView" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,434,0,0" Grid.Row="2" Foreground="White" Background="#FF420F0F">
+            <ScrollViewer x:Name="ChatsScrollView" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,434,0,0" Grid.Row="2" Foreground="White" Background="#00000000">
                 <Canvas x:Name="ChatsCanvas" Focusable="True" Height="257" />
             </ScrollViewer>
             <Canvas x:Name="VideoChatCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="450" Margin="1,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="407" Grid.RowSpan="2">
