@@ -71,6 +71,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\JSON\JSONauth.cs" />
+    <Compile Include="Data\JSON\JSONroom.cs" />
+    <Compile Include="Data\JSON\JSONroomData.cs" />
+    <Compile Include="Data\JSON\JSONrooms.cs" />
     <Compile Include="Data\JSON\JSONuserInfo.cs" />
     <Compile Include="Data\User\GuestInfo.cs" />
     <Compile Include="Data\User\UserInfo.cs" />

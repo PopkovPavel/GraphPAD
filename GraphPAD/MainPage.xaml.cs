@@ -1,16 +1,14 @@
-﻿using GraphPAD.Data.User;
+﻿using GraphPAD.Data.JSON;
+using GraphPAD.Data.User;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using RestSharp;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -21,6 +19,7 @@ namespace GraphPAD
 {
     public partial class MainPage : Window
     {
+        #region Global Variables
         public bool isMicOn;
         public bool isHeadPhonesOn;
         public bool isVideoOn;
@@ -30,7 +29,7 @@ namespace GraphPAD
         public float paintsize;
         private bool _flag; //Флаг для логики микрофона (Проверка на то, был ли выключен микрофон до выключения звука)
         public int lobbyCount;
-        public int lobbyButtonsMargin;
+        public int lobbyButtonsMargin = -70;
 
         Brush _customBrush;
         Random _rand = new Random();
@@ -43,6 +42,8 @@ namespace GraphPAD
 
         public delegate void Method();
         private static Method close;
+        #endregion
+
         public MainPage()
         {
             InitializeComponent();
@@ -90,14 +91,292 @@ namespace GraphPAD
             CancelLobbyButton.Visibility = Visibility.Hidden;
             ConferensionIDTextBox.Visibility = Visibility.Hidden;
             ConnectToLobbyButton.Visibility = Visibility.Hidden;
-
+            RefreshRooms();
 
         }
-        public static void CloseForm()
+
+        #region ServerFunctions
+        public void RefreshRooms()
         {
-            close.Invoke();
-        }
+            try
+            {
+                lobbyCount = 0;
+                lobbyButtonsMargin = -40;
+                var client = new RestClient("https://testingwebrtc.herokuapp.com/room/myrooms");
+                client.Timeout = -1;
+                var request = new RestRequest(RestSharp.Method.GET);
+                request.AddHeader("x-access-token", UserInfo.Token);
+                IRestResponse response = client.Execute(request);
+                if (response.IsSuccessful)
+                {
+                    LobbysCanvas.Children.Clear();
+                    JSONrooms rooms = JsonConvert.DeserializeObject<JSONrooms>(response.Content.ToString());
+                    foreach (JSONroomData room in rooms.Data)
+                    {
 
+                        lobbyCount += 1;
+                        lobbyButtonsMargin += 70;
+                        if (lobbyCount > 8)
+                        {
+                            LobbysCanvas.Height = LobbysCanvas.Height + 70;
+                        }
+                        ConferensionsCountTextBlock.Text = "Конференций: " + (lobbyCount);
+
+                        var menuCopyItem = new MenuItem()
+                        {
+                            Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF181840"),
+                            Foreground = Brushes.White,
+                            FontFamily = new FontFamily("Segoe UI"),
+                            FontSize = 14,
+                            FontStyle = FontStyles.Normal,
+                            FontWeight = FontWeights.Bold,
+                            Cursor = Cursors.Hand,
+                            Padding = new Thickness(10, 0, 0, 0),
+                            Height = 40,
+                            Width = 190,
+                            Header = "Скопировать ID",
+                            ToolTip = "Скопировать ID конференции в буфер"
+                        };
+
+                        menuCopyItem.Click += (sender1, e1) =>
+                        {
+                            //Копирование текста в буфер обмена
+                            Clipboard.SetData(DataFormats.Text, (Object)room.RoomID);
+                            MessageBox.Show("ID скопирован");
+                        };
+
+                        //Второй элемент контекстного меню
+                        var menuLeaveItem = new MenuItem()
+                        {
+                            Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF181840"),
+                            Foreground = Brushes.White,
+                            FontFamily = new FontFamily("Segoe UI"),
+                            FontSize = 14,
+                            FontStyle = FontStyles.Normal,
+                            FontWeight = FontWeights.Bold,
+                            Cursor = Cursors.Hand,
+                            Padding = new Thickness(10, 0, 0, 0),
+                            Height = 40,
+                            Width = 190,
+                            ToolTip = "Покинуть коференцию"
+                        };
+                        menuLeaveItem.Header = "Покинуть конференцию";
+
+                        var contextMenu = new ContextMenu()
+                        {
+                            Background = Brushes.Transparent
+                        };
+                        contextMenu.Items.Add(menuLeaveItem);
+                        contextMenu.Items.Add(menuCopyItem);
+
+                        var tempButton = new Button()
+                        {
+                            Width = 64,
+                            Height = 64,
+                            Margin = new Thickness(15, lobbyButtonsMargin, 0, 0),
+                            BorderBrush = null,
+                            ToolTip = "Конференция №" + room.RoomID,
+                            ContextMenu = contextMenu
+                        };
+
+                        tempButton.Click += Ez_Click;
+
+                        menuLeaveItem.Click += (s, ea) => 
+                        {
+                            LeaveRoom($"{room.RoomID}");
+                        };
+
+                        tempButton.Click += (senda, ev) =>
+                        {
+                            OpenRoom($"{room.RoomID}");
+                        };
+
+                        var path = "Resources/account.png";
+                        Uri resourceUri = new Uri(path, UriKind.Relative);
+                        StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+                        BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+                        tempButton.Background = new ImageBrush(temp);                        
+                        LobbysCanvas.Children.Add(tempButton);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("возможно вы даун", "Ошибка");
+                }
+
+                //создание конференции с уникальным ID
+
+            }
+            catch
+            {
+                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru");
+
+            }
+        }
+        public void LeaveRoom(string roomId)
+        {
+            try
+            {
+                var client = new RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}/leave");
+                client.Timeout = -1;
+                var request = new RestRequest(RestSharp.Method.POST);
+                request.AddHeader("x-access-token", UserInfo.Token);
+                IRestResponse response = client.Execute(request);
+                if (response.IsSuccessful)
+                {
+                    MessageBox.Show($"Вы покинули конференцию {roomId}");
+                    RefreshRooms();
+                }
+                else
+                {
+                    MessageBox.Show("Скорее всего эта ваша конференция\n(если нет, то со всеми бывает)", "да.");
+                }
+
+                //создание конференции с уникальным ID
+
+            }
+            catch
+            {
+                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru");
+
+            }
+        }
+        public void OpenRoom(string roomId) 
+        {
+            MessageBox.Show($"Тут типа должна открываться комната {roomId}","Да.");
+        }
+        private void CreateLobby_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show(this, "Создать новую конференцию?", "Подтверждение", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            {
+                //pass
+            }
+            else
+            {
+                try
+                {
+                    var client = new RestClient("https://testingwebrtc.herokuapp.com/room/create");
+                    client.Timeout = -1;
+                    var request = new RestRequest(RestSharp.Method.POST);
+                    request.AddHeader("x-access-token", UserInfo.Token);
+                    IRestResponse response = client.Execute(request);
+                    if (response.IsSuccessful)
+                    {                        
+                        JSONroom room = JsonConvert.DeserializeObject<JSONroom>(response.Content.ToString());
+                        var newRoomID = room.Data.RoomID;
+                        MessageBox.Show($"Вы успешно создали конференцию с ID:\n {newRoomID}");
+                        RefreshRooms();
+                    }
+                    else
+                    {
+                        MessageBox.Show("возможно вы даун", "Ошибка");
+                    }
+
+                    //создание конференции с уникальным ID
+
+                }
+                catch
+                {
+                    MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru");
+
+                }
+            }
+        }
+        private void ConnectToLobby_Click(object sender, RoutedEventArgs e)
+        {
+            string _conferensionID = ConferensionIDTextBox.Text.Trim().ToLower(); //Trim() - Удаление лишних символов
+            if (_conferensionID == "")
+            {
+                ConferensionIDTextBox.ToolTip = "Введите ID конференции";
+                ConferensionIDTextBox.BorderBrush = Brushes.Red;
+            }
+            else
+            {
+                try
+                {
+                    var client = new RestClient("https://testingwebrtc.herokuapp.com/room/" + _conferensionID + "/join");
+                    client.Timeout = -1;
+                    var request = new RestRequest(RestSharp.Method.POST);
+                    request.AddHeader("x-access-token", UserInfo.Token);
+                    IRestResponse response = client.Execute(request);
+                    if (response.IsSuccessful)
+                    {
+                        MessageBox.Show("Вы успешно вошли в конференцию с ID:\n" + _conferensionID);
+                        ConferensionIDTextBox.ToolTip = _conferensionID.ToString();
+                        ConferensionIDTextBox.BorderBrush = Brushes.Gray;
+                        GraphCanvas.Visibility = Visibility.Visible;
+                        ControlCanvas.Visibility = Visibility.Visible;
+                        conferenssionString.Text = "Конференция №" + _conferensionID;
+                        leaveButton.Visibility = Visibility.Visible;
+                        LobbysCanvas.Visibility = Visibility.Hidden;
+                        RefreshRooms();
+                    } 
+                    else 
+                    {
+                        MessageBox.Show("Возможно такой конференции не существует, либо вы уже состоите в ней","Ошибка");
+                    }
+
+                    
+                }
+                catch
+                {
+                    MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru");
+                    
+                }
+                
+            }
+        }
+        private void DisconnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            File.Delete(@"Token.json");
+            AuthPage authPage = new AuthPage();
+            this.Visibility = Visibility.Hidden; //Скрывает текущее окно
+            authPage.Show();
+        }
+        #endregion
+
+        #region CringeButtons
+        private void LobbyLeave_Click(object sender, RoutedEventArgs e)
+        {
+            ConferensionIDTextBox.BorderBrush = Brushes.Gray;
+            GraphCanvas.Visibility = Visibility.Hidden;
+            FreeModeCanvas.Visibility = Visibility.Hidden;
+            ControlCanvas.Visibility = Visibility.Hidden;
+            conferenssionString.Text = "Конференция № ...";
+            leaveButton.Visibility = Visibility.Hidden;
+
+            CreateLobbyButton.Visibility = Visibility.Visible;
+            ConferensionIDTextBox.Visibility = Visibility.Hidden;
+            CancelLobbyButton.Visibility = Visibility.Hidden;
+            ConnectToLobbyButton.Visibility = Visibility.Hidden;
+            LobbysCanvas.Visibility = Visibility.Visible;
+        }
+        private void Ez_Click(object sender, RoutedEventArgs e)
+        {
+            //GraphCanvas.Visibility = Visibility.Visible;
+            //ControlCanvas.Visibility = Visibility.Visible;
+            //conferenssionString.Text = "Конференция №2284";
+            //leaveButton.Visibility = Visibility.Visible;
+            //LobbysCanvas.Visibility = Visibility.Hidden;
+            ////MessageBox.Show("Why u click?");
+        }
+        private void CancelLobby_Click(object sender, RoutedEventArgs e)
+        {
+            CreateLobbyButton.Visibility = Visibility.Visible;
+            ConferensionIDTextBox.Visibility = Visibility.Hidden;
+            CancelLobbyButton.Visibility = Visibility.Hidden;
+            ConnectToLobbyButton.Visibility = Visibility.Hidden;
+        }
+        private void EnterLobby_Click(object sender, RoutedEventArgs e)
+        {
+            if (UserInfo.Email != null)
+            {
+                CreateLobbyButton.Visibility = Visibility.Hidden;
+                ConferensionIDTextBox.Visibility = Visibility.Visible;
+                CancelLobbyButton.Visibility = Visibility.Visible;
+                ConnectToLobbyButton.Visibility = Visibility.Visible;
+            }
+        }
         private void TextChatButton_Clicked(object sender, RoutedEventArgs e)
         {
             TextChatCanvas.Visibility = Visibility.Visible;
@@ -107,15 +386,6 @@ namespace GraphPAD
         {
             TextChatCanvas.Visibility = Visibility.Hidden;
             VideoChatCanvas.Visibility = Visibility.Visible;
-        }
-        private void ChangeImage(string path, Button btn) //Функция для смены изображений в кнопке
-        {
-            Uri resourceUri = new Uri(path, UriKind.Relative);
-            StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-            BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-            var brush = new ImageBrush();
-            brush.ImageSource = temp;
-            btn.Background = brush;
         }
         private void MicButton_Clicked(object sender, RoutedEventArgs e)
         {
@@ -214,83 +484,86 @@ namespace GraphPAD
             SettingsPage settingsPage = new SettingsPage();
             settingsPage.ShowDialog(); //ShowDialog открывает окно поверх, блокируя основное
         }
-        private void LobbyLeave_Click(object sender, RoutedEventArgs e)
-        {
-            ConferensionIDTextBox.BorderBrush = Brushes.Gray;
-            GraphCanvas.Visibility = Visibility.Hidden;
-            FreeModeCanvas.Visibility = Visibility.Hidden;
-            ControlCanvas.Visibility = Visibility.Hidden;
-            conferenssionString.Text = "Конференция № ...";
-            leaveButton.Visibility = Visibility.Hidden;
+        #endregion
 
-            CreateLobbyButton.Visibility = Visibility.Visible;
-            ConferensionIDTextBox.Visibility = Visibility.Hidden;
-            CancelLobbyButton.Visibility = Visibility.Hidden;
-            ConnectToLobbyButton.Visibility = Visibility.Hidden;
-            LobbysCanvas.Visibility = Visibility.Visible;
-        }
-        private void Ez_Click(object sender, RoutedEventArgs e)
+        #region FreeMode
+        private void Paint(Brush brush, Point point)
         {
-            GraphCanvas.Visibility = Visibility.Visible;
-            ControlCanvas.Visibility = Visibility.Visible;
-            conferenssionString.Text = "Конференция №2284";
-            leaveButton.Visibility = Visibility.Visible;
-            LobbysCanvas.Visibility = Visibility.Hidden;
-            //MessageBox.Show("Why u click?");
+            Ellipse ellipse = new Ellipse();
+            ellipse.Fill = brush;
+            ellipse.Width = paintsize;
+            ellipse.Height = paintsize;
+            Canvas.SetLeft(ellipse, point.X - ellipse.Width / 2);
+            Canvas.SetTop(ellipse, point.Y - ellipse.Height / 2);
+            FreeModeCanvas.Children.Add(ellipse);
         }
-        private void EnterLobby_Click(object sender, RoutedEventArgs e)
+        private void FreeModeMove(object sender, MouseEventArgs e)
         {
-            CreateLobbyButton.Visibility = Visibility.Hidden;
-            ConferensionIDTextBox.Visibility = Visibility.Visible;
-            CancelLobbyButton.Visibility = Visibility.Visible;
-            ConnectToLobbyButton.Visibility = Visibility.Visible;
-        }
-        private void CreateLobby_Click(object sender, RoutedEventArgs e)
-        {
-            if (MessageBox.Show(this, "Создать новую конференцию?", "Подтверждение", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            if (ispaint)
             {
-                //pass
+                Point point = e.GetPosition(FreeModeCanvas);
+                Paint(Brushes.Black, point);
+            }
+        }
+        private void FreeMode_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isFreeModeOn)
+            {
+                function = null; //free mode
+                addVertexBtn.IsEnabled = false; //canvas is better :/
+                deleteVertexBtn.IsEnabled = false;
+                isFreeModeOn = true;
+                GraphCanvas.Visibility = Visibility.Hidden;
+                FreeModeCanvas.Visibility = Visibility.Visible;
+                var path = "Resources/graph_mode.png";
+                Uri resourceUri = new Uri(path, UriKind.Relative);
+                StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+                BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+                freeModeImage.Source = temp;
+                freeModeTextBlock.Text = "Режим графов";
+                freeModeBtn.ToolTip = "Включить режим графов";
+                
             }
             else
             {
-                try
-                {
-                    //создание конференции с уникальным ID
-                    lobbyCount += 1;
-                    lobbyButtonsMargin += 70;
-                    if (lobbyCount > 8)
-                    {
-                        LobbysCanvas.Height = LobbysCanvas.Height + 70;
-                    }
-                    ConferensionsCountTextBlock.Text = "Конференций: " + (lobbyCount+1);
-                    Button testbutton = new Button();
-                    testbutton.Click += Ez_Click;
-                    //testbutton.Content = lobbyCount;
-                    testbutton.Width = 64;
-                    testbutton.Height = 64;
-                    testbutton.Margin = new Thickness(15, lobbyButtonsMargin, 0, 0);
-                    testbutton.BorderBrush = null;
-                    testbutton.ToolTip = "Конференция №" + lobbyCount;
-                    var path = "Resources/account.png";
-                    Uri resourceUri = new Uri(path, UriKind.Relative);
-                    StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-                    BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-                    testbutton.Background = new ImageBrush(temp);
-                    LobbysCanvas.Children.Add(testbutton);
-                    MessageBox.Show("Конференция успешно создана", "Сообщение");
-                }
-                catch
-                {
-                    MessageBox.Show("Ошибка", "Что-то пошло не так", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
+                function = null;
+                addVertexBtn.IsEnabled = true;
+                deleteVertexBtn.IsEnabled = true;
+                isFreeModeOn = false;
+                GraphCanvas.Visibility = Visibility.Visible;
+                FreeModeCanvas.Visibility = Visibility.Hidden;
+                var path = "Resources/free_mode.png";
+                Uri resourceUri = new Uri(path, UriKind.Relative);
+                StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+                BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+                freeModeImage.Source = temp;
+                freeModeTextBlock.Text = "Свободный режим";
+                freeModeBtn.ToolTip = "Включить свободный режим";
+            }
+            Button btn = sender as Button;
+            btn.Background = btn.Background == Brushes.DarkGray ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGray;
+        }
+        private void FreeModeCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            ispaint = false;
+        }
+        private void FreeModeCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ispaint = true;
+            Point point = e.GetPosition(FreeModeCanvas);
+            Paint(Brushes.Black, point);
+        }
+        private void ClearFreeCanvas(object sender, RoutedEventArgs e)
+        {
+            int count = FreeModeCanvas.Children.Count;
+            if (count > 0)
+            {
+                FreeModeCanvas.Children.Clear();
             }
         }
+        #endregion
 
-        //----------------------------------------------------------------------
-        private void workWithCanvasLeftDown(object sender, MouseButtonEventArgs e)
-        {
-            function?.Invoke(sender, e);
-        }
+        #region Vertexes
         public Canvas MakeVertex()
         {
             var temp = 40;
@@ -413,7 +686,6 @@ namespace GraphPAD
                 }
             }
         }
-        //-------------------------------------------------------------------------------------------
         private void AddVertex_Click(object sender, RoutedEventArgs e)
         {
             if (!isAddVetexOn)
@@ -436,7 +708,10 @@ namespace GraphPAD
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGreen ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGreen;
         }
-
+        private void workWithCanvasLeftDown(object sender, MouseButtonEventArgs e)
+        {
+            function?.Invoke(sender, e);
+        }
         private void RemoveVertex_Click(object sender, RoutedEventArgs e)
         {
             if (!isRemoveVertexOn)
@@ -458,84 +733,9 @@ namespace GraphPAD
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkRed ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkRed;
         }
-        private void Paint(Brush brush, Point point)
-        {
-            Ellipse ellipse = new Ellipse();
-            ellipse.Fill = brush;
-            ellipse.Width = paintsize;
-            ellipse.Height = paintsize;
-            Canvas.SetLeft(ellipse, point.X - ellipse.Width / 2);
-            Canvas.SetTop(ellipse, point.Y - ellipse.Height / 2);
-            FreeModeCanvas.Children.Add(ellipse);
-        }
-        private void FreeMode_Click(object sender, RoutedEventArgs e)
-        {
-            if (!isFreeModeOn)
-            {
-                function = null; //free mode
-                addVertexBtn.IsEnabled = false; //canvas is better :/
-                deleteVertexBtn.IsEnabled = false;
-                isFreeModeOn = true;
-                GraphCanvas.Visibility = Visibility.Hidden;
-                FreeModeCanvas.Visibility = Visibility.Visible;
-                var path = "Resources/graph_mode.png";
-                Uri resourceUri = new Uri(path, UriKind.Relative);
-                StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-                BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-                freeModeImage.Source = temp;
-                freeModeTextBlock.Text = "Режим графов";
-                freeModeBtn.ToolTip = "Включить режим графов";
-                
-            }
-            else
-            {
-                function = null;
-                addVertexBtn.IsEnabled = true;
-                deleteVertexBtn.IsEnabled = true;
-                isFreeModeOn = false;
-                GraphCanvas.Visibility = Visibility.Visible;
-                FreeModeCanvas.Visibility = Visibility.Hidden;
-                var path = "Resources/free_mode.png";
-                Uri resourceUri = new Uri(path, UriKind.Relative);
-                StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-                BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-                freeModeImage.Source = temp;
-                freeModeTextBlock.Text = "Свободный режим";
-                freeModeBtn.ToolTip = "Включить свободный режим";
-            }
-            Button btn = sender as Button;
-            btn.Background = btn.Background == Brushes.DarkGray ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGray;
-        }
+        #endregion
 
-        private void FreeModeMove(object sender, MouseEventArgs e)
-        {
-            if (ispaint)
-            {
-                Point point = e.GetPosition(FreeModeCanvas);
-                Paint(Brushes.Black, point);
-            }
-        }
-
-        private void FreeModeCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            ispaint = false;
-        }
-
-        private void FreeModeCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            ispaint = true;
-            Point point = e.GetPosition(FreeModeCanvas);
-            Paint(Brushes.Black, point);
-        }
-
-        private void deleteEz(object sender, RoutedEventArgs e)
-        {
-            int count = FreeModeCanvas.Children.Count;
-            if (count > 0)
-            {
-                FreeModeCanvas.Children.Clear();
-            }
-        }
+        #region Closing
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
             if (MessageBox.Show(this, "Вы действительно хотите выйти ? ", "Подтверждение", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
@@ -548,47 +748,19 @@ namespace GraphPAD
             }
 
         }
-
-        private void CancelLobby_Click(object sender, RoutedEventArgs e)
+        public static void CloseForm()
         {
-            CreateLobbyButton.Visibility = Visibility.Visible;
-            ConferensionIDTextBox.Visibility = Visibility.Hidden;
-            CancelLobbyButton.Visibility = Visibility.Hidden;
-            ConnectToLobbyButton.Visibility = Visibility.Hidden;
+            close.Invoke();
         }
-
-        private void ConnectToLobby_Click(object sender, RoutedEventArgs e)
+        #endregion
+        private void ChangeImage(string path, Button btn) //Функция для смены изображений в кнопке
         {
-            string _conferensionID = ConferensionIDTextBox.Text.Trim().ToLower(); //Trim() - Удаление лишних символов
-            if (_conferensionID == "")
-            {
-                ConferensionIDTextBox.ToolTip = "Введите ID конференции";
-                ConferensionIDTextBox.BorderBrush = Brushes.Red;
-            }
-            else
-            {
-                ConferensionIDTextBox.ToolTip = _conferensionID.ToString();
-                ConferensionIDTextBox.BorderBrush = Brushes.Gray;
-                GraphCanvas.Visibility = Visibility.Visible;
-                ControlCanvas.Visibility = Visibility.Visible;
-                conferenssionString.Text = "Конференция №2284";
-                leaveButton.Visibility = Visibility.Visible;
-                LobbysCanvas.Visibility = Visibility.Hidden;
-            }
-        }
-
-        private void DisconnectButton_Click(object sender, RoutedEventArgs e)
-        {
-            File.Delete(@"Token.json");
-            AuthPage authPage = new AuthPage();
-            this.Visibility = Visibility.Hidden; //Скрывает текущее окно
-            authPage.Show();
-        }
-
-        private void Test(object sender, RoutedEventArgs e)
-        {
-            //MainWindow.Hide();
-            
+            Uri resourceUri = new Uri(path, UriKind.Relative);
+            StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+            BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+            var brush = new ImageBrush();
+            brush.ImageSource = temp;
+            btn.Background = brush;
         }
     }
 }

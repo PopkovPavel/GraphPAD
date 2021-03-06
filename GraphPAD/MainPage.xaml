@@ -25,7 +25,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="100"/>
             </Grid.RowDefinitions>
-            <Button Click="Test" BorderThickness="2" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" ToolTip="Test" HorizontalAlignment="Center" Margin="0" Grid.Row="1" VerticalAlignment="Center" Width="64" Height="64" BorderBrush="White">
+            <Button Click="CreateLobby_Click" BorderThickness="2" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" ToolTip="Test" HorizontalAlignment="Center" Margin="0" Grid.Row="1" VerticalAlignment="Center" Width="64" Height="64" BorderBrush="White">
                 <Button.Background>
                     <ImageBrush ImageSource="Resources/connect.png"/>
                 </Button.Background>
@@ -34,11 +34,7 @@
 
             <ScrollViewer x:Name="LobbysScrollView" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" Height="671" VerticalAlignment="Top" Width="95">
                 <Canvas x:Name="LobbysCanvas" Height="671">
-                    <Button Click="Ez_Click" HorizontalAlignment="Center" Margin="15 10" ToolTip="Конференция №0" VerticalAlignment="Top" Width="64" Height="64" BorderBrush="{x:Null}">
-                        <Button.Background>
-                            <ImageBrush ImageSource="Resources/account.png"/>
-                        </Button.Background>
-                    </Button>
+                    
                 </Canvas>
             </ScrollViewer>
 
@@ -53,7 +49,7 @@
             <Button x:Name="CancelLobbyButton" Click="CancelLobby_Click" Content="Назад" Width="150" Height="40" FontSize="18" Margin="270,380,470,180" Background="#FF3C226A" BorderBrush="{x:Null}"/>
             <Button x:Name="ConnectToLobbyButton" Click="ConnectToLobby_Click" Content="Войти" Width="150" Height="40" FontSize="18" Margin="470,380,270,180" Background="#FF3C226A" BorderBrush="{x:Null}"/>
 
-            <TextBox x:Name="ConferensionIDTextBox" Visibility="Hidden" HorizontalAlignment="Left" Height="30" Margin="270,100,270,0" TextWrapping="Wrap" materialDesign:HintAssist.Hint="ID конференции..." Width="350" Foreground="White" FontSize="18" MaxLines="1" MaxLength="20" Background="Black"/>
+            <TextBox x:Name="ConferensionIDTextBox" Visibility="Hidden" HorizontalAlignment="Left" Height="30" Margin="270,100,270,0" TextWrapping="Wrap" materialDesign:HintAssist.Hint="ID конференции..." Width="350" Foreground="White" FontSize="18" MaxLines="1" MaxLength="46" Background="Black"/>
             <Canvas x:Name="FreeModeCanvas" Visibility="Hidden" MouseMove="FreeModeMove" MouseLeftButtonUp="FreeModeCanvas_MouseLeftButtonUp" MouseLeftButtonDown="FreeModeCanvas_MouseLeftButtonDown" HorizontalAlignment="Left" Height="580" VerticalAlignment="Top" Width="870" Background="White" Margin="10,10,0,0"/>
             <Canvas x:Name="GraphCanvas" Visibility="Hidden" MouseLeftButtonDown="workWithCanvasLeftDown" HorizontalAlignment="Left" Height="580" VerticalAlignment="Top" Width="870" Background="White" Margin="10,10,0,0"/>
             <Grid Grid.Row="1" Background="#22223d">
@@ -80,7 +76,7 @@
                         </StackPanel>
                     </Button>
                     <Image x:Name="Avatar" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Source="iMnLArhZvJU.jpg" Stretch="Fill" Canvas.Left="7" Canvas.Top="75"/>
-                    <TextBlock x:Name="conferenssionString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Конференция №2284" VerticalAlignment="Top" Foreground="White" Width="198" FontSize="16" Height="30" Canvas.Left="4" Canvas.Top="6" FontWeight="Bold"/>
+                    <TextBlock x:Name="conferenssionString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Конференция №2284" VerticalAlignment="Top" Foreground="White" Width="198" FontSize="11" Height="30" Canvas.Left="4" Canvas.Top="6" FontWeight="Bold"/>
                     <TextBlock x:Name="nameString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Шабинский Д.А." VerticalAlignment="Top" Foreground="White" FontSize="16" Canvas.Left="76" Canvas.Top="66" Height="22" Width="219" FontWeight="Bold"/>
                     <TextBlock x:Name="userRoleString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Пользователь" VerticalAlignment="Top" Foreground="White" Canvas.Left="76" Canvas.Top="88" Height="15" Width="100" FontStyle="Italic"/>
                     <TextBlock x:Name="voiceChatTextBlock" HorizontalAlignment="Left" Text="Голосовой чат подключен" VerticalAlignment="Top" Foreground="#FF13C713" Width="183" Height="20" Canvas.Left="4" Canvas.Top="30" TextDecorations="{x:Null}"/>
@@ -126,7 +122,7 @@
                             <TextBlock x:Name="freeModeTextBlock1" TextWrapping="NoWrap" Text="Алгоритмы" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button Content="delete" Click="deleteEz" HorizontalAlignment="Left" VerticalAlignment="Top" Width="76" Canvas.Left="412" Canvas.Top="69"/>
+                    <Button Content="delete" Click="ClearFreeCanvas" HorizontalAlignment="Left" VerticalAlignment="Top" Width="76" Canvas.Left="412" Canvas.Top="69"/>
                 </Canvas>
             </Grid>
 
@@ -174,7 +170,6 @@
                         </TransformGroup>
                     </TextBlock.RenderTransform>
                 </TextBlock>
-                <TextBlock Canvas.Left="160" TextWrapping="Wrap" Text="Chat" Canvas.Top="150" Foreground="White" FontSize="36"/>
             </Canvas>
 
         </Grid>
