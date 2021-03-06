@@ -27,7 +27,7 @@ namespace GraphPAD
             AuthPage authPage = new AuthPage();
             MainPage mainPage = new MainPage();
             this.Close();
-            MainPage.CloseForm();//test
+            MainPage.CloseForm();
             //mainPage.Hide();
             //mainPage.Visibility = Visibility.Hidden;
             //this.Visibility = Visibility.Hidden; //Скрывает текущее окно
