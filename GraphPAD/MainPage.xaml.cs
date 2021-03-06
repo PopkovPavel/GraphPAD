@@ -1,13 +1,11 @@
 ﻿using GraphPAD.Data.JSON;
 using GraphPAD.Data.User;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -254,6 +252,7 @@ namespace GraphPAD
             SocketConnector.client.On("chat-message", async response => 
             {
                 var text =  JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
+                await Dispatcher.BeginInvoke((Action)(() => ChatBox.AppendText($"{text[0].UserId}: {text[0].Message}\n")));
                 Console.WriteLine($"{text[0].UserId}: {text[0].Message}");
             });
         
@@ -795,21 +794,9 @@ namespace GraphPAD
             chatCount += 1;
             if (chatCount > 6)
             {
-                ChatsCanvas.Height = ChatsCanvas.Height + 40;
                 ChatsScrollView.ScrollToEnd();
-            }
-            var textBlock = new TextBlock()
-            {
-                Text = chatTextBox.Text,
-                Height = 36,
-                Width = 380,
-                Background = Brushes.DarkGray,
-                Foreground = Brushes.Gray,
-                FontSize = 20,
-                Margin = new Thickness(0, chatTextblockMargin, 0, 0),
-                TextAlignment = TextAlignment.Right
-            };
-            ChatsCanvas.Children.Add(textBlock);
+            }           
+            ChatBox.AppendText($"Вы: {chatTextBox.Text}\n");
             SocketConnector.SendMessage(chatTextBox.Text);
             chatTextblockMargin += 40;
             chatTextBox.Text = "";
