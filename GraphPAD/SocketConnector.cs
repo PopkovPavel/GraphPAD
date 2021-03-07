@@ -14,6 +14,7 @@ namespace GraphPAD
     public static class SocketConnector
     {
         public static SocketIO client { get; set; }
+        public static bool IsConnected { get; set; }
         private static string _roomId { get; set; }
         private static string _name { get; set; }
         
@@ -26,20 +27,29 @@ namespace GraphPAD
             });
             client.OnConnected += async (sender, e) =>
             {
-                MessageBox.Show("connected");
+                
                 Console.WriteLine("connected");
                 await client.EmitAsync("join-room", _roomId, _name);
             };
             client.OnDisconnected += async (sender, e) =>
             {
+
                 Console.WriteLine("disconnected");
+      
             };
-            await client.ConnectAsync();
+            await Connect();
 
         } 
+        public static async Task Connect()
+        {
+            await client.ConnectAsync();
+            IsConnected = true;
+        }
         public static async Task Disconnect()
         {
             await client.DisconnectAsync();
+            IsConnected = false;
+            
         }
         public static void SetSettings(string roomId, string name)
         {

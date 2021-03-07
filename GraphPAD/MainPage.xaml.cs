@@ -94,6 +94,11 @@ namespace GraphPAD
             CancelLobbyButton.Visibility = Visibility.Hidden;
             ConferensionIDTextBox.Visibility = Visibility.Hidden;
             ConnectToLobbyButton.Visibility = Visibility.Hidden;
+            chatGrid.Visibility = Visibility.Hidden;
+            leaveButton.Click += (s, ea) =>
+            {
+                LobbyLeave_ClickAsync(s,ea);
+            };
             RefreshRooms();
 
         }
@@ -178,7 +183,7 @@ namespace GraphPAD
                             Height = 64,
                             Margin = new Thickness(15, lobbyButtonsMargin, 0, 0),
                             BorderBrush = null,
-                            ToolTip = "Конференция №" + room.RoomID,
+                            ToolTip = "Конференция №" + room.RoomID.Substring(0,8),
                             ContextMenu = contextMenu
                         };
 
@@ -191,7 +196,7 @@ namespace GraphPAD
 
                         tempButton.Click += (senda, ev) =>
                         {
-                            OpenRoom($"{room.RoomID}");
+                            OpenRoomAsync($"{room.RoomID}");
                         };
 
                         var path = "Resources/account.png";
@@ -244,17 +249,30 @@ namespace GraphPAD
 
             }
         }
-        public void OpenRoom(string roomId) 
+        public async System.Threading.Tasks.Task OpenRoomAsync(string roomId)
         {
-          
-            SocketConnector.InitializeClientAsync();
-            SocketConnector.SetSettings(roomId, UserInfo.Name);
-            SocketConnector.client.On("chat-message", async response => 
+
+            chatGrid.Visibility = Visibility.Visible;
+            GraphCanvas.Visibility = Visibility.Visible;
+            ControlCanvas.Visibility = Visibility.Visible;
+            leaveButton.Visibility = Visibility.Visible;
+            LobbysCanvas.Visibility = Visibility.Hidden;
+            conferenssionString.Text = $"Конференция №{roomId.Substring(0, 8)}";
+            ConferensionString.Text = $"Чат конференции №{roomId.Substring(0, 8)}";
+            ///
+            try
             {
-                var text =  JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
-                await Dispatcher.BeginInvoke((Action)(() => ChatBox.AppendText($"{text[0].UserId}: {text[0].Message}\n")));
-                Console.WriteLine($"{text[0].UserId}: {text[0].Message}");
-            });
+                await SocketConnector.InitializeClientAsync();
+                SocketConnector.SetSettings(roomId, UserInfo.Name);
+                SocketConnector.client.On("chat-message", async response =>
+                {
+                    var text = JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
+                    await Dispatcher.BeginInvoke((Action)(() => ChatBox.AppendText($"{text[0].UserId}: {text[0].Message}\n\n")));
+                    Console.WriteLine($"{text[0].UserId}: {text[0].Message}");
+                });
+                chatTextBox.IsReadOnly = (SocketConnector.IsConnected) ? false : true;
+            }
+            catch { }
         
         }
         private void CreateLobby_Click(object sender, RoutedEventArgs e)
@@ -348,8 +366,11 @@ namespace GraphPAD
         #endregion
 
         #region CringeButtons
-        private void LobbyLeave_Click(object sender, RoutedEventArgs e)
-        {
+        private async System.Threading.Tasks.Task LobbyLeave_ClickAsync(object sender, RoutedEventArgs e)
+        {          
+            await SocketConnector.Disconnect();
+            chatTextBox.IsReadOnly = (SocketConnector.IsConnected) ? false : true;
+            chatGrid.Visibility = Visibility.Hidden;
             ConferensionIDTextBox.BorderBrush = Brushes.Gray;
             GraphCanvas.Visibility = Visibility.Hidden;
             FreeModeCanvas.Visibility = Visibility.Hidden;
@@ -364,13 +385,7 @@ namespace GraphPAD
             LobbysCanvas.Visibility = Visibility.Visible;
         }
         private void Ez_Click(object sender, RoutedEventArgs e)
-        {
-            //GraphCanvas.Visibility = Visibility.Visible;
-            //ControlCanvas.Visibility = Visibility.Visible;
-            //conferenssionString.Text = "Конференция №2284";
-            //leaveButton.Visibility = Visibility.Visible;
-            //LobbysCanvas.Visibility = Visibility.Hidden;
-            ////MessageBox.Show("Why u click?");
+        {           
         }
         private void CancelLobby_Click(object sender, RoutedEventArgs e)
         {
@@ -792,13 +807,9 @@ namespace GraphPAD
         private void SendButton_Clicked(object sender, RoutedEventArgs e)
         {
             chatCount += 1;
-            if (chatCount > 6)
-            {
-                ChatsScrollView.ScrollToEnd();
-            }           
-            ChatBox.AppendText($"Вы: {chatTextBox.Text}\n");
+            ChatsScrollView.ScrollToBottom();
+            ChatBox.AppendText($"Вы: {chatTextBox.Text}\n\n");
             SocketConnector.SendMessage(chatTextBox.Text);
-            chatTextblockMargin += 40;
             chatTextBox.Text = "";
 
             //ChatTextBlock.Text = chatTextBox.Text;

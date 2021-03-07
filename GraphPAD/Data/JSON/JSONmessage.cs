@@ -8,6 +8,6 @@ namespace GraphPAD.Data.JSON
         [JsonProperty("message")]
         public string Message { get; set; }
         [JsonProperty("userId")]
-        public string UserId;
+        public string UserId { get; set; }
     }
 }
