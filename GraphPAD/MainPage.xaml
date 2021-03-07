@@ -9,20 +9,25 @@
         Title="GraphPAD" Height="800" Width="1400" WindowStartupLocation="CenterScreen" MinWidth="1200" MinHeight="750" ResizeMode="CanMinimize"
         x:Name="MainWindow">
     <Window.Resources>
+        <SolidColorBrush x:Key="MainPurple" Color="#FF3C226A"/>
         <Style TargetType="ToolTip">
             <Setter Property="Background" Value="#22223d"></Setter>
             <Setter Property="Foreground" Value="White"></Setter>
-            
+
         </Style>
         <Style TargetType="ScrollBar">
             <Setter Property="Background" Value="#00000000"/>
             <Setter Property="Foreground" Value="Red"/>
-            <Setter Property="BorderBrush" Value="#00000000"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
 
         </Style>
-        <Style TargetType="Thumb">
-            <Setter Property="Background" Value="#00000000"/>
+        <Style TargetType="RepeatButton">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
         </Style>
+
     </Window.Resources>
     <Grid >
         <Grid.ColumnDefinitions>
@@ -54,10 +59,10 @@
                 <RowDefinition Height="600"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Button x:Name="EnterLobbyButton" Click="EnterLobby_Click" Content="Войти в конференцию" Width="350" Height="40" FontSize="18" Margin="270,0,270,0" Background="#FF3C226A" BorderBrush="{x:Null}"/>
-            <Button x:Name="CreateLobbyButton" Click="CreateLobby_Click" Content="Создать конференцию" Width="350" Height="40" FontSize="18" Margin="270,100,270,0" Background="#FF3C226A" BorderBrush="{x:Null}"/>
-            <Button x:Name="CancelLobbyButton" Click="CancelLobby_Click" Content="Назад" Width="150" Height="40" FontSize="18" Margin="270,380,470,180" Background="#FF3C226A" BorderBrush="{x:Null}"/>
-            <Button x:Name="ConnectToLobbyButton" Click="ConnectToLobby_Click" Content="Войти" Width="150" Height="40" FontSize="18" Margin="470,380,270,180" Background="#FF3C226A" BorderBrush="{x:Null}"/>
+            <Button x:Name="EnterLobbyButton" Click="EnterLobby_Click" Content="Войти в конференцию" Width="350" Height="40" FontSize="18" Margin="270,0,270,0" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}"/>
+            <Button x:Name="CreateLobbyButton" Click="CreateLobby_Click" Content="Создать конференцию" Width="350" Height="40" FontSize="18" Margin="270,100,270,0" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}"/>
+            <Button x:Name="CancelLobbyButton" Click="CancelLobby_Click" Content="Назад" Width="150" Height="40" FontSize="18" Margin="270,380,470,180" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}"/>
+            <Button x:Name="ConnectToLobbyButton" Click="ConnectToLobby_Click" Content="Войти" Width="150" Height="40" FontSize="18" Margin="470,380,270,180" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}"/>
 
             <TextBox x:Name="ConferensionIDTextBox" Visibility="Hidden" HorizontalAlignment="Left" Height="30" Margin="270,100,270,0" TextWrapping="Wrap" materialDesign:HintAssist.Hint="ID конференции..." Width="350" Foreground="White" FontSize="18" MaxLines="1" MaxLength="46" Background="Black"/>
             <Canvas x:Name="FreeModeCanvas" Visibility="Hidden" MouseMove="FreeModeMove" MouseLeftButtonUp="FreeModeCanvas_MouseLeftButtonUp" MouseLeftButtonDown="FreeModeCanvas_MouseLeftButtonDown" HorizontalAlignment="Left" Height="580" VerticalAlignment="Top" Width="870" Background="White" Margin="10,10,0,0"/>
@@ -149,7 +154,7 @@
             <ScrollViewer x:Name="ChatsScrollView" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,10,0,142" Grid.Row="2" Foreground="White" Background="#00000000">
                 <TextBox x:Name="ChatBox" HorizontalAlignment="Left" Width="380" TextWrapping="Wrap" Text=""  IsReadOnly="True" FontSize="20"/>
             </ScrollViewer>
-            <Canvas x:Name="VideoChatCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="450" Margin="1,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="407" Grid.RowSpan="2">
+            <Canvas x:Name="VideoChatCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="720" Margin="1,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="405" Grid.RowSpan="2">
                 <Image x:Name="Camera" HorizontalAlignment="Left" Height="200" Width="200" VerticalAlignment="Top" Source="Resources/avatar1.jpg" Stretch="Fill" Canvas.Top="46"/>
                 <Image x:Name="Camera2" HorizontalAlignment="Right" Height="200" Width="200" VerticalAlignment="Top" Source="Resources/avatar4.jpg" Stretch="Fill" Canvas.Left="209" Canvas.Top="46"/>
                 <Image x:Name="Camera3" HorizontalAlignment="Left" Height="200" Width="200" VerticalAlignment="Top" Source="Resources/avatar3.jpg" Stretch="Fill" Canvas.Top="247"/>

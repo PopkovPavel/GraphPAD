@@ -1,4 +1,6 @@
-﻿using GraphPAD.Data.JSON;
+﻿using CefSharp;
+using CefSharp.Wpf;
+using GraphPAD.Data.JSON;
 using GraphPAD.Data.User;
 using Newtonsoft.Json;
 using RestSharp;
@@ -95,9 +97,23 @@ namespace GraphPAD
             ConferensionIDTextBox.Visibility = Visibility.Hidden;
             ConnectToLobbyButton.Visibility = Visibility.Hidden;
             chatGrid.Visibility = Visibility.Hidden;
+            Chromium.settings.CefCommandLineArgs.Add("enable-media-stream", "1");
+            Cef.Initialize(Chromium.settings);
             leaveButton.Click += (s, ea) =>
             {
                 LobbyLeave_ClickAsync(s,ea);
+                ChatBox.Clear();
+                chatTextBox.Clear();
+                foreach(UIElement temp in VideoChatCanvas.Children)
+                {
+                    try
+                    {
+                        ((ChromiumWebBrowser)temp).Dispose();
+                    }
+                    catch { }
+
+                }
+                VideoChatCanvas.Children.Clear();
             };
             RefreshRooms();
 
@@ -251,7 +267,12 @@ namespace GraphPAD
         }
         public async System.Threading.Tasks.Task OpenRoomAsync(string roomId)
         {
-
+            Chromium.SetSettings(roomId);
+            var jepa = Chromium.Connect();
+            jepa.Height = 720;
+            jepa.Width = 405;
+            
+            VideoChatCanvas.Children.Add(jepa);
             chatGrid.Visibility = Visibility.Visible;
             GraphCanvas.Visibility = Visibility.Visible;
             ControlCanvas.Visibility = Visibility.Visible;
@@ -408,11 +429,21 @@ namespace GraphPAD
         {
             TextChatCanvas.Visibility = Visibility.Visible;
             VideoChatCanvas.Visibility = Visibility.Hidden;
+            chatTextBox.Visibility = Visibility.Visible;
+            sendButton.Visibility = Visibility.Visible;
+            CharCountTextBlock.Visibility = Visibility.Visible;
+            ChatsScrollView.Visibility = Visibility.Visible;
+
         }
         private void VideoChatButton_Clicked(object sender, RoutedEventArgs e)
         {
             TextChatCanvas.Visibility = Visibility.Hidden;
             VideoChatCanvas.Visibility = Visibility.Visible;
+            ChatsScrollView.Visibility = Visibility.Hidden;
+            chatTextBox.Visibility = Visibility.Hidden;
+            sendButton.Visibility = Visibility.Hidden;
+            CharCountTextBlock.Visibility = Visibility.Hidden;
+
         }
         private void MicButton_Clicked(object sender, RoutedEventArgs e)
         {
