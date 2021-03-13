@@ -65,7 +65,7 @@ namespace GraphPAD
             voiceChatTextBlock.Text = "Голосовой чат подключен";
             videoTextBlock.Text = "Видео отключено";
             videoTextBlock.Foreground = Brushes.DarkGray;
-            
+            //hellob
             function = null;
             isAddVetexOn = false;
             isRemoveVertexOn = false;
