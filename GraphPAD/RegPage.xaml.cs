@@ -5,6 +5,8 @@ using RestSharp;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace GraphPAD
@@ -15,6 +17,7 @@ namespace GraphPAD
         {
             InitializeComponent();
             Closing += OnClosing; //Делегат для отлова закрытия окна
+            this.KeyDown += new KeyEventHandler(RegWindow_KeyDown);
         }
         private void OpenAuthPage(object sender, RoutedEventArgs e)
         {
@@ -133,6 +136,14 @@ namespace GraphPAD
                 Process.GetCurrentProcess().Kill();  //Полное выключение программы
             }
 
+        }
+
+        private void RegWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.regButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            }
         }
     }
 }

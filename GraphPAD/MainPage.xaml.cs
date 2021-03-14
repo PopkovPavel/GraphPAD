@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -50,9 +51,8 @@ namespace GraphPAD
         public MainPage()
         {
             InitializeComponent();
-
             close = new Method(Close);
-
+            this.KeyDown += new KeyEventHandler(MainWindow_KeyDown);
             Closing += OnClosing;  //Делегат для отлова закрытия окна
             isMicOn = true;
             isHeadPhonesOn = true;
@@ -65,7 +65,7 @@ namespace GraphPAD
             voiceChatTextBlock.Text = "Голосовой чат подключен";
             videoTextBlock.Text = "Видео отключено";
             videoTextBlock.Foreground = Brushes.DarkGray;
-            //hellob
+
             function = null;
             isAddVetexOn = false;
             isRemoveVertexOn = false;
@@ -73,9 +73,7 @@ namespace GraphPAD
             ispaint = false;
             paintsize = 20;
             FreeModeCanvas.Visibility = Visibility.Hidden;
-
-            Camera3.Visibility = Visibility.Hidden;
-
+            TextChatCanvas.Visibility = Visibility.Visible;
             conferenssionString.Text = "Конференция № ...";
             if (GuestInfo.Name == "test")
             {
@@ -116,7 +114,6 @@ namespace GraphPAD
                 VideoChatCanvas.Children.Clear();
             };
             RefreshRooms();
-
         }
 
         #region ServerFunctions
@@ -125,7 +122,7 @@ namespace GraphPAD
             try
             {
                 lobbyCount = 0;
-                lobbyButtonsMargin = -40;
+                lobbyButtonsMargin = -70;
                 var client = new RestClient("https://testingwebrtc.herokuapp.com/room/myrooms");
                 client.Timeout = -1;
                 var request = new RestRequest(RestSharp.Method.GET);
@@ -137,7 +134,6 @@ namespace GraphPAD
                     JSONrooms rooms = JsonConvert.DeserializeObject<JSONrooms>(response.Content.ToString());
                     foreach (JSONroomData room in rooms.Data)
                     {
-
                         lobbyCount += 1;
                         lobbyButtonsMargin += 70;
                         if (lobbyCount > 8)
@@ -166,7 +162,7 @@ namespace GraphPAD
                         {
                             //Копирование текста в буфер обмена
                             Clipboard.SetData(DataFormats.Text, (Object)room.RoomID);
-                            MessageBox.Show("ID скопирован");
+                            MessageBox.Show("ID скопирован", "Сообщение");
                         };
 
                         //Второй элемент контекстного меню
@@ -182,7 +178,7 @@ namespace GraphPAD
                             Padding = new Thickness(10, 0, 0, 0),
                             Height = 40,
                             Width = 190,
-                            ToolTip = "Покинуть коференцию"
+                            ToolTip = "Покинуть конференцию"
                         };
                         menuLeaveItem.Header = "Покинуть конференцию";
 
@@ -225,15 +221,12 @@ namespace GraphPAD
                 }
                 else
                 {
-                    MessageBox.Show("возможно вы даун", "Ошибка");
+                    MessageBox.Show("Что-то пошло не так.", "Ошибка");
                 }
-
-                //создание конференции с уникальным ID
-
             }
             catch
             {
-                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru");
+                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
 
             }
         }
@@ -248,22 +241,33 @@ namespace GraphPAD
                 IRestResponse response = client.Execute(request);
                 if (response.IsSuccessful)
                 {
-                    MessageBox.Show($"Вы покинули конференцию {roomId}");
+                    MessageBox.Show($"Вы покинули конференцию {roomId}", "Сообщение");
                     RefreshRooms();
                 }
                 else
                 {
-                    MessageBox.Show("Скорее всего эта ваша конференция\n(если нет, то со всеми бывает)", "да.");
+                    MessageBox.Show("Вы не можете удалить собственную комнату\nСкоро сможете", "Ошибка");
                 }
-
-                //создание конференции с уникальным ID
-
             }
             catch
             {
-                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru");
+                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
 
             }
+        }
+        public Tuple<string[], string> GetUsers(string roomId)
+        {
+            var client = new RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}");
+            client.Timeout = -1;
+            var request = new RestRequest(RestSharp.Method.GET);
+            request.AddHeader("x-access-token", UserInfo.Token);
+            IRestResponse response = client.Execute(request);
+            if (response.IsSuccessful)
+            {
+                JSONroom room = JsonConvert.DeserializeObject<JSONroom>(response.Content.ToString());
+                return Tuple.Create(room.Data.Users, room.Data.RoomOwner);
+            }
+            return null;
         }
         public async System.Threading.Tasks.Task OpenRoomAsync(string roomId)
         {
@@ -280,7 +284,14 @@ namespace GraphPAD
             LobbysCanvas.Visibility = Visibility.Hidden;
             conferenssionString.Text = $"Конференция №{roomId.Substring(0, 8)}";
             ConferensionString.Text = $"Чат конференции №{roomId.Substring(0, 8)}";
-            ///
+            //Participants
+            int num = 1;
+            var temp = GetUsers(roomId);
+            ParticipantsBox.AppendText($"Owner: {temp.Item2}\n\n");
+            foreach (string participant in temp.Item1)
+            {
+                ParticipantsBox.AppendText($"#{num++}: {participant}\n");
+            }
             try
             {
                 await SocketConnector.InitializeClientAsync();
@@ -315,21 +326,17 @@ namespace GraphPAD
                     {                        
                         JSONroom room = JsonConvert.DeserializeObject<JSONroom>(response.Content.ToString());
                         var newRoomID = room.Data.RoomID;
-                        MessageBox.Show($"Вы успешно создали конференцию с ID:\n {newRoomID}");
+                        MessageBox.Show($"Вы успешно создали конференцию с ID:\n {newRoomID}", "Сообщение");
                         RefreshRooms();
                     }
                     else
                     {
-                        MessageBox.Show("возможно вы даун", "Ошибка");
+                        MessageBox.Show("Что-то пошло не так.", "Ошибка");
                     }
-
-                    //создание конференции с уникальным ID
-
                 }
                 catch
                 {
-                    MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru");
-
+                    MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
                 }
             }
         }
@@ -352,26 +359,20 @@ namespace GraphPAD
                     IRestResponse response = client.Execute(request);
                     if (response.IsSuccessful)
                     {
-                        MessageBox.Show("Вы успешно вошли в конференцию с ID:\n" + _conferensionID);
+                        MessageBox.Show("Вы успешно добавили конференцию с ID:\n" + _conferensionID +"\nЧтобы подкючиться к конференции выберите её в списке слева.", "Сообщение");
                         ConferensionIDTextBox.ToolTip = _conferensionID.ToString();
                         ConferensionIDTextBox.BorderBrush = Brushes.Gray;
-                        GraphCanvas.Visibility = Visibility.Visible;
-                        ControlCanvas.Visibility = Visibility.Visible;
-                        conferenssionString.Text = "Конференция №" + _conferensionID;
-                        leaveButton.Visibility = Visibility.Visible;
-                        LobbysCanvas.Visibility = Visibility.Hidden;
+                        ConferensionIDTextBox.Text = "";
                         RefreshRooms();
                     } 
                     else 
                     {
-                        MessageBox.Show("Возможно такой конференции не существует, либо вы уже состоите в ней","Ошибка");
-                    }
-
-                    
+                        MessageBox.Show("Возможно такой конференции не существует, либо она уже была добавлена","Ошибка");
+                    }                   
                 }
                 catch
                 {
-                    MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru");
+                    MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
                     
                 }
                 
@@ -429,21 +430,43 @@ namespace GraphPAD
         {
             TextChatCanvas.Visibility = Visibility.Visible;
             VideoChatCanvas.Visibility = Visibility.Hidden;
+            ParticipantsCanvas.Visibility = Visibility.Hidden;
+
             chatTextBox.Visibility = Visibility.Visible;
             sendButton.Visibility = Visibility.Visible;
             CharCountTextBlock.Visibility = Visibility.Visible;
             ChatsScrollView.Visibility = Visibility.Visible;
-
+            ParticipantsScrollView.Visibility = Visibility.Hidden;
+            ChatBox.Visibility = Visibility.Visible;
+            ParticipantsBox.Visibility = Visibility.Hidden;
         }
         private void VideoChatButton_Clicked(object sender, RoutedEventArgs e)
         {
             TextChatCanvas.Visibility = Visibility.Hidden;
             VideoChatCanvas.Visibility = Visibility.Visible;
+            ParticipantsCanvas.Visibility = Visibility.Hidden;
+
             ChatsScrollView.Visibility = Visibility.Hidden;
             chatTextBox.Visibility = Visibility.Hidden;
             sendButton.Visibility = Visibility.Hidden;
             CharCountTextBlock.Visibility = Visibility.Hidden;
+            ParticipantsScrollView.Visibility = Visibility.Hidden;
+            ChatBox.Visibility = Visibility.Hidden;
+            ParticipantsBox.Visibility = Visibility.Hidden;
+        }
+        private void ParticipantsButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            TextChatCanvas.Visibility = Visibility.Hidden;
+            VideoChatCanvas.Visibility = Visibility.Hidden;
+            ParticipantsCanvas.Visibility = Visibility.Visible;
 
+            ChatsScrollView.Visibility = Visibility.Hidden;
+            chatTextBox.Visibility = Visibility.Hidden;
+            sendButton.Visibility = Visibility.Hidden;
+            CharCountTextBlock.Visibility = Visibility.Hidden;
+            ParticipantsScrollView.Visibility = Visibility.Visible;
+            ChatBox.Visibility = Visibility.Hidden;
+            ParticipantsBox.Visibility = Visibility.Visible;
         }
         private void MicButton_Clicked(object sender, RoutedEventArgs e)
         {
@@ -522,15 +545,15 @@ namespace GraphPAD
             
             if (isVideoOn)
             {
+                //Веб-камера выключена
                 videoTextBlock.Text = "Видео отключено";
                 videoTextBlock.Foreground = Brushes.DarkGray;
                 videoButton.ToolTip = "Вкл. камеру";
                 isVideoOn = false;
-                Camera3.Visibility = Visibility.Hidden;
             }
             else
             {
-                Camera3.Visibility = Visibility.Visible;
+                //Веб-камера включена
                 videoTextBlock.Text = "Видео подключено";
                 videoTextBlock.Foreground = greenbrush;
                 videoButton.ToolTip = "Выкл. камеру";
@@ -837,13 +860,24 @@ namespace GraphPAD
 
         private void SendButton_Clicked(object sender, RoutedEventArgs e)
         {
-            chatCount += 1;
-            ChatsScrollView.ScrollToBottom();
-            ChatBox.AppendText($"Вы: {chatTextBox.Text}\n\n");
-            SocketConnector.SendMessage(chatTextBox.Text);
-            chatTextBox.Text = "";
-
+            if (chatTextBox.Text != "")
+            {
+                chatCount += 1;
+                ChatsScrollView.ScrollToBottom();
+                ChatBox.AppendText($"Вы: {chatTextBox.Text}\n\n");
+                SocketConnector.SendMessage(chatTextBox.Text);
+                chatTextBox.Text = "";
+            }
             //ChatTextBlock.Text = chatTextBox.Text;
         }
+
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.sendButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            }
+        }
+
     }
 }

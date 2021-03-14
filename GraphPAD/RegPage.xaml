@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GraphPAD"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="GraphPAD (Регистрация)" Height="500" Width="450" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+        Title="GraphPAD (Регистрация)" Height="500" Width="450" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" KeyDown="RegWindow_KeyDown">
     <Grid Background="#303030">
         <Border MinWidth="300" MinHeight="300" Margin="15" Background="White" VerticalAlignment="Center" Padding="30" CornerRadius="20">
             <Border.Effect>
@@ -18,7 +18,7 @@
                 <TextBox x:Name="textboxEmail" materialDesign:HintAssist.Hint="Введите Email" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaxLines="1" MaxLength="30"/>
                 <PasswordBox x:Name="passwordbox_1" materialDesign:HintAssist.Hint="Введите пароль" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" MaxLength="40"/>
                 <PasswordBox x:Name="passwordbox_2" materialDesign:HintAssist.Hint="Введите пароль ещё раз" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" MaxLength="40"/>
-                <Button Content="Зарегистрироваться" Margin="0 20" Click="RegButton_Clicked"/>
+                <Button x:Name="regButton" Content="Зарегистрироваться" Margin="0 20" Click="RegButton_Clicked"/>
                 <Grid Height="60">
                     <TextBlock HorizontalAlignment="Center" Text="Уже есть аккаунт?" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" Margin="0,6,0,0" />
                     <Button HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="Войти" FontSize="16" Click="OpenAuthPage" Style="{StaticResource MaterialDesignFlatButton}"/>
