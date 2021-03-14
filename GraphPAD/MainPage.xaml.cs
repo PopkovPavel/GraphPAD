@@ -255,7 +255,7 @@ namespace GraphPAD
 
             }
         }
-        public Tuple<string[], string> GetUsers(string roomId)
+        public Tuple<JSONroomuser[], string> GetUsers(string roomId)
         {
             var client = new RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}");
             client.Timeout = -1;
@@ -265,6 +265,7 @@ namespace GraphPAD
             if (response.IsSuccessful)
             {
                 JSONroom room = JsonConvert.DeserializeObject<JSONroom>(response.Content.ToString());
+                Console.WriteLine(room.Data.Users.ToString());
                 return Tuple.Create(room.Data.Users, room.Data.RoomOwner);
             }
             return null;
@@ -282,30 +283,42 @@ namespace GraphPAD
             ControlCanvas.Visibility = Visibility.Visible;
             leaveButton.Visibility = Visibility.Visible;
             LobbysCanvas.Visibility = Visibility.Hidden;
+
+            TextChatCanvas.Visibility = Visibility.Visible;
+            VideoChatCanvas.Visibility = Visibility.Hidden;
+            ParticipantsCanvas.Visibility = Visibility.Hidden;
+            ChatBox.Visibility = Visibility.Visible;
+            ParticipantsBox.Visibility = Visibility.Hidden;
+            ParticipantsString.Visibility = Visibility.Hidden;
+            ParticipantsScrollView.Visibility = Visibility.Hidden;
+
             conferenssionString.Text = $"Конференция №{roomId.Substring(0, 8)}";
             ConferensionString.Text = $"Чат конференции №{roomId.Substring(0, 8)}";
             //Participants
             int num = 1;
             var temp = GetUsers(roomId);
             ParticipantsBox.AppendText($"Owner: {temp.Item2}\n\n");
-            foreach (string participant in temp.Item1)
+            if (temp.Item1 != null)
             {
-                ParticipantsBox.AppendText($"#{num++}: {participant}\n");
-            }
-            try
-            {
-                await SocketConnector.InitializeClientAsync();
-                SocketConnector.SetSettings(roomId, UserInfo.Name);
-                SocketConnector.client.On("chat-message", async response =>
+                foreach (JSONroomuser participant in temp.Item1)
                 {
-                    var text = JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
-                    await Dispatcher.BeginInvoke((Action)(() => ChatBox.AppendText($"{text[0].UserId}: {text[0].Message}\n\n")));
-                    Console.WriteLine($"{text[0].UserId}: {text[0].Message}");
-                });
-                chatTextBox.IsReadOnly = (SocketConnector.IsConnected) ? false : true;
-            }
-            catch { }
-        
+                    ParticipantsBox.AppendText($"#{num++}: {participant.Name}\n");
+                    //Console.WriteLine(participant.ToString());
+                }
+                try
+                {
+                    await SocketConnector.InitializeClientAsync();
+                    SocketConnector.SetSettings(roomId, UserInfo.Name);
+                    SocketConnector.client.On("chat-message", async response =>
+                    {
+                        var text = JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
+                        await Dispatcher.BeginInvoke((Action)(() => ChatBox.AppendText($"{text[0].UserId}: {text[0].Message}\n\n")));
+                        Console.WriteLine($"{text[0].UserId}: {text[0].Message}");
+                    });
+                    chatTextBox.IsReadOnly = (SocketConnector.IsConnected) ? false : true;
+                }
+                catch { }
+            }        
         }
         private void CreateLobby_Click(object sender, RoutedEventArgs e)
         {
@@ -405,6 +418,7 @@ namespace GraphPAD
             CancelLobbyButton.Visibility = Visibility.Hidden;
             ConnectToLobbyButton.Visibility = Visibility.Hidden;
             LobbysCanvas.Visibility = Visibility.Visible;
+            ParticipantsBox.Text = "";
         }
         private void Ez_Click(object sender, RoutedEventArgs e)
         {           
@@ -431,42 +445,30 @@ namespace GraphPAD
             TextChatCanvas.Visibility = Visibility.Visible;
             VideoChatCanvas.Visibility = Visibility.Hidden;
             ParticipantsCanvas.Visibility = Visibility.Hidden;
-
-            chatTextBox.Visibility = Visibility.Visible;
-            sendButton.Visibility = Visibility.Visible;
-            CharCountTextBlock.Visibility = Visibility.Visible;
-            ChatsScrollView.Visibility = Visibility.Visible;
-            ParticipantsScrollView.Visibility = Visibility.Hidden;
             ChatBox.Visibility = Visibility.Visible;
             ParticipantsBox.Visibility = Visibility.Hidden;
+            ParticipantsString.Visibility = Visibility.Hidden;
+            ParticipantsScrollView.Visibility = Visibility.Hidden;
         }
         private void VideoChatButton_Clicked(object sender, RoutedEventArgs e)
         {
             TextChatCanvas.Visibility = Visibility.Hidden;
             VideoChatCanvas.Visibility = Visibility.Visible;
             ParticipantsCanvas.Visibility = Visibility.Hidden;
-
-            ChatsScrollView.Visibility = Visibility.Hidden;
-            chatTextBox.Visibility = Visibility.Hidden;
-            sendButton.Visibility = Visibility.Hidden;
-            CharCountTextBlock.Visibility = Visibility.Hidden;
-            ParticipantsScrollView.Visibility = Visibility.Hidden;
             ChatBox.Visibility = Visibility.Hidden;
             ParticipantsBox.Visibility = Visibility.Hidden;
+            ParticipantsString.Visibility = Visibility.Hidden;
+            ParticipantsScrollView.Visibility = Visibility.Hidden;
         }
         private void ParticipantsButton_Clicked(object sender, RoutedEventArgs e)
         {
             TextChatCanvas.Visibility = Visibility.Hidden;
             VideoChatCanvas.Visibility = Visibility.Hidden;
             ParticipantsCanvas.Visibility = Visibility.Visible;
-
-            ChatsScrollView.Visibility = Visibility.Hidden;
-            chatTextBox.Visibility = Visibility.Hidden;
-            sendButton.Visibility = Visibility.Hidden;
-            CharCountTextBlock.Visibility = Visibility.Hidden;
-            ParticipantsScrollView.Visibility = Visibility.Visible;
             ChatBox.Visibility = Visibility.Hidden;
             ParticipantsBox.Visibility = Visibility.Visible;
+            ParticipantsString.Visibility = Visibility.Visible;
+            ParticipantsScrollView.Visibility = Visibility.Visible;
         }
         private void MicButton_Clicked(object sender, RoutedEventArgs e)
         {

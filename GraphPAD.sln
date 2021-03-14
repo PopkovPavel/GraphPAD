@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D45B1310-023C-4CB3-A84F-33D62C8F3474}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		..\..\..\OneDrive\Рабочий стол\Logo1.jpg = ..\..\..\OneDrive\Рабочий стол\Logo1.jpg
 	EndProjectSection
 EndProject
 Global

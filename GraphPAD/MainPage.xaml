@@ -8,7 +8,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="GraphPAD" Height="800" Width="1400" WindowStartupLocation="CenterScreen" MinWidth="1200" MinHeight="750" ResizeMode="CanMinimize"
         x:Name="MainWindow"
-        Background="#FF141424" KeyDown="MainWindow_KeyDown">
+        Background="#FF141424" KeyDown="MainWindow_KeyDown" Icon="Resources/icon.jpg">
     <Window.Resources>
         <SolidColorBrush x:Key="MainPurple" Color="#FF3C226A"/>
         <Style TargetType="ToolTip">
@@ -94,7 +94,7 @@
                     </Button>
                     <Image x:Name="Avatar" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Source="iMnLArhZvJU.jpg" Stretch="Fill" Canvas.Left="7" Canvas.Top="75"/>
                     <TextBlock x:Name="conferenssionString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Конференция №2284" VerticalAlignment="Top" Foreground="White" Width="198" FontSize="11" Height="30" Canvas.Left="4" Canvas.Top="6" FontWeight="Bold"/>
-                    <TextBlock x:Name="nameString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Шабинский Д.А." VerticalAlignment="Top" Foreground="White" FontSize="16" Canvas.Left="76" Canvas.Top="66" Height="22" Width="219" FontWeight="Bold"/>
+                    <TextBlock x:Name="nameString" HorizontalAlignment="Left" Text="Шабинский Д.А." VerticalAlignment="Top" Foreground="White" FontSize="16" Canvas.Left="76" Canvas.Top="66" Height="22" Width="219" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
                     <TextBlock x:Name="userRoleString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Пользователь" VerticalAlignment="Top" Foreground="White" Canvas.Left="76" Canvas.Top="88" Height="15" Width="100" FontStyle="Italic"/>
                     <TextBlock x:Name="voiceChatTextBlock" HorizontalAlignment="Left" Text="Голосовой чат подключен" VerticalAlignment="Top" Foreground="#FF13C713" Width="183" Height="20" Canvas.Left="4" Canvas.Top="30" TextDecorations="{x:Null}"/>
                     <TextBlock x:Name="videoTextBlock" HorizontalAlignment="Left" Text="Видео подключено" VerticalAlignment="Top" Foreground="#FF13C713" Width="183" Height="20" Canvas.Left="4" Canvas.Top="50" TextDecorations="{x:Null}"/>
@@ -176,7 +176,7 @@
                         <ImageBrush ImageSource="Resources/send.png" Stretch="UniformToFill"/>
                     </Button.Background>
                 </Button>
-                <TextBox x:Name="chatTextBox" Height="100" Width="350" materialDesign:HintAssist.Hint="Напишите сообщение ..." Background="#FF323232" Canvas.Top="627" FontSize="16" MaxLength="200" MaxLines="20" MinLines="1" TextWrapping="Wrap" CaretBrush="{x:Null}" Foreground="White" TextChanged="chatTextBox_TextChanged" Canvas.Left="4"/>
+                <TextBox x:Name="chatTextBox" Height="100" Width="350" materialDesign:HintAssist.Hint="Напишите сообщение ..." Background="#FF323232" Canvas.Top="627" FontSize="16" MaxLength="200" MaxLines="20" MinLines="1" TextWrapping="Wrap" TextAlignment="Left" CaretBrush="{x:Null}" Foreground="White" TextChanged="chatTextBox_TextChanged" Canvas.Left="4"/>
                 <TextBlock x:Name="CharCountTextBlock" TextWrapping="Wrap" Text="Символов 0/200" Canvas.Top="607" Height="20" Width="350" Foreground="White" Canvas.Left="4"/>
             </Canvas>
             <!--Video Canvas-->
@@ -193,7 +193,7 @@
                 </TextBlock>
             </Canvas>
             <!--Participants Canvas-->
-            <Canvas x:Name="ParticipantsCanvas" Visibility="Visible" HorizontalAlignment="Left" Height="720" Margin="1,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="405" Grid.RowSpan="2">
+            <Canvas x:Name="ParticipantsCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="720" Margin="1,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="405" Grid.RowSpan="2">
                 <TextBlock x:Name="ParticipantsString" HorizontalAlignment="Center" Padding="0,9,5,0" Text="Участники конференции" VerticalAlignment="Center" Height="50" Width="407" FontSize="22" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" RenderTransformOrigin="0.5,0.5" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="WordEllipsis" Canvas.Top="-10">
                     <TextBlock.RenderTransform>
                         <TransformGroup>
