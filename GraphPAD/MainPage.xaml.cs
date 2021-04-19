@@ -15,7 +15,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Resources;
-using System.Windows.Shapes;
 
 namespace GraphPAD
 {
@@ -28,19 +27,14 @@ namespace GraphPAD
         public bool isAddVetexOn;
         public bool isRemoveVertexOn;
         public bool isFreeModeOn;
-        public float paintsize;
         private bool _flag; //Флаг для логики микрофона (Проверка на то, был ли выключен микрофон до выключения звука)
         public int lobbyCount;
         public int lobbyButtonsMargin = -70;
         public int chatCount;
         public int chatTextblockMargin;
 
-        Brush _customBrush;
-        Random _rand = new Random();
         delegate void Function(object sender, MouseButtonEventArgs e);
         Function function;
-        private int _inc = 1;
-        private bool ispaint;
 
         public SolidColorBrush greenbrush = new SolidColorBrush(Color.FromRgb(19, 199, 19));
 
@@ -70,12 +64,10 @@ namespace GraphPAD
             isAddVetexOn = false;
             isRemoveVertexOn = false;
             isFreeModeOn = false;
-            ispaint = false;
-            paintsize = 20;
             FreeModeCanvas.Visibility = Visibility.Hidden;
             TextChatCanvas.Visibility = Visibility.Visible;
             conferenssionString.Text = "Конференция № ...";
-            if (GuestInfo.Name == "test")
+            if (GuestInfo.Name == "exist")
             {
                 nameString.Text = UserInfo.Name;
                 userRoleString.Text = "Пользователь";
@@ -570,24 +562,6 @@ namespace GraphPAD
         #endregion
 
         #region FreeMode
-        private void Paint(Brush brush, Point point)
-        {
-            Ellipse ellipse = new Ellipse();
-            ellipse.Fill = brush;
-            ellipse.Width = paintsize;
-            ellipse.Height = paintsize;
-            Canvas.SetLeft(ellipse, point.X - ellipse.Width / 2);
-            Canvas.SetTop(ellipse, point.Y - ellipse.Height / 2);
-            FreeModeCanvas.Children.Add(ellipse);
-        }
-        private void FreeModeMove(object sender, MouseEventArgs e)
-        {
-            if (ispaint)
-            {
-                Point point = e.GetPosition(FreeModeCanvas);
-                Paint(Brushes.Black, point);
-            }
-        }
         private void FreeMode_Click(object sender, RoutedEventArgs e)
         {
             if (!isFreeModeOn)
@@ -626,155 +600,12 @@ namespace GraphPAD
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGray ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGray;
         }
-        private void FreeModeCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            ispaint = false;
-        }
-        private void FreeModeCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            ispaint = true;
-            Point point = e.GetPosition(FreeModeCanvas);
-            Paint(Brushes.Black, point);
-        }
-        private void ClearFreeCanvas(object sender, RoutedEventArgs e)
-        {
-            int count = FreeModeCanvas.Children.Count;
-            if (count > 0)
-            {
-                FreeModeCanvas.Children.Clear();
-            }
-        }
         #endregion
-
-        #region Vertexes
-        public Canvas MakeVertex()
-        {
-            var temp = 40;
-            Grid myGrid = new Grid
-            {
-                Width = temp,
-                Height = temp,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            ColumnDefinition colDef1 = new ColumnDefinition();
-            RowDefinition rowDef1 = new RowDefinition();
-            myGrid.ColumnDefinitions.Add(colDef1);
-            myGrid.RowDefinitions.Add(rowDef1);
-            Ellipse ellipse1 = new Ellipse
-            {
-                Width = temp,
-                Height = temp,
-                StrokeThickness = 3,
-                Fill = _customBrush,
-                Stroke = Brushes.Black
-            };
-            TextBlock txt1 = new TextBlock
-            {
-                Text = _inc.ToString(),
-                FontSize = 20,
-                FontWeight = FontWeights.Bold,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            _inc++;
-            Grid.SetColumnSpan(ellipse1, 1);
-            Grid.SetColumnSpan(txt1, 1);
-            Grid.SetRow(ellipse1, 0);
-            Grid.SetRow(txt1, 0);
-            myGrid.Children.Add(ellipse1);
-            myGrid.Children.Add(txt1);
-            Viewbox newViewbox = new Viewbox
-            {
-                Height = temp,
-                Width = temp,
-                Child = myGrid
-            };
-            Canvas newCanvas = new Canvas
-            {
-                Height = temp,
-                Width = temp,
-            };
-            Canvas.SetLeft(newCanvas, temp / 2);
-            Canvas.SetTop(newCanvas, temp / 2);
-            newCanvas.Children.Add(newViewbox);
-            return newCanvas;
-        }
-        public void AddVertex(object sender, MouseButtonEventArgs e)
-        {
-            if (e.OriginalSource is Ellipse || e.OriginalSource is TextBlock)
-            {
-                try
-                {
-                    Ellipse activeRec = (Ellipse)e.OriginalSource; // create the link between the sender rectangle
-                    activeRec.Fill = Brushes.Red;
-
-                }
-                catch
-                {
-                }
-                try
-                {
-                    TextBlock activeRec = (TextBlock)e.OriginalSource; // create the link between the sender rectangle
-                    var temp = ((Ellipse)((Grid)activeRec.Parent).Children[0]);
-                    temp.Fill = Brushes.Red;
-                }
-                catch
-                {
-
-                }
-            }
-            else
-            {
-                _customBrush = new SolidColorBrush(Color.FromRgb((byte)_rand.Next(100, 255),
-                    (byte)_rand.Next(100, 255), (byte)_rand.Next(100, 255)));
-
-                var vertex = MakeVertex();
-                var temp = 20;
-                var tempX = -20;
-                var tempY = -20;
-                if (Mouse.GetPosition(GraphCanvas).X + temp >= GraphCanvas.Width) { tempX += -temp; }
-                if (Mouse.GetPosition(GraphCanvas).Y + temp >= GraphCanvas.Height) { tempY += -temp; }
-                if (Mouse.GetPosition(GraphCanvas).X - temp <= 0) { tempX += temp; }
-                if (Mouse.GetPosition(GraphCanvas).Y - temp <= 0) { tempY += temp; }
-                Canvas.SetLeft(vertex, Mouse.GetPosition(GraphCanvas).X + tempX); // set the left position of rectangle to mouse X
-                Canvas.SetTop(vertex, Mouse.GetPosition(GraphCanvas).Y + tempY); // set the top position of rectangle to mouse Y
-
-                GraphCanvas.Children.Add(vertex); // add the new rectangle to the canvas
-            }
-        }
-        public void DeleteVertex(object sender, MouseButtonEventArgs e)
-        {
-            if ((e.OriginalSource is TextBlock) || (e.OriginalSource is Ellipse))
-            {
-                try
-                {
-                    TextBlock activeRec = (TextBlock)e.OriginalSource;
-                    var temp = (Viewbox)(((Grid)activeRec.Parent).Parent);
-                    ((Canvas)temp.Parent).Children.Remove(temp);
-                }
-                catch
-                {
-
-                }
-                try
-                {
-                    Ellipse activeRec = (Ellipse)e.OriginalSource;
-                    var temp = (Viewbox)(((Grid)activeRec.Parent).Parent);
-                    ((Canvas)temp.Parent).Children.Remove(temp);
-                }
-                catch
-                {
-
-                }
-            }
-        }
-        //-------------------------------------------------------------------------------------------
         private void AddVertex_Click(object sender, RoutedEventArgs e)
         {
             if (!isAddVetexOn)
             {
-                function = AddVertex;
+                //function = AddVertex;
                 //addVertexBtn.IsEnabled = false;
                 deleteVertexBtn.IsEnabled = false;
                 freeModeBtn.IsEnabled = false;
@@ -800,7 +631,7 @@ namespace GraphPAD
         {
             if (!isRemoveVertexOn)
             {
-                function = DeleteVertex;
+                //function = DeleteVertex;
                 addVertexBtn.IsEnabled = false;
                 freeModeBtn.IsEnabled = false;
                 isRemoveVertexOn = true;
@@ -817,7 +648,7 @@ namespace GraphPAD
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkRed ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkRed;
         }
-        #endregion
+
 
         #region Closing
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
@@ -883,3 +714,7 @@ namespace GraphPAD
 
     }
 }
+// TODO
+// 1) Изменить кнопку "свободный режим"
+// 2) пососать хуяку
+// 3) :)

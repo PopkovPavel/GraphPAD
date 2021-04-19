@@ -172,7 +172,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="iMnLArhZvJU.jpg" />
+    <Resource Include="testavatar.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\connect.png" />
@@ -196,14 +196,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\graph_mode.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\avatar1.jpg" />
-    <Resource Include="Resources\avatar3.jpg" />
-    <Resource Include="Resources\avatar4.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\avatar2.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\connect_vertex.png" />

@@ -110,7 +110,7 @@ namespace GraphPAD
                     //UserInfo.ID = tempUser.ID;
                     UserInfo.Role = tempUser.Data.Role;
                     UserInfo.Token = tempUser.Token;
-                    GuestInfo.Name = "test";
+                    GuestInfo.Name = "exist";
                     UserInfo.Name = tempUser.Data.Name;
                     
                     MainPage mainPage = new MainPage();
