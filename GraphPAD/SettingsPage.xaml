@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GraphPAD"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="GraphPAD.SettingsPage"
         mc:Ignorable="d"
-        Title="GraphPAD (Настройки)" Height="400" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="GraphPAD (Настройки)" Height="400" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="Resources/icon.jpg">
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>

@@ -7,6 +7,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace GraphPAD
@@ -17,7 +20,7 @@ namespace GraphPAD
         {
             InitializeComponent();
             Closing += OnClosing; //Делегат для отлова закрытия окна
-            
+            this.KeyDown += new KeyEventHandler(AuthWindow_KeyDown);
             if (File.Exists("Token.json"))
             {
                 //string responseData = response.Content.ToString();
@@ -40,7 +43,7 @@ namespace GraphPAD
                     UserInfo.ID = tempUser.Data.userId;
                     UserInfo.Token = tempUser.Token;
                     UserInfo.Role = tempUser.Data.Role;
-                    MessageBox.Show("Здравствуйте, " + tempUser.Data.Email, "Успешный вход", MessageBoxButton.OK);
+                    MessageBox.Show("Здравствуйте, " + UserInfo.Name, "Успешный вход", MessageBoxButton.OK);
                     MainPage mainPage = new MainPage();
                     this.Visibility = Visibility.Hidden;
                     mainPage.Show();
@@ -107,12 +110,14 @@ namespace GraphPAD
                     //UserInfo.ID = tempUser.ID;
                     UserInfo.Role = tempUser.Data.Role;
                     UserInfo.Token = tempUser.Token;
-                    GuestInfo.Name = "test";
+                    GuestInfo.Name = "exist";
                     UserInfo.Name = tempUser.Data.Name;
-                    MessageBox.Show("Здравствуйте, " + textboxLogin.Text, "Успешный вход", MessageBoxButton.OK);
+                    
                     MainPage mainPage = new MainPage();
                     this.Visibility = Visibility.Hidden;
+                    MessageBox.Show("Здравствуйте, " + UserInfo.Name, "Успешный вход", MessageBoxButton.OK);
                     mainPage.Show();
+                    
                     if (checkboxRemember.IsChecked == true)
                     {
                         UserInfo JSONUser = new UserInfo();
@@ -131,8 +136,9 @@ namespace GraphPAD
                 }
                 catch
                 {
-                    passwordboxPassword.ToolTip = "Неверный пароль.";
+                    passwordboxPassword.ToolTip = "Неверный логин или пароль.";
                     passwordboxPassword.BorderBrush = Brushes.Red;
+                    passwordboxPassword.Password = "";
                     //MessageBox.Show("Введен неверный логин или пароль", "Ошибка", MessageBoxButton.OK);
                 }
             }
@@ -140,10 +146,9 @@ namespace GraphPAD
         private void OpenMainPageGuest(object sender, RoutedEventArgs e) //Открытие главного окна без входа в аккаунт ("Гостевой Профиль")
         {
             //NameEnterPage nameEnterPage = new NameEnterPage();
-            //nameEnterPage.ShowDialog(); //ShowDialog открывает окно поверх, блокируя основное
-            NameEnterPage nameEnterPage = new NameEnterPage();
-            this.Visibility = Visibility.Hidden;
-            nameEnterPage.Show();
+            //this.Visibility = Visibility.Hidden;
+            //nameEnterPage.Show();
+            MessageBox.Show("Гостевые аккаунты пока не поддерживаются.", "Сообщение");
         }
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs) //Подтверждения выхода из программы
         {
@@ -166,6 +171,17 @@ namespace GraphPAD
             else
             {
                 //pass
+            }
+        }
+        private void authButton_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+        private void AuthWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.authButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
             }
         }
     }

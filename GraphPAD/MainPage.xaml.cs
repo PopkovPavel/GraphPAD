@@ -10,11 +10,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Resources;
-using System.Windows.Shapes;
 
 namespace GraphPAD
 {
@@ -27,19 +27,14 @@ namespace GraphPAD
         public bool isAddVetexOn;
         public bool isRemoveVertexOn;
         public bool isFreeModeOn;
-        public float paintsize;
         private bool _flag; //Флаг для логики микрофона (Проверка на то, был ли выключен микрофон до выключения звука)
         public int lobbyCount;
         public int lobbyButtonsMargin = -70;
         public int chatCount;
         public int chatTextblockMargin;
 
-        Brush _customBrush;
-        Random _rand = new Random();
         delegate void Function(object sender, MouseButtonEventArgs e);
         Function function;
-        private int _inc = 1;
-        private bool ispaint;
 
         public SolidColorBrush greenbrush = new SolidColorBrush(Color.FromRgb(19, 199, 19));
 
@@ -50,9 +45,8 @@ namespace GraphPAD
         public MainPage()
         {
             InitializeComponent();
-
             close = new Method(Close);
-
+            this.KeyDown += new KeyEventHandler(MainWindow_KeyDown);
             Closing += OnClosing;  //Делегат для отлова закрытия окна
             isMicOn = true;
             isHeadPhonesOn = true;
@@ -65,19 +59,15 @@ namespace GraphPAD
             voiceChatTextBlock.Text = "Голосовой чат подключен";
             videoTextBlock.Text = "Видео отключено";
             videoTextBlock.Foreground = Brushes.DarkGray;
-            
+
             function = null;
             isAddVetexOn = false;
             isRemoveVertexOn = false;
             isFreeModeOn = false;
-            ispaint = false;
-            paintsize = 20;
             FreeModeCanvas.Visibility = Visibility.Hidden;
-
-            Camera3.Visibility = Visibility.Hidden;
-
+            TextChatCanvas.Visibility = Visibility.Visible;
             conferenssionString.Text = "Конференция № ...";
-            if (GuestInfo.Name == "test")
+            if (GuestInfo.Name == "exist")
             {
                 nameString.Text = UserInfo.Name;
                 userRoleString.Text = "Пользователь";
@@ -116,7 +106,6 @@ namespace GraphPAD
                 VideoChatCanvas.Children.Clear();
             };
             RefreshRooms();
-
         }
 
         #region ServerFunctions
@@ -125,7 +114,7 @@ namespace GraphPAD
             try
             {
                 lobbyCount = 0;
-                lobbyButtonsMargin = -40;
+                lobbyButtonsMargin = -70;
                 var client = new RestClient("https://testingwebrtc.herokuapp.com/room/myrooms");
                 client.Timeout = -1;
                 var request = new RestRequest(RestSharp.Method.GET);
@@ -137,7 +126,6 @@ namespace GraphPAD
                     JSONrooms rooms = JsonConvert.DeserializeObject<JSONrooms>(response.Content.ToString());
                     foreach (JSONroomData room in rooms.Data)
                     {
-
                         lobbyCount += 1;
                         lobbyButtonsMargin += 70;
                         if (lobbyCount > 8)
@@ -166,7 +154,7 @@ namespace GraphPAD
                         {
                             //Копирование текста в буфер обмена
                             Clipboard.SetData(DataFormats.Text, (Object)room.RoomID);
-                            MessageBox.Show("ID скопирован");
+                            MessageBox.Show("ID скопирован", "Сообщение");
                         };
 
                         //Второй элемент контекстного меню
@@ -182,7 +170,7 @@ namespace GraphPAD
                             Padding = new Thickness(10, 0, 0, 0),
                             Height = 40,
                             Width = 190,
-                            ToolTip = "Покинуть коференцию"
+                            ToolTip = "Покинуть конференцию"
                         };
                         menuLeaveItem.Header = "Покинуть конференцию";
 
@@ -225,15 +213,12 @@ namespace GraphPAD
                 }
                 else
                 {
-                    MessageBox.Show("возможно вы даун", "Ошибка");
+                    MessageBox.Show("Что-то пошло не так.", "Ошибка");
                 }
-
-                //создание конференции с уникальным ID
-
             }
             catch
             {
-                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru");
+                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
 
             }
         }
@@ -248,22 +233,34 @@ namespace GraphPAD
                 IRestResponse response = client.Execute(request);
                 if (response.IsSuccessful)
                 {
-                    MessageBox.Show($"Вы покинули конференцию {roomId}");
+                    MessageBox.Show($"Вы покинули конференцию {roomId}", "Сообщение");
                     RefreshRooms();
                 }
                 else
                 {
-                    MessageBox.Show("Скорее всего эта ваша конференция\n(если нет, то со всеми бывает)", "да.");
+                    MessageBox.Show("Вы не можете удалить собственную комнату\nСкоро сможете", "Ошибка");
                 }
-
-                //создание конференции с уникальным ID
-
             }
             catch
             {
-                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru");
+                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
 
             }
+        }
+        public Tuple<JSONroomuser[], string> GetUsers(string roomId)
+        {
+            var client = new RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}");
+            client.Timeout = -1;
+            var request = new RestRequest(RestSharp.Method.GET);
+            request.AddHeader("x-access-token", UserInfo.Token);
+            IRestResponse response = client.Execute(request);
+            if (response.IsSuccessful)
+            {
+                JSONroom room = JsonConvert.DeserializeObject<JSONroom>(response.Content.ToString());
+                Console.WriteLine(room.Data.Users.ToString());
+                return Tuple.Create(room.Data.Users, room.Data.RoomOwner);
+            }
+            return null;
         }
         public async System.Threading.Tasks.Task OpenRoomAsync(string roomId)
         {
@@ -278,23 +275,42 @@ namespace GraphPAD
             ControlCanvas.Visibility = Visibility.Visible;
             leaveButton.Visibility = Visibility.Visible;
             LobbysCanvas.Visibility = Visibility.Hidden;
+
+            TextChatCanvas.Visibility = Visibility.Visible;
+            VideoChatCanvas.Visibility = Visibility.Hidden;
+            ParticipantsCanvas.Visibility = Visibility.Hidden;
+            ChatBox.Visibility = Visibility.Visible;
+            ParticipantsBox.Visibility = Visibility.Hidden;
+            ParticipantsString.Visibility = Visibility.Hidden;
+            ParticipantsScrollView.Visibility = Visibility.Hidden;
+
             conferenssionString.Text = $"Конференция №{roomId.Substring(0, 8)}";
             ConferensionString.Text = $"Чат конференции №{roomId.Substring(0, 8)}";
-            ///
-            try
+            //Participants
+            int num = 1;
+            var temp = GetUsers(roomId);
+            ParticipantsBox.AppendText($"Owner: {temp.Item2}\n\n");
+            if (temp.Item1 != null)
             {
-                await SocketConnector.InitializeClientAsync();
-                SocketConnector.SetSettings(roomId, UserInfo.Name);
-                SocketConnector.client.On("chat-message", async response =>
+                foreach (JSONroomuser participant in temp.Item1)
                 {
-                    var text = JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
-                    await Dispatcher.BeginInvoke((Action)(() => ChatBox.AppendText($"{text[0].UserId}: {text[0].Message}\n\n")));
-                    Console.WriteLine($"{text[0].UserId}: {text[0].Message}");
-                });
-                chatTextBox.IsReadOnly = (SocketConnector.IsConnected) ? false : true;
-            }
-            catch { }
-        
+                    ParticipantsBox.AppendText($"#{num++}: {participant.Name}\n");
+                    //Console.WriteLine(participant.ToString());
+                }
+                try
+                {
+                    await SocketConnector.InitializeClientAsync();
+                    SocketConnector.SetSettings(roomId, UserInfo.Name);
+                    SocketConnector.client.On("chat-message", async response =>
+                    {
+                        var text = JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
+                        await Dispatcher.BeginInvoke((Action)(() => ChatBox.AppendText($"{text[0].UserId}: {text[0].Message}\n\n")));
+                        Console.WriteLine($"{text[0].UserId}: {text[0].Message}");
+                    });
+                    chatTextBox.IsReadOnly = (SocketConnector.IsConnected) ? false : true;
+                }
+                catch { }
+            }        
         }
         private void CreateLobby_Click(object sender, RoutedEventArgs e)
         {
@@ -315,21 +331,17 @@ namespace GraphPAD
                     {                        
                         JSONroom room = JsonConvert.DeserializeObject<JSONroom>(response.Content.ToString());
                         var newRoomID = room.Data.RoomID;
-                        MessageBox.Show($"Вы успешно создали конференцию с ID:\n {newRoomID}");
+                        MessageBox.Show($"Вы успешно создали конференцию с ID:\n {newRoomID}", "Сообщение");
                         RefreshRooms();
                     }
                     else
                     {
-                        MessageBox.Show("возможно вы даун", "Ошибка");
+                        MessageBox.Show("Что-то пошло не так.", "Ошибка");
                     }
-
-                    //создание конференции с уникальным ID
-
                 }
                 catch
                 {
-                    MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru");
-
+                    MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
                 }
             }
         }
@@ -352,26 +364,20 @@ namespace GraphPAD
                     IRestResponse response = client.Execute(request);
                     if (response.IsSuccessful)
                     {
-                        MessageBox.Show("Вы успешно вошли в конференцию с ID:\n" + _conferensionID);
+                        MessageBox.Show("Вы успешно добавили конференцию с ID:\n" + _conferensionID +"\nЧтобы подкючиться к конференции выберите её в списке слева.", "Сообщение");
                         ConferensionIDTextBox.ToolTip = _conferensionID.ToString();
                         ConferensionIDTextBox.BorderBrush = Brushes.Gray;
-                        GraphCanvas.Visibility = Visibility.Visible;
-                        ControlCanvas.Visibility = Visibility.Visible;
-                        conferenssionString.Text = "Конференция №" + _conferensionID;
-                        leaveButton.Visibility = Visibility.Visible;
-                        LobbysCanvas.Visibility = Visibility.Hidden;
+                        ConferensionIDTextBox.Text = "";
                         RefreshRooms();
                     } 
                     else 
                     {
-                        MessageBox.Show("Возможно такой конференции не существует, либо вы уже состоите в ней","Ошибка");
-                    }
-
-                    
+                        MessageBox.Show("Возможно такой конференции не существует, либо она уже была добавлена","Ошибка");
+                    }                   
                 }
                 catch
                 {
-                    MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru");
+                    MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
                     
                 }
                 
@@ -404,6 +410,7 @@ namespace GraphPAD
             CancelLobbyButton.Visibility = Visibility.Hidden;
             ConnectToLobbyButton.Visibility = Visibility.Hidden;
             LobbysCanvas.Visibility = Visibility.Visible;
+            ParticipantsBox.Text = "";
         }
         private void Ez_Click(object sender, RoutedEventArgs e)
         {           
@@ -429,21 +436,31 @@ namespace GraphPAD
         {
             TextChatCanvas.Visibility = Visibility.Visible;
             VideoChatCanvas.Visibility = Visibility.Hidden;
-            chatTextBox.Visibility = Visibility.Visible;
-            sendButton.Visibility = Visibility.Visible;
-            CharCountTextBlock.Visibility = Visibility.Visible;
-            ChatsScrollView.Visibility = Visibility.Visible;
-
+            ParticipantsCanvas.Visibility = Visibility.Hidden;
+            ChatBox.Visibility = Visibility.Visible;
+            ParticipantsBox.Visibility = Visibility.Hidden;
+            ParticipantsString.Visibility = Visibility.Hidden;
+            ParticipantsScrollView.Visibility = Visibility.Hidden;
         }
         private void VideoChatButton_Clicked(object sender, RoutedEventArgs e)
         {
             TextChatCanvas.Visibility = Visibility.Hidden;
             VideoChatCanvas.Visibility = Visibility.Visible;
-            ChatsScrollView.Visibility = Visibility.Hidden;
-            chatTextBox.Visibility = Visibility.Hidden;
-            sendButton.Visibility = Visibility.Hidden;
-            CharCountTextBlock.Visibility = Visibility.Hidden;
-
+            ParticipantsCanvas.Visibility = Visibility.Hidden;
+            ChatBox.Visibility = Visibility.Hidden;
+            ParticipantsBox.Visibility = Visibility.Hidden;
+            ParticipantsString.Visibility = Visibility.Hidden;
+            ParticipantsScrollView.Visibility = Visibility.Hidden;
+        }
+        private void ParticipantsButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            TextChatCanvas.Visibility = Visibility.Hidden;
+            VideoChatCanvas.Visibility = Visibility.Hidden;
+            ParticipantsCanvas.Visibility = Visibility.Visible;
+            ChatBox.Visibility = Visibility.Hidden;
+            ParticipantsBox.Visibility = Visibility.Visible;
+            ParticipantsString.Visibility = Visibility.Visible;
+            ParticipantsScrollView.Visibility = Visibility.Visible;
         }
         private void MicButton_Clicked(object sender, RoutedEventArgs e)
         {
@@ -522,15 +539,15 @@ namespace GraphPAD
             
             if (isVideoOn)
             {
+                //Веб-камера выключена
                 videoTextBlock.Text = "Видео отключено";
                 videoTextBlock.Foreground = Brushes.DarkGray;
                 videoButton.ToolTip = "Вкл. камеру";
                 isVideoOn = false;
-                Camera3.Visibility = Visibility.Hidden;
             }
             else
             {
-                Camera3.Visibility = Visibility.Visible;
+                //Веб-камера включена
                 videoTextBlock.Text = "Видео подключено";
                 videoTextBlock.Foreground = greenbrush;
                 videoButton.ToolTip = "Выкл. камеру";
@@ -545,24 +562,6 @@ namespace GraphPAD
         #endregion
 
         #region FreeMode
-        private void Paint(Brush brush, Point point)
-        {
-            Ellipse ellipse = new Ellipse();
-            ellipse.Fill = brush;
-            ellipse.Width = paintsize;
-            ellipse.Height = paintsize;
-            Canvas.SetLeft(ellipse, point.X - ellipse.Width / 2);
-            Canvas.SetTop(ellipse, point.Y - ellipse.Height / 2);
-            FreeModeCanvas.Children.Add(ellipse);
-        }
-        private void FreeModeMove(object sender, MouseEventArgs e)
-        {
-            if (ispaint)
-            {
-                Point point = e.GetPosition(FreeModeCanvas);
-                Paint(Brushes.Black, point);
-            }
-        }
         private void FreeMode_Click(object sender, RoutedEventArgs e)
         {
             if (!isFreeModeOn)
@@ -601,155 +600,12 @@ namespace GraphPAD
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGray ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGray;
         }
-        private void FreeModeCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            ispaint = false;
-        }
-        private void FreeModeCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            ispaint = true;
-            Point point = e.GetPosition(FreeModeCanvas);
-            Paint(Brushes.Black, point);
-        }
-        private void ClearFreeCanvas(object sender, RoutedEventArgs e)
-        {
-            int count = FreeModeCanvas.Children.Count;
-            if (count > 0)
-            {
-                FreeModeCanvas.Children.Clear();
-            }
-        }
         #endregion
-
-        #region Vertexes
-        public Canvas MakeVertex()
-        {
-            var temp = 40;
-            Grid myGrid = new Grid
-            {
-                Width = temp,
-                Height = temp,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            ColumnDefinition colDef1 = new ColumnDefinition();
-            RowDefinition rowDef1 = new RowDefinition();
-            myGrid.ColumnDefinitions.Add(colDef1);
-            myGrid.RowDefinitions.Add(rowDef1);
-            Ellipse ellipse1 = new Ellipse
-            {
-                Width = temp,
-                Height = temp,
-                StrokeThickness = 3,
-                Fill = _customBrush,
-                Stroke = Brushes.Black
-            };
-            TextBlock txt1 = new TextBlock
-            {
-                Text = _inc.ToString(),
-                FontSize = 20,
-                FontWeight = FontWeights.Bold,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            _inc++;
-            Grid.SetColumnSpan(ellipse1, 1);
-            Grid.SetColumnSpan(txt1, 1);
-            Grid.SetRow(ellipse1, 0);
-            Grid.SetRow(txt1, 0);
-            myGrid.Children.Add(ellipse1);
-            myGrid.Children.Add(txt1);
-            Viewbox newViewbox = new Viewbox
-            {
-                Height = temp,
-                Width = temp,
-                Child = myGrid
-            };
-            Canvas newCanvas = new Canvas
-            {
-                Height = temp,
-                Width = temp,
-            };
-            Canvas.SetLeft(newCanvas, temp / 2);
-            Canvas.SetTop(newCanvas, temp / 2);
-            newCanvas.Children.Add(newViewbox);
-            return newCanvas;
-        }
-        public void AddVertex(object sender, MouseButtonEventArgs e)
-        {
-            if (e.OriginalSource is Ellipse || e.OriginalSource is TextBlock)
-            {
-                try
-                {
-                    Ellipse activeRec = (Ellipse)e.OriginalSource; // create the link between the sender rectangle
-                    activeRec.Fill = Brushes.Red;
-
-                }
-                catch
-                {
-                }
-                try
-                {
-                    TextBlock activeRec = (TextBlock)e.OriginalSource; // create the link between the sender rectangle
-                    var temp = ((Ellipse)((Grid)activeRec.Parent).Children[0]);
-                    temp.Fill = Brushes.Red;
-                }
-                catch
-                {
-
-                }
-            }
-            else
-            {
-                _customBrush = new SolidColorBrush(Color.FromRgb((byte)_rand.Next(100, 255),
-                    (byte)_rand.Next(100, 255), (byte)_rand.Next(100, 255)));
-
-                var vertex = MakeVertex();
-                var temp = 20;
-                var tempX = -20;
-                var tempY = -20;
-                if (Mouse.GetPosition(GraphCanvas).X + temp >= GraphCanvas.Width) { tempX += -temp; }
-                if (Mouse.GetPosition(GraphCanvas).Y + temp >= GraphCanvas.Height) { tempY += -temp; }
-                if (Mouse.GetPosition(GraphCanvas).X - temp <= 0) { tempX += temp; }
-                if (Mouse.GetPosition(GraphCanvas).Y - temp <= 0) { tempY += temp; }
-                Canvas.SetLeft(vertex, Mouse.GetPosition(GraphCanvas).X + tempX); // set the left position of rectangle to mouse X
-                Canvas.SetTop(vertex, Mouse.GetPosition(GraphCanvas).Y + tempY); // set the top position of rectangle to mouse Y
-
-                GraphCanvas.Children.Add(vertex); // add the new rectangle to the canvas
-            }
-        }
-        public void DeleteVertex(object sender, MouseButtonEventArgs e)
-        {
-            if ((e.OriginalSource is TextBlock) || (e.OriginalSource is Ellipse))
-            {
-                try
-                {
-                    TextBlock activeRec = (TextBlock)e.OriginalSource;
-                    var temp = (Viewbox)(((Grid)activeRec.Parent).Parent);
-                    ((Canvas)temp.Parent).Children.Remove(temp);
-                }
-                catch
-                {
-
-                }
-                try
-                {
-                    Ellipse activeRec = (Ellipse)e.OriginalSource;
-                    var temp = (Viewbox)(((Grid)activeRec.Parent).Parent);
-                    ((Canvas)temp.Parent).Children.Remove(temp);
-                }
-                catch
-                {
-
-                }
-            }
-        }
-        //-------------------------------------------------------------------------------------------
         private void AddVertex_Click(object sender, RoutedEventArgs e)
         {
             if (!isAddVetexOn)
             {
-                function = AddVertex;
+                //function = AddVertex;
                 //addVertexBtn.IsEnabled = false;
                 deleteVertexBtn.IsEnabled = false;
                 freeModeBtn.IsEnabled = false;
@@ -775,7 +631,7 @@ namespace GraphPAD
         {
             if (!isRemoveVertexOn)
             {
-                function = DeleteVertex;
+                //function = DeleteVertex;
                 addVertexBtn.IsEnabled = false;
                 freeModeBtn.IsEnabled = false;
                 isRemoveVertexOn = true;
@@ -792,7 +648,7 @@ namespace GraphPAD
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkRed ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkRed;
         }
-        #endregion
+
 
         #region Closing
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
@@ -837,13 +693,28 @@ namespace GraphPAD
 
         private void SendButton_Clicked(object sender, RoutedEventArgs e)
         {
-            chatCount += 1;
-            ChatsScrollView.ScrollToBottom();
-            ChatBox.AppendText($"Вы: {chatTextBox.Text}\n\n");
-            SocketConnector.SendMessage(chatTextBox.Text);
-            chatTextBox.Text = "";
-
+            if (chatTextBox.Text != "")
+            {
+                chatCount += 1;
+                ChatsScrollView.ScrollToBottom();
+                ChatBox.AppendText($"Вы: {chatTextBox.Text}\n\n");
+                SocketConnector.SendMessage(chatTextBox.Text);
+                chatTextBox.Text = "";
+            }
             //ChatTextBlock.Text = chatTextBox.Text;
         }
+
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.sendButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+            }
+        }
+
     }
 }
+// TODO
+// 1) Изменить кнопку "свободный режим"
+// 2) пососать хуяку
+// 3) :)

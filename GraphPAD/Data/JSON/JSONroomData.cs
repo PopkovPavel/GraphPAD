@@ -1,16 +1,11 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GraphPAD.Data.JSON
 {
     public class JSONroomData
     {
         [JsonProperty("userIds")]
-        public string[] Users { get; set; }
+        public JSONroomuser[] Users { get; set; }
 
         [JsonProperty("_id")]
         public string RoomID { get; set; }
