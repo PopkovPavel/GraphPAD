@@ -8,6 +8,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -133,7 +134,22 @@ namespace GraphPAD
                             LobbysCanvas.Height = LobbysCanvas.Height + 70;
                         }
                         ConferensionsCountTextBlock.Text = "Конференций: " + (lobbyCount);
-
+                     
+                        var menuChangeNameItem = new MenuItem()
+                        {
+                            Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF181840"),
+                            Foreground = Brushes.White,
+                            FontFamily = new FontFamily("Segoe UI"),
+                            FontSize = 14,
+                            FontStyle = FontStyles.Normal,
+                            FontWeight = FontWeights.Bold,
+                            Cursor = Cursors.Hand,
+                            Padding = new Thickness(10, 0, 0, 0),
+                            Height = 40,
+                            Width = 190,
+                            Header = "Изменить название",
+                            ToolTip = "Изменить название конференции"
+                        };
                         var menuCopyItem = new MenuItem()
                         {
                             Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF181840"),
@@ -149,7 +165,13 @@ namespace GraphPAD
                             Header = "Скопировать ID",
                             ToolTip = "Скопировать ID конференции в буфер"
                         };
-
+                        menuChangeNameItem.Click += (sender1, e1) =>
+                        {
+                            ChangeRoomeName(room.RoomID);
+                            
+                            //Копирование текста в буфер обмена                           
+                            MessageBox.Show("ПРОГРАММИСТЫ ЗАБЫЛИ УБРАТЬ ОТЛАДКУ@ПАЦИЕНТ ВХОДИТ К ТЕРАПЕВТУ@ТЕРАПЕВТ ВЫХОДИТ В ЗАЛ И ГРОМКО КРИЧИТ \"ВОШЕЛ ИВАН ИВАНОВИЧ ПЕТРОВ У НЕГО ГЕМОРРОЙ ТРЕТЬЕЙ СТЕПЕНИ И Z=34567\"", "Сообщение");
+                        };
                         menuCopyItem.Click += (sender1, e1) =>
                         {
                             //Копирование текста в буфер обмена
@@ -178,16 +200,38 @@ namespace GraphPAD
                         {
                             Background = Brushes.Transparent
                         };
-                        contextMenu.Items.Add(menuLeaveItem);
+                        
                         contextMenu.Items.Add(menuCopyItem);
+                        contextMenu.Items.Add(menuChangeNameItem);
+                        contextMenu.Items.Add(menuLeaveItem);
 
+                        string toolTip;
+                        if (File.Exists("Rooms.json"))
+                        {
+                            var jsonString = File.ReadAllText("Rooms.json");
+                            JSONroomsnames tempRooms = JsonConvert.DeserializeObject<JSONroomsnames>(jsonString);
+
+                            var result = Array.Find<JSONroomname>(tempRooms.jSONroomnames, element => (element as JSONroomname).RoomID == room.RoomID);
+                            if (result == null)
+                            {
+                                toolTip = room.RoomID.Substring(0, 8);
+                            }
+                            else
+                            {
+
+                                toolTip = result.RoomName;
+                            }
+                        } else
+                        {
+                            toolTip = room.RoomID.ToString();
+                        }
                         var tempButton = new Button()
                         {
                             Width = 64,
                             Height = 64,
                             Margin = new Thickness(15, lobbyButtonsMargin, 0, 0),
                             BorderBrush = null,
-                            ToolTip = "Конференция №" + room.RoomID.Substring(0,8),
+                            ToolTip = "Конференция №" + toolTip,
                             ContextMenu = contextMenu
                         };
 
@@ -393,6 +437,63 @@ namespace GraphPAD
         #endregion
 
         #region CringeButtons
+        public void ChangeRoomeName(string roomId) 
+        {
+            if (File.Exists("Rooms.json"))
+            {
+                var jsonString = File.ReadAllText("Rooms.json");
+                JSONroomsnames tempRooms = JsonConvert.DeserializeObject<JSONroomsnames>(jsonString);
+                bool flag = false;
+                foreach(JSONroomname room in tempRooms.jSONroomnames)
+                {
+                    if(room.RoomID == roomId)
+                    {
+                        room.RoomName = "test5";
+                        flag = true;
+                        break;
+                    }
+                }
+                JSONroomsnames result;
+                if (flag == false)
+                {
+                    var temp = new JSONroomname[] {new JSONroomname
+                    {
+                        RoomID = roomId,
+                        RoomName = "jeupa2"
+                    } };
+                    var result2 = new JSONroomname[tempRooms.jSONroomnames.Length + 1];
+                    tempRooms.jSONroomnames.CopyTo(result2, 0);
+                    temp.CopyTo(result2, tempRooms.jSONroomnames.Length);
+                    // tempRooms.jSONroomnames = (JSONroomname[])tempRooms.jSONroomnames.Concat(temp);
+                    tempRooms.jSONroomnames = result2;
+
+                } 
+                    result = tempRooms;
+                File.WriteAllText(@"Rooms.json", JsonConvert.SerializeObject(result));
+                using (StreamWriter file = File.CreateText(@"Rooms.json"))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    serializer.Serialize(file, tempRooms);
+                }
+            } else
+            {
+                var temp = new JSONroomname[] {new JSONroomname
+                    {
+                        RoomID = roomId,
+                        RoomName = "jeupa"
+                    } };
+                var result = new JSONroomsnames { jSONroomnames = temp };
+
+                File.WriteAllText(@"Rooms.json", JsonConvert.SerializeObject(result));
+                using (StreamWriter file = File.CreateText(@"Rooms.json"))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    serializer.Serialize(file, result);
+                }
+                //remind me "ты тупоголовый говнокодер" Sadge
+            }
+            RefreshRooms();
+        }
         private async System.Threading.Tasks.Task LobbyLeave_ClickAsync(object sender, RoutedEventArgs e)
         {          
             await SocketConnector.Disconnect();
@@ -714,7 +815,3 @@ namespace GraphPAD
 
     }
 }
-// TODO
-// 1) Изменить кнопку "свободный режим"
-// 2) пососать хуяку
-// 3) :)

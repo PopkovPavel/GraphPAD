@@ -94,7 +94,9 @@
     <Compile Include="Data\JSON\JSONmessage.cs" />
     <Compile Include="Data\JSON\JSONroom.cs" />
     <Compile Include="Data\JSON\JSONroomData.cs" />
+    <Compile Include="Data\JSON\JSONroomname.cs" />
     <Compile Include="Data\JSON\JSONrooms.cs" />
+    <Compile Include="Data\JSON\JSONroomsnames.cs" />
     <Compile Include="Data\JSON\JSONroomuser.cs" />
     <Compile Include="Data\JSON\JSONuserInfo.cs" />
     <Compile Include="Data\User\GuestInfo.cs" />
