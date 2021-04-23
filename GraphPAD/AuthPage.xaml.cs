@@ -75,7 +75,7 @@ namespace GraphPAD
             } 
             else //Логин верен
             {
-                textboxLogin.ToolTip = _Email;
+                textboxLogin.ToolTip = null;
                 textboxLogin.BorderBrush = Brushes.Gray;
                 loginCorrect = true;
             }
@@ -86,7 +86,7 @@ namespace GraphPAD
             }
             else //Пароль верен
             {
-                passwordboxPassword.ToolTip = "";
+                passwordboxPassword.ToolTip = null;
                 passwordboxPassword.BorderBrush = Brushes.Gray;
                 passCorrect = true;
             }

@@ -6,7 +6,14 @@
         xmlns:local="clr-namespace:GraphPAD"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="GraphPAD.SettingsPage"
         mc:Ignorable="d"
-        Title="GraphPAD (Настройки)" Height="400" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="Resources/icon.jpg">
+        Title="GraphPAD (Настройки)" Height="430" Width="700" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="Resources/icon.jpg">
+    <Window.Resources>
+        <Style TargetType="ToolTip">
+            <Setter Property="Background" Value="#22223d"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
+
+        </Style>
+    </Window.Resources>
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>
@@ -17,22 +24,73 @@
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="60"/>
                 <RowDefinition Height="20"/>
-                <RowDefinition Height="90"/>
-
+                <RowDefinition Height="120"/>
+                <RowDefinition Height="120"/>
+                <RowDefinition Height="60"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <!--Left menu buttons-->
             <TextBlock HorizontalAlignment="Left" TextAlignment="Center" TextWrapping="Wrap" Text="Настройки пользователя" VerticalAlignment="Top" Height="20" Width="120" Foreground="White" FontSize="10" Padding="3,3,2,0"/>
-            <Button Content="Мой аккаунт" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30"/>
-            <Button Content="Голос" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30"/>
             <TextBlock HorizontalAlignment="Left" TextAlignment="Center" TextWrapping="Wrap" Text="Настройки приложения" VerticalAlignment="Top" Height="20" Width="120" Foreground="White" FontSize="10" Padding="3,3,2,0" Grid.Row="2"/>
-            <Button Content="Видео" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" Margin="0,30,0,0"/>
-            <Button Content="Интерфейс" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" Margin="0,60,0,0"/>
-            <Button Click="DisconnectButton_Click" Content="Выйти из аккаунта" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="120" BorderBrush="#FF510202" Background="#FF510202" Height="30" Margin="0,140,0,0" FontSize="12" FontWeight="Bold" Padding="0"/>
+            <Button x:Name="AccountButton" Click="AccountButton_Click" Content="Мой аккаунт" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30"/>
+            <Button x:Name="VoiceButton" Click="VoiceButton_Click" Content="Голос" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30"/>
+            <Button x:Name="VideoButton" Click="VideoButton_Click" Content="Видео" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" Margin="0,30,0,0"/>
+            <Button x:Name="InterfaceButton" Click="InterfaceButton_Click" Content="Интерфейс" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" Margin="0,60,0,0"/>
 
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ссылки:" VerticalAlignment="Bottom" Height="60" Width="120" Foreground="White" Padding="3,0,0,0" Grid.Row="5" FontSize="10"/>
+            <Button x:Name="vkButton" Click="vkButton_Clicked" ToolTip="Наш ВК" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="76" Canvas.Top="107" IsTabStop="False" Margin="6,14,0,14">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/vk.png" Stretch="UniformToFill"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="ytButton" Click="ytButton_Clicked" ToolTip="Наш YouTube канал" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="76" Canvas.Top="107" IsTabStop="False" Margin="43,14,0,14">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/youtube.png" Stretch="UniformToFill"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="webButton" Click="webButton_Clicked" ToolTip="Браузерная версия" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="76" Canvas.Top="107" IsTabStop="False" Margin="80,14,0,14">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/web.png" Stretch="UniformToFill"/>
+                </Button.Background>
+            </Button>
         </Grid>
 
         <Grid Grid.Column="1" Background="#22223d">
-            <Canvas HorizontalAlignment="Left" Height="371" VerticalAlignment="Top" Width="474"/>
+            <!--Account Canvas-->
+            <Canvas x:Name="AccountCanvas" Visibility="Visible" HorizontalAlignment="Left" Height="421" VerticalAlignment="Top" Width="574">
+                <TextBlock Text="Мой аккаунт" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" FontWeight="Bold" Height="30" Padding="5,1,0,0" FontSize="20" TextDecorations="{x:Null}" Canvas.Left="40" Canvas.Top="15"/>
+                <Button Click="DisconnectButton_Click" Content="Выйти из Аккаунта" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="120" BorderBrush="#FF510202" Background="#FF510202" Height="30" FontSize="12" FontWeight="SemiBold" Padding="0" Canvas.Left="420" Canvas.Top="340"/>
+                <Button Click="DisconnectButton_Click" Content="Изменить Пароль" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="120" BorderBrush="#FF3D246A" Background="#FF3D246A" Height="30" FontSize="12" FontWeight="SemiBold" Padding="0" Canvas.Left="40" Canvas.Top="340"/>
+                <Border CornerRadius="10" BorderThickness="1" HorizontalAlignment="Left" Height="240" VerticalAlignment="Top" Width="500" Canvas.Left="40" Canvas.Top="60" BorderBrush="#FF141424">
+                    <Border.Background>
+                        <SolidColorBrush Color="#FF141424"/>
+                    </Border.Background>
+                    <Image x:Name="Avatar" HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="60" Source="Resources\Avatar2.png" Stretch="Fill" RenderTransformOrigin="0.984,0.562" Margin="19,19,0,0"/>
+                </Border>
+                <Border CornerRadius="10" BorderThickness="1" HorizontalAlignment="Left" Height="120" VerticalAlignment="Top" Width="460" Canvas.Left="60" Canvas.Top="160" Background="#FF22223D" BorderBrush="#FF22223D"/>
+                <TextBlock HorizontalAlignment="Left" Margin="70,170,0,0" TextWrapping="Wrap" Text="Имя пользователя" VerticalAlignment="Top" Foreground="#FF8B8B8B" Width="110" Height="12" FontSize="8" FontWeight="Medium"/>
+                <TextBlock HorizontalAlignment="Left" Margin="70,182,0,0" TextWrapping="Wrap" Text="Шабинский Д.А." VerticalAlignment="Top" Foreground="White" Width="250" Height="16" FontWeight="Medium" Padding="0,0,0,0"/>
+                <TextBlock HorizontalAlignment="Left" Margin="70,205,0,0" TextWrapping="Wrap" Text="ID" VerticalAlignment="Top" Foreground="#FF8B8B8B" Width="110" Height="12" FontSize="8" FontWeight="Medium"/>
+                <TextBlock HorizontalAlignment="Left" Margin="70,217,0,0" TextWrapping="Wrap" Text="123456-123456-123456-123456" VerticalAlignment="Top" Foreground="White" Width="250" Height="16" FontWeight="Medium" Padding="0,0,0,0"/>
+                <TextBlock HorizontalAlignment="Left" Margin="70,240,0,0" TextWrapping="Wrap" Text="Email" VerticalAlignment="Top" Foreground="#FF8B8B8B" Width="110" Height="12" FontSize="8" FontWeight="Medium"/>
+                <TextBlock HorizontalAlignment="Left" Margin="70,252,0,0" TextWrapping="Wrap" Text="gabajoba@mail.ru" VerticalAlignment="Top" Foreground="White" Width="250" Height="16" FontWeight="Medium" Padding="0,0,0,0"/>
+                <TextBlock Canvas.Left="140" Text="Шабинский Д.А." Canvas.Top="90" Foreground="White" FontWeight="Bold" FontSize="20" Width="250"/>
+                <TextBlock Canvas.Left="140" Text="Пользователь" Canvas.Top="117" Foreground="White" FontSize="14" Width="250"/>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Пароль и аутентификация" VerticalAlignment="Top" Foreground="White" Width="240" Height="20" FontWeight="Medium" Canvas.Left="40" Canvas.Top="320"/>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Foreground="White" Width="220" Height="20" FontWeight="Medium" Canvas.Left="320" Canvas.Top="320" TextAlignment="Right"/>
+            </Canvas>
+            <!--Voice Canvas-->
+            <Canvas x:Name="VoiceCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="371" VerticalAlignment="Top" Width="474">
+                <TextBlock Text="Voice Canvas" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="474" FontWeight="Medium" TextAlignment="Center" Background="#FF141424" Height="20" Padding="0,1,0,0"/>
+            </Canvas>
+            <!--Video Canvas-->
+            <Canvas x:Name="VideoCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="371" VerticalAlignment="Top" Width="474">
+                <TextBlock Text="Video Canvas" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="474" FontWeight="Medium" TextAlignment="Center" Background="#FF141424" Height="20" Padding="0,1,0,0"/>
+            </Canvas>
+            <!--Interface Canvas-->
+            <Canvas x:Name="InterfaceCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="371" VerticalAlignment="Top" Width="474">
+                <TextBlock Text="Interface Canvas" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="474" FontWeight="Medium" TextAlignment="Center" Background="#FF141424" Height="20" Padding="0,1,0,0"/>
+            </Canvas>
         </Grid>
     </Grid>
 </Window>

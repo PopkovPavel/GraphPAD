@@ -6,12 +6,15 @@ namespace GraphPAD.Data.JSON
     {
         [JsonProperty("userIds")]
         public JSONroomuser[] Users { get; set; }
-
+        
+        [JsonProperty("roomOwner")]
+        public JSONroomuser RoomOwner { get; set; }
+        
         [JsonProperty("_id")]
         public string RoomID { get; set; }
 
-        [JsonProperty("roomOwner")]
-        public string RoomOwner { get; set; }
+        [JsonProperty("roomName")]
+        public string RoomName { get; set; }
 
         [JsonProperty("isPrivate")]
         public bool IsPrivate { get; set; }

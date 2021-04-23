@@ -172,7 +172,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="testavatar.jpg" />
+    <Resource Include="Resources\Avatar1.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\connect.png" />
@@ -195,7 +195,7 @@
     <Resource Include="Resources\free_mode.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\graph_mode.png" />
+    <Resource Include="Resources\graph_generator.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\connect_vertex.png" />
@@ -214,6 +214,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\icon.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\vk.png" />
+    <Resource Include="Resources\web.png" />
+    <Resource Include="Resources\youtube.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Avatar2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />
