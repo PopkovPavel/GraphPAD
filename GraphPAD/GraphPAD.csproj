@@ -39,6 +39,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CefSharp, Version=88.2.90.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=MSIL">
       <HintPath>..\packages\CefSharp.Common.88.2.90\lib\net452\CefSharp.dll</HintPath>
@@ -172,9 +175,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Avatar1.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\connect.png" />
   </ItemGroup>
   <ItemGroup>
@@ -221,7 +221,28 @@
     <Resource Include="Resources\youtube.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Avatar2.png" />
+    <Resource Include="Resources\Avatar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Avatar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\brush.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\eraser.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\eraser_smart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\selection.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />

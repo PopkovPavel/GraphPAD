@@ -31,32 +31,31 @@ namespace GraphPAD
         public bool isGraphGeneratorOn;
         public bool isAlgorithmsOn;
         public bool isFreeModeOn;
-        private bool _flag; //Флаг для логики микрофона (Проверка на то, был ли выключен микрофон до выключения звука)
+        private bool _flag;
         public int lobbyCount;
         public int lobbyButtonsMargin = -70;
         public int chatCount;
         public int chatTextblockMargin;
-
-        delegate void Function(object sender, MouseButtonEventArgs e);
-        Function function;
-
-        public SolidColorBrush greenbrush = new SolidColorBrush(Color.FromRgb(19, 199, 19));
-        public SolidColorBrush lightpurple = new SolidColorBrush(Color.FromRgb(85, 85, 147));
+        private string ConferensionName;
+        //delegate void Function(object sender, MouseButtonEventArgs e);
+        //Function function;
         public delegate void Method();
         private static Method close;
-        private string ConferensionName;
+        //Доп. Кастомные Цвета
+        public SolidColorBrush greenbrush = new SolidColorBrush(Color.FromRgb(19, 199, 19));
+        public SolidColorBrush lightpurple = new SolidColorBrush(Color.FromRgb(85, 85, 147));
         #endregion
         #region Initialize
         public MainPage()
         {
             InitializeComponent();
             close = new Method(Close);
-            this.KeyDown += new KeyEventHandler(MainWindow_KeyDown);
+            this.KeyDown += new KeyEventHandler(MainWindow_KeyDown); //Отлов клавиши Enter для отправки сообщений
             Closing += OnClosing;  //Делегат для отлова закрытия окна
             isMicOn = true;
             isHeadPhonesOn = true;
             isVideoOn = false;
-            _flag = false;
+            _flag = false; //Флаг для логики микрофона (Проверка на то, был ли выключен микрофон до выключения звука)
             lobbyCount = 0;
             chatCount = 0;
             lobbyButtonsMargin = 10;
@@ -64,7 +63,8 @@ namespace GraphPAD
             voiceChatTextBlock.Text = "Голосовой чат подключен";
             videoTextBlock.Text = "Видео отключено";
             videoTextBlock.Foreground = Brushes.DarkGray;
-            function = null;
+            
+            //Выключение всех режимов работы с графами
             isAddVetexOn = false;
             isRemoveVertexOn = false;
             isConnectVertexOn = false;
@@ -72,10 +72,8 @@ namespace GraphPAD
             isGraphGeneratorOn = false;
             isAlgorithmsOn = false;
             isFreeModeOn = false;
-            FreeModeCanvas.Visibility = Visibility.Hidden;
-            TextChatCanvas.Visibility = Visibility.Visible;
-            conferenssionString.Text = "Конференция № ...";
-            if (GuestInfo.Name == "exist")
+
+            if (GuestInfo.Name != "exist")
             {
                 nameString.Text = UserInfo.Name;
                 userRoleString.Text = "Пользователь";
@@ -84,20 +82,21 @@ namespace GraphPAD
             {
                 nameString.Text = GuestInfo.Name;
                 userRoleString.Text = "Гость";
-                
             }
-            nameString.Text = UserInfo.Name;
-            userRoleString.Text = "Пользователь";
+            conferenssionString.Text = "Конференция ...";
+
+            //debug
+            GraphCanvas.Visibility = Visibility.Hidden;
+            PaintCanvas.Visibility = Visibility.Hidden;
             GraphControlCanvas.Visibility = Visibility.Hidden;
+            GraphModeChangerButton.Visibility = Visibility.Hidden;
+            PaintControlCanvas.Visibility = Visibility.Hidden;
+            PaintModeChangerButton.Visibility = Visibility.Hidden;
             infoTextBlock.Visibility = Visibility.Visible;
-            leaveButton.Visibility = Visibility.Hidden;
-            CancelEnterLobbyButton.Visibility = Visibility.Hidden;
-            ConfirmEnterLobbyButton.Visibility = Visibility.Hidden;
-            ConferensionIDTextBox.Visibility = Visibility.Hidden;
-            NewConferensionNameTextBox.Visibility = Visibility.Hidden;
-            CancelCreateLobbyButton.Visibility = Visibility.Hidden;
-            ConfirmCreateLobbyButton.Visibility = Visibility.Hidden;
+            PaintCanvas.Visibility = Visibility.Hidden;
+            leaveButton.Visibility = Visibility.Hidden;  
             chatGrid.Visibility = Visibility.Hidden;
+
             Chromium.settings.CefCommandLineArgs.Add("enable-media-stream", "1");
             Cef.Initialize(Chromium.settings);
             leaveButton.Click += (s, ea) =>
@@ -114,11 +113,6 @@ namespace GraphPAD
                     catch { }
 
                 }
-                VideoChatCanvas.Children.Clear();
-                //Кнопка "Покинуть"
-                BGgrid.Background = lightpurple;
-                freeModeBtn.Visibility = Visibility.Hidden;
-                PaintControlCanvas.Visibility = Visibility.Hidden;
                 ButtonsFix();
 
             };
@@ -171,7 +165,7 @@ namespace GraphPAD
             try
             {
                 lobbyCount = 0;
-                lobbyButtonsMargin = -70;
+                lobbyButtonsMargin = -60;
                 var client = new RestClient("https://testingwebrtc.herokuapp.com/room/myrooms");
                 client.Timeout = -1;
                 var request = new RestRequest(RestSharp.Method.GET);
@@ -185,12 +179,15 @@ namespace GraphPAD
                     {
                         lobbyCount += 1;
                         lobbyButtonsMargin += 70;
+                        LobbysCanvas.Height = lobbyButtonsMargin;
                         if (lobbyCount > 8)
                         {
                             LobbysCanvas.Height = LobbysCanvas.Height + 70;
+                            //LobbysScrollView.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
                         }
                         ConferensionsCountTextBlock.Text = "Конференций: " + (lobbyCount);
 
+                        //Первый элемент контекстного меню
                         var menuCopyItem = new MenuItem()
                         {
                             Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF181840"),
@@ -227,16 +224,41 @@ namespace GraphPAD
                             Padding = new Thickness(10, 0, 0, 0),
                             Height = 40,
                             Width = 190,
+                            Header = "Покинуть конференцию",
                             ToolTip = "Покинуть конференцию"
+                        };                        
+                        menuLeaveItem.Click += (s, ea) =>
+                        {
+                            LeaveRoom($"{room.RoomID}", $"{room.RoomName}");
                         };
-                        menuLeaveItem.Header = "Покинуть конференцию";
-
+                        
+                        //Третий элемент контекстного меню
+                        var menuDeleteItem = new MenuItem()
+                        {
+                            Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF181840"),
+                            Foreground = Brushes.White,
+                            FontFamily = new FontFamily("Segoe UI"),
+                            FontSize = 14,
+                            FontStyle = FontStyles.Normal,
+                            FontWeight = FontWeights.Bold,
+                            Cursor = Cursors.Hand,
+                            Padding = new Thickness(10, 0, 0, 0),
+                            Height = 40,
+                            Width = 190,
+                            Header = "Удалить конференцию",
+                            ToolTip = "Удалить конференцию"
+                        };
+                        menuDeleteItem.Click += (s, ea) =>
+                        {
+                            DeleteRoom($"{room.RoomID}", $"{room.RoomName}");
+                        };
                         var contextMenu = new ContextMenu()
                         {
                             Background = Brushes.Transparent
                         };
-                        contextMenu.Items.Add(menuLeaveItem);
                         contextMenu.Items.Add(menuCopyItem);
+                        contextMenu.Items.Add(menuLeaveItem);
+                        contextMenu.Items.Add(menuDeleteItem);
 
                         var tempButton = new Button()
                         {
@@ -250,16 +272,10 @@ namespace GraphPAD
 
                         tempButton.Click += Ez_Click;
 
-                        menuLeaveItem.Click += (s, ea) => 
-                        {
-                            LeaveRoom($"{room.RoomID}",$"{room.RoomName}");
-                        };
 
                         tempButton.Click += (senda, ev) =>
                         {
-                            OpenRoomAsync($"{room.RoomID}",$"{room.RoomName}");
-                            //Кнопка конференции слева
-                            BGgrid.Background = Brushes.DarkGray;
+                            LobbyEnter_ClickAsync($"{room.RoomID}",$"{room.RoomName}");
                             isAddVetexOn = false;
                             isRemoveVertexOn = false;
                             isConnectVertexOn = false;
@@ -267,8 +283,7 @@ namespace GraphPAD
                             isGraphGeneratorOn = false;
                             isAlgorithmsOn = false;
                             isFreeModeOn = false;
-                            freeModeBtn.Visibility = Visibility.Visible;
-                            freeModeBtn.Content = "Графы";
+
 
                         };
 
@@ -295,9 +310,9 @@ namespace GraphPAD
         {
             try
             {
-                var client = new RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}/delete");
+                var client = new RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}/leave");
                 client.Timeout = -1;
-                var request = new RestRequest(RestSharp.Method.DELETE);
+                var request = new RestRequest(RestSharp.Method.POST);
                 request.AddHeader("x-access-token", UserInfo.Token);
                 IRestResponse response = client.Execute(request);
                 if (response.IsSuccessful)
@@ -307,7 +322,32 @@ namespace GraphPAD
                 }
                 else
                 {
-                    MessageBox.Show("Вы не можете удалить собственную комнату\nСкоро сможете", "Ошибка");
+                    MessageBox.Show("Вы не можете покинуть собственную комнату", "Ошибка");
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
+
+            }
+        }
+        public void DeleteRoom(string roomId, string roomName)
+        {
+            try
+            {
+                var client = new RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}/delete");
+                client.Timeout = -1;
+                var request = new RestRequest(RestSharp.Method.DELETE);
+                request.AddHeader("x-access-token", UserInfo.Token);
+                IRestResponse response = client.Execute(request);
+                if (response.IsSuccessful)
+                {
+                    MessageBox.Show($"Вы удалили конференцию \"{roomName}\"", "Сообщение");
+                    RefreshRooms();
+                }
+                else
+                {
+                    MessageBox.Show("Вы не можете удалить чужую комнату", "Ошибка");
                 }
             }
             catch
@@ -331,56 +371,6 @@ namespace GraphPAD
             }
             return null;
         }
-        public async System.Threading.Tasks.Task OpenRoomAsync(string roomId, string roomName)
-        {
-            Chromium.SetSettings(roomId);
-            var jepa = Chromium.Connect();
-            jepa.Height = 720;
-            jepa.Width = 405;
-            
-            VideoChatCanvas.Children.Add(jepa);
-            chatGrid.Visibility = Visibility.Visible;
-            GraphCanvas.Visibility = Visibility.Visible;
-            GraphControlCanvas.Visibility = Visibility.Visible;
-            leaveButton.Visibility = Visibility.Visible;
-            LobbysCanvas.Visibility = Visibility.Hidden;
-
-            TextChatCanvas.Visibility = Visibility.Visible;
-            VideoChatCanvas.Visibility = Visibility.Hidden;
-            ParticipantsCanvas.Visibility = Visibility.Hidden;
-            ChatBox.Visibility = Visibility.Visible;
-            ParticipantsBox.Visibility = Visibility.Hidden;
-            ParticipantsString.Visibility = Visibility.Hidden;
-            ParticipantsScrollView.Visibility = Visibility.Hidden;
-
-            conferenssionString.Text = $"Конференция \"{roomName}\"";
-            ConferensionString.Text = $"Чат конференции \"{roomName}\"";
-            //Participants
-            int num = 1;
-            var temp = GetUsers(roomId);
-            ParticipantsBox.AppendText($"Owner: {temp.Item2.Name}\n\n");
-            if (temp.Item1 != null)
-            {
-                foreach (JSONroomuser participant in temp.Item1)
-                {
-                    ParticipantsBox.AppendText($"#{num++}: {participant.Name}\n");
-                    //Console.WriteLine(participant.ToString());
-                }
-                try
-                {
-                    await SocketConnector.InitializeClientAsync();
-                    SocketConnector.SetSettings(roomId, UserInfo.Name);
-                    SocketConnector.client.On("chat-message", async response =>
-                    {
-                        var text = JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
-                        await Dispatcher.BeginInvoke((Action)(() => ChatBox.AppendText($"{text[0].UserId}: {text[0].Message}\n\n")));
-                        Console.WriteLine($"{text[0].UserId}: {text[0].Message}");
-                    });
-                    chatTextBox.IsReadOnly = (SocketConnector.IsConnected) ? false : true;
-                }
-                catch { }
-            }        
-        }
         #endregion
         #region Image Changer
         private void ChangeImage(string path, Button btn) //Функция для смены изображений в кнопке
@@ -393,7 +383,7 @@ namespace GraphPAD
             btn.Background = brush;
         }
         #endregion
-        #region Enter Lobby
+        #region Menu Enter Lobby
         private void EnterLobby_Click(object sender, RoutedEventArgs e)
         {
             if (UserInfo.Email != null)
@@ -453,10 +443,10 @@ namespace GraphPAD
             }
         }
         #endregion
-        #region Create lobby
+        #region Menu Create lobby
         private void CreateLobby_Click(object sender, RoutedEventArgs e)
         {
-            EnterLobbyButton.Visibility = Visibility.Hidden;
+            EnterLobbyButton.IsEnabled = false;
             ConfirmCreateLobbyButton.Visibility = Visibility.Visible;
             CancelCreateLobbyButton.Visibility = Visibility.Visible;
             NewConferensionNameTextBox.Visibility = Visibility.Visible;
@@ -466,7 +456,7 @@ namespace GraphPAD
             CancelCreateLobbyButton.Visibility = Visibility.Hidden;
             ConfirmCreateLobbyButton.Visibility = Visibility.Hidden;
             NewConferensionNameTextBox.Visibility = Visibility.Hidden;
-            EnterLobbyButton.Visibility = Visibility.Visible;
+            EnterLobbyButton.IsEnabled = true;
             NewConferensionNameTextBox.Text = "";
             NewConferensionNameTextBox.BorderBrush = Brushes.Transparent;
             NewConferensionNameTextBox.ToolTip = null;
@@ -504,6 +494,14 @@ namespace GraphPAD
                         NewConferensionNameTextBox.Text = "";
                         NewConferensionNameTextBox.BorderBrush = Brushes.Transparent;
                         NewConferensionNameTextBox.ToolTip = null;
+                        
+                        CancelCreateLobbyButton.Visibility = Visibility.Hidden;
+                        ConfirmCreateLobbyButton.Visibility = Visibility.Hidden;
+                        NewConferensionNameTextBox.Visibility = Visibility.Hidden;
+                        EnterLobbyButton.IsEnabled = true;
+                        NewConferensionNameTextBox.Text = "";
+                        NewConferensionNameTextBox.BorderBrush = Brushes.Transparent;
+                        NewConferensionNameTextBox.ToolTip = null;
                         RefreshRooms();
                     }
                     else
@@ -518,60 +516,176 @@ namespace GraphPAD
             }
         }
         #endregion
+        #region Lobby Enter
+        public async System.Threading.Tasks.Task LobbyEnter_ClickAsync(string roomId, string roomName)
+        {
+            //Отображение веб-камер
+            Chromium.SetSettings(roomId);
+            var camera = Chromium.Connect();
+            camera.Height = 720;
+            camera.Width = 405;
+
+            //Список конференций в левой части окна
+            LobbysCanvas.Visibility = Visibility.Hidden;
+            //Нижнее поле управления
+            GraphCanvas.Visibility = Visibility.Visible;
+            GraphControlCanvas.Visibility = Visibility.Visible;
+            GraphModeChangerButton.Visibility = Visibility.Visible;
+            PaintCanvas.Visibility = Visibility.Hidden;
+            PaintControlCanvas.Visibility = Visibility.Hidden;
+            PaintModeChangerButton.Visibility = Visibility.Hidden;
+            infoTextBlock.Visibility = Visibility.Hidden;
+            //Нижнее-левое поле управления
+            leaveButton.Visibility = Visibility.Visible;
+            conferenssionString.Text = $"Конференция \"{roomName}\"";
+            //Правая часть окна
+            chatGrid.Visibility = Visibility.Visible;
+            VideoChatCanvas.Children.Add(camera);
+            ConferensionString.Visibility = Visibility.Visible;
+            ConferensionString.Text = $"Чат конференции \"{roomName}\"";
+            VideoString.Visibility = Visibility.Hidden;
+            ParticipantsString.Visibility = Visibility.Hidden;
+            //Главное меню
+            BGgrid.Background = Brushes.DarkGray;
+            menuCanvas.Visibility = Visibility.Hidden;
+            //Отображение элементов чата
+            chatTextBox.Visibility = Visibility.Visible;
+            charCounterTextBlock.Visibility = Visibility.Visible;
+            sendButton.Visibility = Visibility.Visible;
+            ChatBox.Visibility = Visibility.Visible;
+            ParticipantsBox.Visibility = Visibility.Hidden;
+            ParticipantsString.Visibility = Visibility.Hidden;
+            ParticipantsScrollView.Visibility = Visibility.Hidden;
+
+            //Отображение участников конференции
+            int participants = 0;
+            var temp = GetUsers(roomId);
+            ParticipantsBox.AppendText($"Владелец: {temp.Item2.Name}\n\nУчастники:\n");
+            if (temp.Item1 != null)
+            {
+                foreach (JSONroomuser participant in temp.Item1)
+                {
+                    ParticipantsBox.AppendText($"#{++participants}: {participant.Name}\n");
+                }
+                try
+                {
+                    await SocketConnector.InitializeClientAsync();
+                    SocketConnector.SetSettings(roomId, UserInfo.Name);
+                    SocketConnector.client.On("chat-message", async response =>
+                    {
+                        var text = JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
+                        await Dispatcher.BeginInvoke((Action)(() => ChatBox.AppendText($"{text[0].UserId}: {text[0].Message}\n\n")));
+                        Console.WriteLine($"{text[0].UserId}: {text[0].Message}");
+                    });
+                    chatTextBox.IsReadOnly = (SocketConnector.IsConnected) ? false : true;
+                }
+                catch { }
+            }
+
+        }
+        #endregion
         #region Lobby Leave
         private async System.Threading.Tasks.Task LobbyLeave_ClickAsync(object sender, RoutedEventArgs e)
         {          
             await SocketConnector.Disconnect();
-            chatTextBox.IsReadOnly = (SocketConnector.IsConnected) ? false : true;
-            chatGrid.Visibility = Visibility.Hidden;
-            ConferensionIDTextBox.BorderBrush = Brushes.Transparent;
-            NewConferensionNameTextBox.BorderBrush = Brushes.Transparent;
-            GraphCanvas.Visibility = Visibility.Hidden;
-            FreeModeCanvas.Visibility = Visibility.Hidden;
-            GraphControlCanvas.Visibility = Visibility.Hidden;
-            conferenssionString.Text = "Конференция № ...";
-            leaveButton.Visibility = Visibility.Hidden;
+            chatTextBox.IsReadOnly = !SocketConnector.IsConnected;
+            //Изменения интерфейса до состояния в момент запуска
 
-            CreateLobbyButton.Visibility = Visibility.Visible;
-            ConferensionIDTextBox.Visibility = Visibility.Hidden;
+            //Список конференций в левой части окна
+            LobbysCanvas.Visibility = Visibility.Visible;
+            //Главные поля и панели для работы
+            GraphCanvas.Visibility = Visibility.Hidden;
+            GraphControlCanvas.Visibility = Visibility.Hidden;
+            PaintCanvas.Visibility = Visibility.Hidden;
+            PaintControlCanvas.Visibility = Visibility.Hidden;
+            infoTextBlock.Visibility = Visibility.Visible;
+            //Нижнее поле управления
+            GraphControlCanvas.Visibility = Visibility.Hidden;
+            GraphModeChangerButton.Visibility = Visibility.Hidden;
+            PaintControlCanvas.Visibility = Visibility.Hidden;
+            PaintModeChangerButton.Visibility = Visibility.Hidden;
+            //Нижнее-левое поле управления
+            conferenssionString.Text = "Конференция ...";
+            leaveButton.Visibility = Visibility.Hidden;
+            //Очистить и скрыть правую часть окна
+            chatGrid.Visibility = Visibility.Hidden;
+            ParticipantsBox.Text = "";
+            VideoChatCanvas.Children.Clear();
+            ConferensionString.Visibility = Visibility.Visible;
+            VideoString.Visibility = Visibility.Hidden;
+            ParticipantsString.Visibility = Visibility.Hidden;
+            //Главное меню
+            BGgrid.Background = lightpurple;
+            menuCanvas.Visibility = Visibility.Visible;
+            EnterLobbyButton.IsEnabled = true;
             CancelEnterLobbyButton.Visibility = Visibility.Hidden;
             ConfirmEnterLobbyButton.Visibility = Visibility.Hidden;
+            CreateLobbyButton.Visibility = Visibility.Visible;
             CancelCreateLobbyButton.Visibility = Visibility.Hidden;
             ConfirmCreateLobbyButton.Visibility = Visibility.Hidden;
-            LobbysCanvas.Visibility = Visibility.Visible;
-            ParticipantsBox.Text = "";
+            ConferensionIDTextBox.BorderBrush = Brushes.Transparent;
+            ConferensionIDTextBox.Visibility = Visibility.Hidden;
+            NewConferensionNameTextBox.BorderBrush = Brushes.Transparent;
+            NewConferensionNameTextBox.Visibility = Visibility.Hidden;
         }
         #endregion
         #region Text, Video, Chat buttons
         private void TextChatButton_Clicked(object sender, RoutedEventArgs e)
         {
-            TextChatCanvas.Visibility = Visibility.Visible;
-            VideoChatCanvas.Visibility = Visibility.Hidden;
-            ParticipantsCanvas.Visibility = Visibility.Hidden;
-            ChatBox.Visibility = Visibility.Visible;
-            ParticipantsBox.Visibility = Visibility.Hidden;
+            //Отображение строки под кнопками
+            ConferensionString.Visibility = Visibility.Visible;
+            VideoString.Visibility = Visibility.Hidden;
             ParticipantsString.Visibility = Visibility.Hidden;
+            //Отображение поля под строкой
+            ChatBox.Visibility = Visibility.Visible;
+            VideoChatCanvas.Visibility = Visibility.Hidden;
+            ParticipantsBox.Visibility = Visibility.Hidden;
+            //Отображение полосы прокрутки
+            ChatsScrollView.Visibility = Visibility.Visible;
+            VideosScrollView.Visibility = Visibility.Hidden;
             ParticipantsScrollView.Visibility = Visibility.Hidden;
+            //Отображение элементов чата внизу
+            chatTextBox.Visibility = Visibility.Visible;
+            charCounterTextBlock.Visibility = Visibility.Visible;
+            sendButton.Visibility = Visibility.Visible;
         }
         private void VideoChatButton_Clicked(object sender, RoutedEventArgs e)
         {
-            TextChatCanvas.Visibility = Visibility.Hidden;
-            VideoChatCanvas.Visibility = Visibility.Visible;
-            ParticipantsCanvas.Visibility = Visibility.Hidden;
-            ChatBox.Visibility = Visibility.Hidden;
-            ParticipantsBox.Visibility = Visibility.Hidden;
+            //Отображение строки под кнопками
+            ConferensionString.Visibility = Visibility.Hidden;
+            VideoString.Visibility = Visibility.Visible;
             ParticipantsString.Visibility = Visibility.Hidden;
+            //Отображение поля под строкой
+            ChatBox.Visibility = Visibility.Hidden;
+            VideoChatCanvas.Visibility = Visibility.Visible;
+            ParticipantsBox.Visibility = Visibility.Hidden;
+            //Отображение полосы прокрутки
+            ChatsScrollView.Visibility = Visibility.Hidden;
+            VideosScrollView.Visibility = Visibility.Visible;
             ParticipantsScrollView.Visibility = Visibility.Hidden;
+            //Отображение элементов чата внизу
+            chatTextBox.Visibility = Visibility.Hidden;
+            charCounterTextBlock.Visibility = Visibility.Hidden;
+            sendButton.Visibility = Visibility.Hidden;
         }
         private void ParticipantsButton_Clicked(object sender, RoutedEventArgs e)
         {
-            TextChatCanvas.Visibility = Visibility.Hidden;
-            VideoChatCanvas.Visibility = Visibility.Hidden;
-            ParticipantsCanvas.Visibility = Visibility.Visible;
-            ChatBox.Visibility = Visibility.Hidden;
-            ParticipantsBox.Visibility = Visibility.Visible;
+            //Отображение строки под кнопками
+            ConferensionString.Visibility = Visibility.Hidden;
+            VideoString.Visibility = Visibility.Hidden;
             ParticipantsString.Visibility = Visibility.Visible;
+            //Отображение поля под строкой
+            ChatBox.Visibility = Visibility.Hidden;
+            VideoChatCanvas.Visibility = Visibility.Hidden;
+            ParticipantsBox.Visibility = Visibility.Visible;
+            //Отображение полосы прокрутки
+            ChatsScrollView.Visibility = Visibility.Hidden;
+            VideosScrollView.Visibility = Visibility.Hidden;
             ParticipantsScrollView.Visibility = Visibility.Visible;
+            //Отображение элементов чата внизу
+            chatTextBox.Visibility = Visibility.Hidden;
+            charCounterTextBlock.Visibility = Visibility.Hidden;
+            sendButton.Visibility = Visibility.Hidden;
         }
         #endregion
         #region Microphone
@@ -672,11 +786,16 @@ namespace GraphPAD
             }
         }
         #endregion
-        #region Settings
+        #region Settings (broken avatar changer)
         private void SettingsButton_Clicked(object sender, RoutedEventArgs e)
         {
             SettingsPage settingsPage = new SettingsPage();
             settingsPage.ShowDialog(); //ShowDialog открывает окно поверх, блокируя основное
+            ////Обновление аватарки
+            //Avatar.Source = null;
+            //var converter = new ImageSourceConverter();
+            //Avatar.Source = (ImageSource)converter.ConvertFromString(@"..\..\Resources\Avatar.png");
+            //Console.WriteLine(Avatar.Source);
         }
         private void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
@@ -694,29 +813,27 @@ namespace GraphPAD
                 isFreeModeOn = true;
 
                 GraphControlCanvas.Visibility = Visibility.Hidden;
+                GraphModeChangerButton.Visibility = Visibility.Hidden;
                 PaintControlCanvas.Visibility = Visibility.Visible;
+                PaintModeChangerButton.Visibility = Visibility.Visible;
                 GraphCanvas.Visibility = Visibility.Hidden;
-                FreeModeCanvas.Visibility = Visibility.Visible;
+                PaintCanvas.Visibility = Visibility.Visible;
                 BGgrid.Background = Brushes.DarkSlateGray;
-                freeModeBtn.Content = "Рисование";
-                freeModeBtn.ToolTip = "Включить Графы";
                 
             }
             else
             {
                 isFreeModeOn = false;
                 GraphControlCanvas.Visibility = Visibility.Visible;
+                GraphModeChangerButton.Visibility = Visibility.Visible;
                 PaintControlCanvas.Visibility = Visibility.Hidden;
+                PaintModeChangerButton.Visibility = Visibility.Hidden;
                 GraphCanvas.Visibility = Visibility.Visible;
-                FreeModeCanvas.Visibility = Visibility.Hidden;
+                PaintCanvas.Visibility = Visibility.Hidden;
                 BGgrid.Background = Brushes.DarkGray;
-                freeModeBtn.Content = "Графы";
-                freeModeBtn.ToolTip = "Включить Рисование";
 
                 ButtonsFix();
             }
-            //Button btn = sender as Button;
-            //btn.Background = btn.Background == Brushes.DarkGray ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGray;
         }
         #endregion
         #region Graph panel buttons
@@ -938,7 +1055,7 @@ namespace GraphPAD
                 charCount = userInput[0];
             }
             
-            CharCountTextBlock.Text = "Символов " + userInput.Length.ToString() + "/200";
+            charCounterTextBlock.Text = "Символов " + userInput.Length.ToString() + "/200";
         }
         #endregion
         #region Chat
@@ -952,9 +1069,7 @@ namespace GraphPAD
                 SocketConnector.SendMessage(chatTextBox.Text);
                 chatTextBox.Text = "";
             }
-            //ChatTextBlock.Text = chatTextBox.Text;
         }
-
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -963,6 +1078,25 @@ namespace GraphPAD
             }
         }
         #endregion
+        private void BrushButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void EraserButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Eraser_SmartButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SelectionButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
         #region Trash
         private void Ez_Click(object sender, RoutedEventArgs e)
         {
@@ -976,6 +1110,5 @@ namespace GraphPAD
 }
 
 //ToDo
-//1)доп контекстное меню "удалить комнату" и "покинуть комнату"
-//2)Вернуть выход из конференции без её полного удаления (leave = !!!POST запрос!!!)
-//3)Настройки -> мой аккаунт = добавить реальные данные
+//1)
+//2)

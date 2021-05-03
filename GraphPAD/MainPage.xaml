@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:GraphPAD"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="GraphPAD" Height="800" Width="1400" WindowStartupLocation="CenterScreen" MinWidth="1200" MinHeight="750" ResizeMode="CanMinimize"
         x:Name="MainWindow"
+        Title="GraphPAD" Height="800" Width="1400" WindowStartupLocation="CenterScreen" MinWidth="1400" MinHeight="800"
         Background="#FF141424" KeyDown="MainWindow_KeyDown" Icon="Resources/icon.jpg">
     <Window.Resources>
         <SolidColorBrush x:Key="MainPurple" Color="#FF3C226A"/>
@@ -17,7 +17,7 @@
 
         </Style>
         <Style TargetType="ScrollBar">
-            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Background" Value="#FF141424"/>
             <Setter Property="Foreground" Value="Red"/>
             <Setter Property="BorderBrush" Value="Gray"/>
             <Setter Property="BorderThickness" Value="1"/>
@@ -33,47 +33,54 @@
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="95"/>
-            <ColumnDefinition Width="890"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="400"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" Background="#141424">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="100"/>
             </Grid.RowDefinitions>
-            <Button Click="RefreshRoomsList" BorderThickness="2" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Center" Margin="0" Grid.Row="1" VerticalAlignment="Center" Width="64" Height="64" BorderBrush="White" IsTabStop="False">
-                <Button.Background>
-                    <ImageBrush ImageSource="Resources/connect.png"/>
-                </Button.Background>
-            </Button>
-            <TextBlock x:Name="ConferensionsCountTextBlock" Text="Конференций: 0" TextAlignment="Center" Height="35" Foreground="White" Margin="0,636,0,0" TextDecorations="{x:Null}" FontSize="10" FontWeight="Bold"/>
-            <ScrollViewer x:Name="LobbysScrollView" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" Height="671" VerticalAlignment="Top" Width="95">
-                <Canvas x:Name="LobbysCanvas" Height="671">
-
-                </Canvas>
-            </ScrollViewer>
+            <Grid Grid.Row = "0">
+                <ScrollViewer x:Name="LobbysScrollView" VerticalScrollBarVisibility="Hidden">
+                    <Canvas x:Name="LobbysCanvas" Height="0" VerticalAlignment="Top"/>
+                </ScrollViewer>
+            </Grid>
+            <Grid Grid.Row = "1">
+                <Button Click="RefreshRoomsList" BorderThickness="2" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Center" Margin="0" Grid.Row="1" VerticalAlignment="Center" Width="64" Height="64" BorderBrush="White" IsTabStop="False" ToolTip="Обновить список конференций">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Resources/connect.png"/>
+                    </Button.Background>
+                </Button>
+                <TextBlock x:Name="ConferensionsCountTextBlock" Text="Конференций: 0" TextAlignment="Center" Height="35" Foreground="White" Margin="0,0,0,65" TextDecorations="{x:Null}" FontSize="10" FontWeight="Bold" Grid.Row="1"/>
+            </Grid>
 
         </Grid>
         <Grid x:Name="BGgrid" Grid.Column="1" Background="#FF555593">
             <Grid.RowDefinitions>
-                <RowDefinition Height="600"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="165"/>
             </Grid.RowDefinitions>
-            <!--Кнопки и поля для входа в конференцию-->
-            <Button x:Name="EnterLobbyButton" Click="EnterLobby_Click" Content="Войти в конференцию" Width="350" Height="40" FontSize="18" Margin="270,0,270,0" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False"/>
-            <Button x:Name="CancelEnterLobbyButton" Click="CancelEnterLobby_Click" Content="Назад" Width="150" Height="40" FontSize="18" Margin="270,380,470,180" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False"/>
-            <Button x:Name="ConfirmEnterLobbyButton" Click="ConfirmEnterLobby_Click" Content="Войти" Width="150" Height="40" FontSize="18" Margin="470,380,270,180" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Padding="16,4"/>
-            <TextBox x:Name="ConferensionIDTextBox" Visibility="Hidden" HorizontalAlignment="Left" Height="32" Margin="270,333,0,235" TextWrapping="Wrap" materialDesign:HintAssist.Hint="ID конференции..." Width="350" Foreground="White" FontSize="18" MaxLines="1" MaxLength="36" Background="Black" IsTabStop="False" Padding="0" VerticalContentAlignment="Stretch"/>
-            <!--Кнопки и поля для создания конференции-->
-            <Button x:Name="CreateLobbyButton" Click="CreateLobby_Click" Content="Создать конференцию" Width="350" Height="40" FontSize="18" Margin="270,100,270,0" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False"/>
-            <Button x:Name="CancelCreateLobbyButton" Click="CancelCreateLobby_Click" Content="Назад" Width="150" Height="40" FontSize="18" Margin="270,425,470,135" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False"/>
-            <Button x:Name="ConfirmCreateLobbyButton" Click="ConfirmCreateLobby_Click" Content="Создать" Width="150" Height="40" FontSize="18" Margin="470,425,270,135" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Padding="16,4"/>
-            <TextBox x:Name="NewConferensionNameTextBox" Visibility="Hidden" HorizontalAlignment="Left" Height="33" Margin="270,197,270,0" TextWrapping="Wrap" materialDesign:HintAssist.Hint="Название конференции..." Width="350" Foreground="White" FontSize="18" MaxLines="1" MaxLength="35" Background="Black" IsTabStop="False" HorizontalContentAlignment="Stretch" Padding="0" VerticalContentAlignment="Stretch"/>
 
-            <Canvas x:Name="FreeModeCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="580" VerticalAlignment="Top" Width="870" Background="White" Margin="10,10,0,0"/>
-            <Canvas x:Name="GraphCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="580" VerticalAlignment="Top" Width="870" Background="White" Margin="10,10,0,0"/>
+            <Grid Grid.Row="0">
+                <!--Главное меню-->
+                <Canvas x:Name="menuCanvas" HorizontalAlignment="Center" Height="185" Margin="0,150,0,0" VerticalAlignment="Center" Width="350">
+                    <Button x:Name="EnterLobbyButton" Click="EnterLobby_Click" Content="Войти в конференцию" Width="350" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False"/>
+                    <Button x:Name="CancelCreateLobbyButton" Visibility="Hidden" Click="CancelCreateLobby_Click" Content="Назад" Width="150" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Canvas.Top="145"/>
+                    <Button x:Name="ConfirmCreateLobbyButton" Visibility="Hidden" Click="ConfirmCreateLobby_Click" Content="Создать" Width="150" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Padding="16,4" Canvas.Left="200" Canvas.Top="145"/>
+                    <Button x:Name="CreateLobbyButton" Click="CreateLobby_Click" Content="Создать конференцию" Width="350" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Canvas.Top="48"/>
+                    <Button x:Name="CancelEnterLobbyButton" Visibility="Hidden" Click="CancelEnterLobby_Click" Content="Назад" Width="150" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Canvas.Top="98"/>
+                    <Button x:Name="ConfirmEnterLobbyButton" Visibility="Hidden" Click="ConfirmEnterLobby_Click" Content="Войти" Width="150" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Padding="16,4" Canvas.Left="200" Canvas.Top="98"/>
+                    <TextBox x:Name="ConferensionIDTextBox" Visibility="Hidden" HorizontalAlignment="Left" Height="32" TextWrapping="Wrap" materialDesign:HintAssist.Hint="ID конференции..." Width="350" Foreground="White" FontSize="18" MaxLines="1" MaxLength="36" Background="Black" IsTabStop="False" Padding="0" VerticalContentAlignment="Stretch" Canvas.Top="52"/>
+                    <TextBox x:Name="NewConferensionNameTextBox" Visibility="Hidden" HorizontalAlignment="Left" Height="33" TextWrapping="Wrap" materialDesign:HintAssist.Hint="Название конференции..." Width="350" Foreground="White" FontSize="18" MaxLines="1" MaxLength="35" Background="Black" IsTabStop="False" HorizontalContentAlignment="Stretch" Padding="0" VerticalContentAlignment="Stretch" Canvas.Top="101"/>
+                </Canvas>
+                <!--Поля для графов и рисовалки-->
+                <Canvas x:Name="GraphCanvas" Visibility="Hidden" Background="White" Margin="10"/>
+                <InkCanvas x:Name="PaintCanvas" Visibility="Visible" Background="White" Margin="10"/>
+            </Grid>
             <Grid Grid.Row="1" Background="#22223d">
-                <Canvas x:Name="UserCanvas" HorizontalAlignment="Left" Height="148" Margin="10,11,0,0" VerticalAlignment="Top" Width="295" Background="#FF0E0E19">
+                <!--Нижняя часть интерфейса-->
+                <Canvas x:Name="UserCanvas" HorizontalAlignment="Left" Height="148" Margin="10,0,0,0" Width="295" Background="#FF0E0E19" VerticalAlignment="Center">
                     <Button x:Name="micButton" Click="MicButton_Clicked" ToolTip="Выкл. микрофон" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="76" Canvas.Top="107" IsTabStop="False">
                         <Button.Background>
                             <ImageBrush ImageSource="Resources/microphone_on.png" Stretch="UniformToFill"/>
@@ -95,19 +102,18 @@
                             <TextBlock Margin="4,5,0,5" TextWrapping="Wrap" Text="Видео" Canvas.Top="118" Foreground="White" Height="20" Width="55" FontWeight="Bold"/>
                         </StackPanel>
                     </Button>
-                    <Image x:Name="Avatar" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Source="Resources\Avatar2.png" Stretch="Fill" Canvas.Left="7" Canvas.Top="75"/>
-                    <TextBlock x:Name="conferenssionString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Конференция №2284" VerticalAlignment="Top" Foreground="White" Width="198" FontSize="11" Height="30" Canvas.Left="4" Canvas.Top="6" FontWeight="Bold"/>
+                    <Image x:Name="Avatar" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Source="Avatar.png" Stretch="Fill" Canvas.Left="7" Canvas.Top="75"/>
+                    <TextBlock x:Name="conferenssionString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Конференция ..." VerticalAlignment="Top" Foreground="White" Width="198" FontSize="11" Height="30" Canvas.Left="4" Canvas.Top="6" FontWeight="Bold"/>
                     <TextBlock x:Name="nameString" HorizontalAlignment="Left" Text="Шабинский Д.А." VerticalAlignment="Top" Foreground="White" FontSize="16" Canvas.Left="76" Canvas.Top="66" Height="22" Width="219" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
                     <TextBlock x:Name="userRoleString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Пользователь" VerticalAlignment="Top" Foreground="White" Canvas.Left="76" Canvas.Top="88" Height="15" Width="100" FontStyle="Italic"/>
                     <TextBlock x:Name="voiceChatTextBlock" HorizontalAlignment="Left" Text="Голосовой чат подключен" VerticalAlignment="Top" Foreground="#FF13C713" Width="183" Height="20" Canvas.Left="4" Canvas.Top="30" TextDecorations="{x:Null}"/>
                     <TextBlock x:Name="videoTextBlock" HorizontalAlignment="Left" Text="Видео подключено" VerticalAlignment="Top" Foreground="#FF13C713" Width="183" Height="20" Canvas.Left="4" Canvas.Top="50" TextDecorations="{x:Null}"/>
                     <Button x:Name="leaveButton" Content="Покинуть" ToolTip="Покинуть конференцию" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Canvas.Left="187" Canvas.Top="6" Background="#FF472781" BorderBrush="#FF472781" Height="30" FontSize="14" FontWeight="Bold" Foreground="#DDFFFFFF" IsTabStop="False"/>
-
                 </Canvas>
-                <TextBlock x:Name="infoTextBlock" Visibility="Hidden" Text="Для работы с графами необходимо сначала войти в конференцию или же создать собственную." Height="70" Width="500" HorizontalAlignment="Right" Margin="0 0 45 0" Foreground="#FFFFC11A" FontSize="20" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                <TextBlock x:Name="infoTextBlock" Visibility="Visible" Text="Для работы с графами, а также общения с пользователями необходимо сначала войти в конференцию или же создать собственную." HorizontalAlignment="Center" Margin="310 40 10 40" Foreground="#FFFFC11A" FontSize="20" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" TextAlignment="Center"/>
 
-                <!--Канвас для панели графов-->
-                <Canvas x:Name="GraphControlCanvas" Visibility="Visible" HorizontalAlignment="Left" Height="148" Margin="324,11,0,0" VerticalAlignment="Top" Width="556" Background="#FF0E0E19">
+                <!--Панель для работы с графами-->
+                <Canvas x:Name="GraphControlCanvas" Visibility="Hidden" Margin="315,7.5,10,7.5" Background="#FF0E0E19">
                     <Button x:Name="addVertexBtn" Click="AddVertex_Click" ToolTip = "Включить режим добавления вершин" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/add_vertex.png"/>
@@ -144,13 +150,38 @@
                             <TextBlock x:Name="freeModeTextBlock1" TextWrapping="NoWrap" Text="Алгоритмы" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <TextBlock x:Name="currentMode" Text="Текущий режим: Курсор" Canvas.Left="10" Canvas.Top="2" Width="321" Foreground="White" Height="16" Padding="1" FontSize="10" TextAlignment="Center" FontWeight="Medium"/>
+                    <TextBlock x:Name="currentMode" Text="Текущий режим: Перемещение" Canvas.Left="10" Canvas.Top="2" Width="321" Foreground="White" Height="16" Padding="1" FontSize="10" TextAlignment="Center" FontWeight="Medium"/>
                 </Canvas>
-                <!--Канвас для панели рисования-->
-                <Canvas x:Name="PaintControlCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="148" Margin="324,11,0,0" VerticalAlignment="Top" Width="556" Background="#FF0E0E19">
-                    <TextBlock x:Name="currentPaintMode" Text="Текущий режим: Кисть" Canvas.Left="10" Canvas.Top="2" Width="321" Foreground="White" Height="16" Padding="1" FontSize="10" TextAlignment="Center" FontWeight="Medium"/>
+                <Button x:Name="GraphModeChangerButton" Visibility="Hidden" Content="Графы" Click="FreeMode_Click" ToolTip = "Переключитиь на свободный режим" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" BorderBrush="White" Canvas.Left="456" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" ClipToBounds="True" Margin="0,7.5,10,0"/>
+                <!--Панель для работы с рисовалкой-->
+                <Canvas x:Name="PaintControlCanvas" Visibility="Visible" Margin="315,7.5,10,7.5" Background="#FF0E0E19">
+                    <TextBlock x:Name="currentPaintMode" Text="Текущий режим: Курсор" Canvas.Left="10" Canvas.Top="2" Width="321" Foreground="White" Height="16" Padding="1" FontSize="10" TextAlignment="Center" FontWeight="Medium"/>
+                    <Button x:Name="BrushButton" Click="BrushButton_Click" ToolTip = "Включить Кисть" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                        <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
+                            <Image Source="Resources/brush.png"/>
+                            <TextBlock TextWrapping="NoWrap" Text="Кисть" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="EraserButton" Click="EraserButton_Click" ToolTip = "Включить Ластик" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                        <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
+                            <Image Source="Resources/eraser.png"/>
+                            <TextBlock TextWrapping="NoWrap" Text="Ластик" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="Eraser_SmartButton" Click="Eraser_SmartButton_Click" ToolTip = "Включить Ластик" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
+                        <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
+                            <Image Source="Resources/eraser_smart.png"/>
+                            <TextBlock TextWrapping="NoWrap" Text="Умный Ластик" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="SelectionButton" Click="SelectionButton_Click" ToolTip = "Включить режим Выделения" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
+                        <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
+                            <Image Source="Resources/selection.png"/>
+                            <TextBlock TextWrapping="NoWrap" Text="Выделение" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                        </StackPanel>
+                    </Button>
                 </Canvas>
-                <Button x:Name="freeModeBtn" Visibility="Hidden" Content="Графы" Click="FreeMode_Click" ToolTip = "Включить свободный режим" HorizontalAlignment="Left" VerticalAlignment="Top" Width="99" BorderBrush="White" Canvas.Left="457" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" ClipToBounds="True" Margin="781,14,0,0"/>
+                <Button x:Name="PaintModeChangerButton" Visibility="Hidden" Content="Рисование" Click="FreeMode_Click" ToolTip = "Переключить на режим графов" Width="100" BorderBrush="White" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,7.5,10,0"/>
             </Grid>
         </Grid>
         <Grid x:Name="chatGrid" Grid.Column="2" Background="#FF141424">
@@ -158,62 +189,44 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="165"/>
             </Grid.RowDefinitions>
-            <Button Click="TextChatButton_Clicked" Content="Текстовый чат" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatAccentButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
-            <Button Click="VideoChatButton_Clicked" Content="Видео-чат" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
-            <Button Click="ParticipantsButton_Clicked" Content="Участники" HorizontalAlignment="Right" VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
-            <ScrollViewer x:Name="ChatsScrollView" Visibility="Visible" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,10,0,142" Grid.Row="2" Foreground="White" Background="#00000000">
-                <TextBox x:Name="ChatBox" Visibility="Visible" HorizontalAlignment="Left" Width="380" TextWrapping="Wrap" Text="" IsReadOnly="True" FontSize="20" TextAlignment="Left" IsTabStop="False" AllowDrop="False" CaretBrush="Red"/>
-            </ScrollViewer>
-            <ScrollViewer x:Name="ParticipantsScrollView" Visibility="Hidden" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,10,0,142" Grid.Row="2" Foreground="White" Background="#00000000">
-                <TextBox x:Name="ParticipantsBox" Visibility="Hidden" HorizontalAlignment="Left" Width="380" Text="" IsReadOnly="True" FontSize="20" TextAlignment="Left" TextWrapping="Wrap"/>
-            </ScrollViewer>
-            <!--Chat Canvas-->
-            <Canvas x:Name="TextChatCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="460" Margin="1,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="407" Grid.RowSpan="2">
-                <TextBlock x:Name="ConferensionString" HorizontalAlignment="Center" Padding="0,9,5,0" Text="Чат конференции №2284" VerticalAlignment="Center" Height="50" Width="407" FontSize="22" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" RenderTransformOrigin="0.5,0.5" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="WordEllipsis">
-                    <TextBlock.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform ScaleY="1" ScaleX="1"/>
-                            <SkewTransform AngleY="0" AngleX="0"/>
-                            <RotateTransform Angle="0"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </TextBlock.RenderTransform>
-                </TextBlock>
-                <Button x:Name="sendButton" Click="SendButton_Clicked" HorizontalAlignment="Left" Style="{StaticResource MaterialDesignFloatingActionButton}" VerticalAlignment="Top" Width="48" Height="48" Canvas.Left="352" Canvas.Top="679" FontSize="16" Foreground="{x:Null}" BorderBrush="{x:Null}" IsTabStop="False">
+            <Grid Grid.Row="0">
+                <!--Верхние кнопки-->
+                <Button Click="TextChatButton_Clicked" Content="Текстовый чат" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatAccentButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
+                <Button Click="VideoChatButton_Clicked" Content="Видео-чат" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
+                <Button Click="ParticipantsButton_Clicked" Content="Участники" HorizontalAlignment="Right" VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <!--Верхняя Строка-->
+                <TextBlock x:Name="ConferensionString" Visibility="Visible" Padding="0,8,0,0" Text="Чат конференции №123" Height="50" FontSize="24" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="WordEllipsis" Width="400" Canvas.Top="5"/>
+                <TextBlock x:Name="VideoString" Visibility="Hidden" Padding="0,8,0,0" Text="Видео-чат конференции" Height="50" FontSize="24" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="WordEllipsis" Width="400" Canvas.Top="5"/>
+                <TextBlock x:Name="ParticipantsString" Visibility="Hidden" Padding="0,8,0,0" Text="Участники конференции" Height="50" FontSize="24" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="WordEllipsis" Width="400" Canvas.Top="5"/>
+            </Grid>
+            <Grid Grid.Row="2">
+                <!--Чат со сообщениями-->
+                <ScrollViewer x:Name="ChatsScrollView" Visibility="Visible" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0" Grid.Row="2" Foreground="White">
+                    <TextBox x:Name="ChatBox" Visibility="Visible" TextWrapping="Wrap" Text="" IsReadOnly="True" FontSize="20" TextAlignment="Left" IsTabStop="False" AllowDrop="False"/>
+                </ScrollViewer>
+                <!--Веб-камеры-->
+                <ScrollViewer x:Name="VideosScrollView" Visibility="Hidden" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0" Grid.Row="2" Foreground="White" Background="#00000000">
+                    <Canvas x:Name="VideoChatCanvas" Visibility="Hidden" Grid.Row="1" Grid.RowSpan="2"/>
+                </ScrollViewer>
+                <!--Список участников-->
+                <ScrollViewer x:Name="ParticipantsScrollView" Visibility="Hidden" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0" Grid.Row="2" Foreground="White">
+                    <TextBox x:Name="ParticipantsBox" Visibility="Hidden" HorizontalAlignment="Left" Width="400" TextWrapping="Wrap" Text="" IsReadOnly="True" FontSize="20" TextAlignment="Left" IsTabStop="False" AllowDrop="False" />
+                </ScrollViewer>
+            </Grid>
+            <Grid Grid.Row="3">
+                <!--Элементы для чата-->
+                <TextBox x:Name="chatTextBox" Height="120" materialDesign:HintAssist.Hint="Напишите сообщение ..." Background="#FF323232" FontSize="16" MaxLength="200" MaxLines="20" MinLines="1" TextWrapping="Wrap" TextAlignment="Left" CaretBrush="{x:Null}" Foreground="White" TextChanged="chatTextBox_TextChanged" SpellCheck.IsEnabled="True" VerticalAlignment="Bottom" Margin="5,0,50,8.5"/>
+                <TextBlock x:Name="charCounterTextBlock" TextWrapping="Wrap" Text="Символов 0/200" Foreground="White" Margin="5,0,250,128" VerticalAlignment="Bottom"/>
+                <Button x:Name="sendButton" Click="SendButton_Clicked" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionButton}" Width="48" Height="48" FontSize="16" Foreground="{x:Null}" BorderBrush="{x:Null}" IsTabStop="False" Margin="0,0,0,8.5" VerticalAlignment="Bottom">
                     <Button.Background>
                         <ImageBrush ImageSource="Resources/send.png" Stretch="UniformToFill"/>
                     </Button.Background>
                 </Button>
-                <TextBox x:Name="chatTextBox" Height="100" Width="350" materialDesign:HintAssist.Hint="Напишите сообщение ..." Background="#FF323232" Canvas.Top="627" FontSize="16" MaxLength="200" MaxLines="20" MinLines="1" TextWrapping="Wrap" TextAlignment="Left" CaretBrush="{x:Null}" Foreground="White" TextChanged="chatTextBox_TextChanged" Canvas.Left="4" SpellCheck.IsEnabled="True"/>
-                <TextBlock x:Name="CharCountTextBlock" TextWrapping="Wrap" Text="Символов 0/200" Canvas.Top="607" Height="20" Width="350" Foreground="White" Canvas.Left="4"/>
-            </Canvas>
-            <!--Video Canvas-->
-            <Canvas x:Name="VideoChatCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="720" Margin="1,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="405" Grid.RowSpan="2">
-                <TextBlock x:Name="VideoString" HorizontalAlignment="Center" Padding="0,9,5,0" Text="Видео-чат конференции" VerticalAlignment="Center" Height="50" Width="407" FontSize="22" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" RenderTransformOrigin="0.5,0.5" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="WordEllipsis">
-                    <TextBlock.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform ScaleY="1" ScaleX="1"/>
-                            <SkewTransform AngleY="0" AngleX="0"/>
-                            <RotateTransform Angle="0"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </TextBlock.RenderTransform>
-                </TextBlock>
-            </Canvas>
-            <!--Participants Canvas-->
-            <Canvas x:Name="ParticipantsCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="720" Margin="1,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="405" Grid.RowSpan="2">
-                <TextBlock x:Name="ParticipantsString" HorizontalAlignment="Center" Padding="0,9,5,0" Text="Участники конференции" VerticalAlignment="Center" Height="50" Width="407" FontSize="22" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" RenderTransformOrigin="0.5,0.5" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="WordEllipsis" Canvas.Top="-10">
-                    <TextBlock.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform ScaleY="1" ScaleX="1"/>
-                            <SkewTransform AngleY="0" AngleX="0"/>
-                            <RotateTransform Angle="0"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </TextBlock.RenderTransform>
-                </TextBlock>
-            </Canvas>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
