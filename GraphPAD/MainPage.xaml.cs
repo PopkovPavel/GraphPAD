@@ -1,5 +1,6 @@
 ﻿using CefSharp;
 using CefSharp.Wpf;
+using GalaSoft.MvvmLight.Command;
 using GraphPAD.Data.JSON;
 using GraphPAD.Data.User;
 using Newtonsoft.Json;
@@ -8,6 +9,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -15,23 +17,33 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Resources;
+using System.Windows.Ink;
+using MaterialDesignThemes.Wpf;
 
 namespace GraphPAD
 {
     public partial class MainPage : Window
     {
         #region Global Variables
+        //User Controls
         public bool isMicOn;
         public bool isHeadPhonesOn;
         public bool isVideoOn;
+        private bool _flag;
+        //Graph Controls
         public bool isAddVetexOn;
         public bool isRemoveVertexOn;
         public bool isConnectVertexOn;
         public bool isDisconnectVertexOn;
         public bool isGraphGeneratorOn;
         public bool isAlgorithmsOn;
+        //Paint Controls
         public bool isFreeModeOn;
-        private bool _flag;
+        public bool isBrushModeOn;
+        public bool isEraserModeOn;
+        public bool isEraser_SmartModeOn;
+        public bool isSelectionModeOn;
+        //Etc.
         public int lobbyCount;
         public int lobbyButtonsMargin = -70;
         public int chatCount;
@@ -72,6 +84,11 @@ namespace GraphPAD
             isGraphGeneratorOn = false;
             isAlgorithmsOn = false;
             isFreeModeOn = false;
+            //Выключение всех режимов работы с рисовалкой
+            isBrushModeOn = false;
+            isEraserModeOn = false;
+            isEraser_SmartModeOn = false;
+            isSelectionModeOn = false;
 
             if (GuestInfo.Name != "exist")
             {
@@ -97,6 +114,12 @@ namespace GraphPAD
             leaveButton.Visibility = Visibility.Hidden;  
             chatGrid.Visibility = Visibility.Hidden;
 
+            EraserTextBlock.Visibility = Visibility.Hidden;
+            EraserSlider.Visibility = Visibility.Hidden;
+            //ColorPickerTextBlock.Visibility = Visibility.Hidden;
+            //ColorPicker.Visibility = Visibility.Hidden;
+            //Отключение Кисти при запуске
+            PaintCanvas.EditingMode = InkCanvasEditingMode.None;
             Chromium.settings.CefCommandLineArgs.Add("enable-media-stream", "1");
             Cef.Initialize(Chromium.settings);
             leaveButton.Click += (s, ea) =>
@@ -122,6 +145,7 @@ namespace GraphPAD
         #region Functions
         public void ButtonsFix()
         {
+            //GraphButtons fix
             isAddVetexOn = false;
             isRemoveVertexOn = false;
             isConnectVertexOn = false;
@@ -147,8 +171,25 @@ namespace GraphPAD
             disconnectVertexBtn.Visibility = Visibility.Visible;
             graphGeneratorBtn.Visibility = Visibility.Visible;
             algorithmsBtn.Visibility = Visibility.Visible;
-            currentMode.Text = "Текущий режим: Курсор";
-
+            currentGraphMode.Text = "Текущий режим: Перемещение";
+            //PaintButtons Fix
+            isBrushModeOn = false;
+            isEraserModeOn = false;
+            isEraser_SmartModeOn = false;
+            isSelectionModeOn = false;
+            BrushButton.Background = Brushes.Transparent;
+            EraserButton.Background = Brushes.Transparent;
+            Eraser_SmartButton.Background = Brushes.Transparent;
+            SelectionButton.Background = Brushes.Transparent;
+            BrushButton.IsEnabled = true;
+            EraserButton.IsEnabled = true;
+            Eraser_SmartButton.IsEnabled = true;
+            SelectionButton.IsEnabled = true;
+            PaintCanvas.EditingMode = InkCanvasEditingMode.None;
+            EraserSlider.Visibility = Visibility.Hidden;
+            EraserTextBlock.Visibility = Visibility.Hidden;
+            currentPaintMode.Text = "Текущий режим: Курсор";
+            //Menu Fix
             CancelCreateLobbyButton.Visibility = Visibility.Hidden;
             ConfirmCreateLobbyButton.Visibility = Visibility.Hidden;
             NewConferensionNameTextBox.Visibility = Visibility.Hidden;
@@ -260,7 +301,7 @@ namespace GraphPAD
                         contextMenu.Items.Add(menuLeaveItem);
                         contextMenu.Items.Add(menuDeleteItem);
 
-                        var tempButton = new Button()
+                        var ConfButton = new Button()
                         {
                             Width = 64,
                             Height = 64,
@@ -270,10 +311,9 @@ namespace GraphPAD
                             ContextMenu = contextMenu
                         };
 
-                        tempButton.Click += Ez_Click;
+                        ConfButton.Click += Ez_Click;
 
-
-                        tempButton.Click += (senda, ev) =>
+                        ConfButton.Click += (senda, ev) =>
                         {
                             LobbyEnter_ClickAsync($"{room.RoomID}",$"{room.RoomName}");
                             isAddVetexOn = false;
@@ -283,16 +323,18 @@ namespace GraphPAD
                             isGraphGeneratorOn = false;
                             isAlgorithmsOn = false;
                             isFreeModeOn = false;
-
-
+                            isBrushModeOn = false;
+                            isEraserModeOn = false;
+                            isEraser_SmartModeOn = false;
+                            isSelectionModeOn = false;
                         };
 
                         var path = "Resources/account.png";
                         Uri resourceUri = new Uri(path, UriKind.Relative);
                         StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
                         BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-                        tempButton.Background = new ImageBrush(temp);                        
-                        LobbysCanvas.Children.Add(tempButton);
+                        ConfButton.Background = new ImageBrush(temp);                        
+                        LobbysCanvas.Children.Add(ConfButton);
                     }
                 }
                 else
@@ -805,7 +847,7 @@ namespace GraphPAD
             authPage.Show();
         }
         #endregion
-        #region FreeMode
+        #region FreeMode Changer
         private void FreeMode_Click(object sender, RoutedEventArgs e)
         {
             if (!isFreeModeOn)
@@ -819,7 +861,7 @@ namespace GraphPAD
                 GraphCanvas.Visibility = Visibility.Hidden;
                 PaintCanvas.Visibility = Visibility.Visible;
                 BGgrid.Background = Brushes.DarkSlateGray;
-                
+
             }
             else
             {
@@ -831,7 +873,6 @@ namespace GraphPAD
                 GraphCanvas.Visibility = Visibility.Visible;
                 PaintCanvas.Visibility = Visibility.Hidden;
                 BGgrid.Background = Brushes.DarkGray;
-
                 ButtonsFix();
             }
         }
@@ -848,7 +889,7 @@ namespace GraphPAD
                 disconnectVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
-                currentMode.Text = "Текущий режим: Добавление вершин";
+                currentGraphMode.Text = "Текущий режим: Добавление вершин";
                 isAddVetexOn = true;
                 addVertexBtn.ToolTip = "Выключить режим добавления вершин";
             }
@@ -861,7 +902,7 @@ namespace GraphPAD
                 disconnectVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
-                currentMode.Text = "Текущий режим: Курсор";
+                currentGraphMode.Text = "Текущий режим: Перемещение";
                 isAddVetexOn = false;
                 addVertexBtn.ToolTip = "Включить режим добавления вершин";
             }
@@ -879,7 +920,7 @@ namespace GraphPAD
                 disconnectVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
-                currentMode.Text = "Текущий режим: Удаление вершин";
+                currentGraphMode.Text = "Текущий режим: Удаление вершин";
                 isRemoveVertexOn = true;
                 deleteVertexBtn.ToolTip = "Выключить режим удаления вершин";
             }
@@ -892,7 +933,7 @@ namespace GraphPAD
                 disconnectVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
-                currentMode.Text = "Текущий режим: Курсор";
+                currentGraphMode.Text = "Текущий режим: Перемещение";
                 isRemoveVertexOn = false;
                 deleteVertexBtn.ToolTip = "Включить режим удаления вершин";
             }
@@ -911,7 +952,7 @@ namespace GraphPAD
                 disconnectVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
-                currentMode.Text = "Текущий режим: Соединение вершин";
+                currentGraphMode.Text = "Текущий режим: Соединение вершин";
                 isConnectVertexOn = true;
                 connectVertexBtn.ToolTip = "Выключить режим соединения вершин";
             }
@@ -924,7 +965,7 @@ namespace GraphPAD
                 disconnectVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
-                currentMode.Text = "Текущий режим: Курсор";
+                currentGraphMode.Text = "Текущий режим: Перемещение";
                 isConnectVertexOn = false;
                 connectVertexBtn.ToolTip = "Включить режим соединения вершин";
             }
@@ -943,7 +984,7 @@ namespace GraphPAD
                 //disconnectVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
-                currentMode.Text = "Текущий режим: Удаление связей";
+                currentGraphMode.Text = "Текущий режим: Удаление связей";
                 isDisconnectVertexOn = true;
                 disconnectVertexBtn.ToolTip = "Выключить режим удаления связей";
             }
@@ -956,7 +997,7 @@ namespace GraphPAD
                 //disconnectVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
-                currentMode.Text = "Текущий режим: Курсор";
+                currentGraphMode.Text = "Текущий режим: Перемещение";
                 isDisconnectVertexOn = false;
                 disconnectVertexBtn.ToolTip = "Включить режим удаления связей";
             }
@@ -974,7 +1015,7 @@ namespace GraphPAD
                 disconnectVertexBtn.Visibility = Visibility.Hidden;
                 //graphGeneratorBtn.Visibility = Visibility.Hidden;
                 algorithmsBtn.Visibility = Visibility.Hidden;
-                currentMode.Text = "Текущий режим: Генерация графов";                
+                currentGraphMode.Text = "Текущий режим: Генерация графов";                
                 isGraphGeneratorOn = true;
                 graphGeneratorBtn.ToolTip = "Выключить режим удаления связей";
             }
@@ -986,7 +1027,7 @@ namespace GraphPAD
                 disconnectVertexBtn.Visibility = Visibility.Visible;
                 //graphGeneratorBtn.Visibility = Visibility.Visible;
                 algorithmsBtn.Visibility = Visibility.Visible;
-                currentMode.Text = "Текущий режим: Курсор";
+                currentGraphMode.Text = "Текущий режим: Перемещение";
                 isGraphGeneratorOn = false;
                 disconnectVertexBtn.ToolTip = "Включить режим удаления связей";
             }
@@ -1004,7 +1045,7 @@ namespace GraphPAD
                 disconnectVertexBtn.Visibility = Visibility.Hidden;
                 graphGeneratorBtn.Visibility = Visibility.Hidden;
                 //algorithmsBtn.Visibility = Visibility.Hidden;
-                currentMode.Text = "Текущий режим: Алгоритмы";
+                currentGraphMode.Text = "Текущий режим: Алгоритмы";
                 isAlgorithmsOn = true;
                 graphGeneratorBtn.ToolTip = "Выключить режим удаления связей";
             }
@@ -1016,7 +1057,7 @@ namespace GraphPAD
                 disconnectVertexBtn.Visibility = Visibility.Visible;
                 graphGeneratorBtn.Visibility = Visibility.Visible;
                 //algorithmsBtn.Visibility = Visibility.Visible;
-                currentMode.Text = "Текущий режим: Курсор";
+                currentGraphMode.Text = "Текущий режим: Перемещение";
                 isAlgorithmsOn = false;
                 disconnectVertexBtn.ToolTip = "Включить режим удаления связей";
             }
@@ -1025,7 +1066,163 @@ namespace GraphPAD
         }
         #endregion
         #region Paint panel buttons
-        //LET'S GOOOOOOOOOOOOOOO
+        private void BrushButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isBrushModeOn)
+            {
+                //BrushButton.IsEnabled = false;
+                EraserButton.IsEnabled = false;
+                Eraser_SmartButton.IsEnabled = false;
+                SelectionButton.IsEnabled = false;
+                PaintCanvas.EditingMode = InkCanvasEditingMode.Ink;
+                currentPaintMode.Text = "Текущий режим: Кисть";
+                BrushButton.ToolTip = "Выключить Кисть";
+                //ColorPickerTextBlock.Visibility = Visibility.Visible;
+                //ColorPicker.Visibility = Visibility.Visible;
+                isBrushModeOn = true;
+            }
+            else
+            {
+                //BrushButton.IsEnabled = true;
+                EraserButton.IsEnabled = true;
+                Eraser_SmartButton.IsEnabled = true;
+                SelectionButton.IsEnabled = true;
+                PaintCanvas.EditingMode = InkCanvasEditingMode.None;
+                currentPaintMode.Text = "Текущий режим: Курсор";
+                BrushButton.ToolTip = "Включить Кисть";
+                //ColorPickerTextBlock.Visibility = Visibility.Hidden;
+                //ColorPicker.Visibility = Visibility.Hidden;
+                isBrushModeOn = false;
+
+            }
+            Button btn = sender as Button;
+            btn.Background = btn.Background == Brushes.DarkGreen ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGreen;
+        }
+        private void EraserButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isEraserModeOn)
+            {
+                BrushButton.IsEnabled = false;
+                //EraserButton.IsEnabled = false;
+                Eraser_SmartButton.IsEnabled = false;
+                SelectionButton.IsEnabled = false;
+                PaintCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                currentPaintMode.Text = "Текущий режим: Ластик";
+                EraserButton.ToolTip = "Выключить Ластик";
+                EraserTextBlock.Visibility = Visibility.Visible;
+                EraserSlider.Visibility = Visibility.Visible;
+                isEraserModeOn = true;
+            }
+            else
+            {
+                BrushButton.IsEnabled = true;
+                //EraserButton.IsEnabled = true;
+                Eraser_SmartButton.IsEnabled = true;
+                SelectionButton.IsEnabled = true;
+                PaintCanvas.EditingMode = InkCanvasEditingMode.None;
+                currentPaintMode.Text = "Текущий режим: Курсор";
+                EraserButton.ToolTip = "Включить Ластик";
+                EraserTextBlock.Visibility = Visibility.Hidden;
+                EraserSlider.Visibility = Visibility.Hidden;
+                isEraserModeOn = false;
+            }
+            Button btn = sender as Button;
+            btn.Background = btn.Background == Brushes.DarkRed ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkRed;
+        }
+        private void Eraser_SmartButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isEraser_SmartModeOn)
+            {
+                BrushButton.IsEnabled = false;
+                EraserButton.IsEnabled = false;
+                //Eraser_SmartButton.IsEnabled = false;
+                SelectionButton.IsEnabled = false;
+                PaintCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
+                currentPaintMode.Text = "Текущий режим: Умный Ластик";
+                Eraser_SmartButton.ToolTip = "Выключить Умный Ластик";
+                isEraser_SmartModeOn = true;
+            }
+            else
+            {
+                BrushButton.IsEnabled = true;
+                EraserButton.IsEnabled = true;
+                //Eraser_SmartButton.IsEnabled = true;
+                SelectionButton.IsEnabled = true;
+                PaintCanvas.EditingMode = InkCanvasEditingMode.None;
+                currentPaintMode.Text = "Текущий режим: Курсор";
+                Eraser_SmartButton.ToolTip = "Включить Умный Ластик";
+                isEraser_SmartModeOn = false;
+            }
+            Button btn = sender as Button;
+            btn.Background = btn.Background == Brushes.DarkRed ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkRed;
+        }
+        private void SelectionButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isSelectionModeOn)
+            {
+                BrushButton.IsEnabled = false;
+                EraserButton.IsEnabled = false;
+                Eraser_SmartButton.IsEnabled = false;
+                //SelectionButton.IsEnabled = false;
+                PaintCanvas.EditingMode = InkCanvasEditingMode.Select;
+                currentPaintMode.Text = "Текущий режим: Выделение";
+                SelectionButton.ToolTip = "Выключить Режим Выделения";
+                isSelectionModeOn = true;
+            }
+            else
+            {
+                BrushButton.IsEnabled = true;
+                EraserButton.IsEnabled = true;
+                Eraser_SmartButton.IsEnabled = true;
+                //SelectionButton.IsEnabled = true;
+                PaintCanvas.EditingMode = InkCanvasEditingMode.None;
+                currentPaintMode.Text = "Текущий режим: Курсор";
+                SelectionButton.ToolTip = "Включить Режим Выделения";
+                isSelectionModeOn = false;
+            }
+            Button btn = sender as Button;
+            btn.Background = btn.Background == Brushes.DarkOrange ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkOrange;
+        }
+        private void ColorPicker_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var CurrentColor = ColorPicker.Color;
+            PaintCanvas.DefaultDrawingAttributes.Color = CurrentColor;
+            //MessageBox.Show(CurrentColor.ToString());
+        }
+        private void ColorPicker_ColorChanged(object sender, RoutedPropertyChangedEventArgs<Color> e)
+        {
+            var CurrentColor = ColorPicker.Color;
+            PaintCanvas.DefaultDrawingAttributes.Color = CurrentColor;
+        }
+        private void ColorPicker_LayoutUpdated(object sender, EventArgs e)
+        {
+            var CurrentColor = ColorPicker.Color;
+            PaintCanvas.DefaultDrawingAttributes.Color = CurrentColor;
+        }
+        private void EraserSlider_LayoutUpdated(object sender, EventArgs e)
+        {
+            var eraserSize = EraserSlider.Value;
+            PaintCanvas.EraserShape = new EllipseStylusShape(eraserSize, eraserSize);
+            EraserTextBlock.Text = "Размер Ластика: " + (eraserSize).ToString();
+        }
+        private void EraserSlider_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (isEraserModeOn)
+            {
+                var eraserSize = EraserSlider.Value;
+                PaintCanvas.EditingMode = InkCanvasEditingMode.None;
+                PaintCanvas.EraserShape = new EllipseStylusShape(eraserSize, eraserSize);
+            }
+        }
+        private void EraserSlider_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (isEraserModeOn)
+            {
+                var eraserSize = EraserSlider.Value;
+                PaintCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
+                PaintCanvas.EraserShape = new EllipseStylusShape(eraserSize, eraserSize);
+            }
+        }
         #endregion
         #region Closing
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
@@ -1078,25 +1275,6 @@ namespace GraphPAD
             }
         }
         #endregion
-        private void BrushButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void EraserButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Eraser_SmartButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void SelectionButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
         #region Trash
         private void Ez_Click(object sender, RoutedEventArgs e)
         {
@@ -1110,5 +1288,5 @@ namespace GraphPAD
 }
 
 //ToDo
-//1)
+//1)Avatar Changer
 //2)

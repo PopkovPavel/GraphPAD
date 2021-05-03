@@ -19,6 +19,9 @@ namespace GraphPAD
         public SettingsPage()
         {
             InitializeComponent();
+            
+            //Avatar.UpdateLayout();
+
             userNameTextBlock.Text = UserInfo.Name;
             userRoleTextBlock.Text = "Пользователь";
             nameStingTextBlock.Text = UserInfo.Name;

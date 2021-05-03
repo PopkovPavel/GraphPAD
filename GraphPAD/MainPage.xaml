@@ -41,18 +41,18 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="100"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row = "0">
+            <Grid Grid.Row="0">
                 <ScrollViewer x:Name="LobbysScrollView" VerticalScrollBarVisibility="Hidden">
                     <Canvas x:Name="LobbysCanvas" Height="0" VerticalAlignment="Top"/>
                 </ScrollViewer>
             </Grid>
-            <Grid Grid.Row = "1">
-                <Button Click="RefreshRoomsList" BorderThickness="2" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Center" Margin="0" Grid.Row="1" VerticalAlignment="Center" Width="64" Height="64" BorderBrush="White" IsTabStop="False" ToolTip="Обновить список конференций">
+            <Grid Grid.Row="1" Background="#FF171720">
+                <Button Click="RefreshRoomsList" BorderThickness="2" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Center" Margin="22,35,23,15" VerticalAlignment="Center" Width="50" Height="50" BorderBrush="White" IsTabStop="False" ToolTip="Обновить список конференций">
                     <Button.Background>
-                        <ImageBrush ImageSource="Resources/connect.png"/>
+                        <ImageBrush ImageSource="Resources/refresh.png"/>
                     </Button.Background>
                 </Button>
-                <TextBlock x:Name="ConferensionsCountTextBlock" Text="Конференций: 0" TextAlignment="Center" Height="35" Foreground="White" Margin="0,0,0,65" TextDecorations="{x:Null}" FontSize="10" FontWeight="Bold" Grid.Row="1"/>
+                <TextBlock x:Name="ConferensionsCountTextBlock" Text="Конференций: 0" TextAlignment="Center" Foreground="White" Margin="0,10,0,70" TextDecorations="{x:Null}" FontSize="10" FontWeight="Bold"/>
             </Grid>
 
         </Grid>
@@ -76,7 +76,7 @@
                 </Canvas>
                 <!--Поля для графов и рисовалки-->
                 <Canvas x:Name="GraphCanvas" Visibility="Hidden" Background="White" Margin="10"/>
-                <InkCanvas x:Name="PaintCanvas" Visibility="Visible" Background="White" Margin="10"/>
+                <InkCanvas x:Name="PaintCanvas" Visibility="Visible" Background="White" Margin="10" EditingMode="{Binding EditingMode}" ClipToBounds="True" DefaultDrawingAttributes="{Binding DrawingAttributes}"/>
             </Grid>
             <Grid Grid.Row="1" Background="#22223d">
                 <!--Нижняя часть интерфейса-->
@@ -150,36 +150,40 @@
                             <TextBlock x:Name="freeModeTextBlock1" TextWrapping="NoWrap" Text="Алгоритмы" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <TextBlock x:Name="currentMode" Text="Текущий режим: Перемещение" Canvas.Left="10" Canvas.Top="2" Width="321" Foreground="White" Height="16" Padding="1" FontSize="10" TextAlignment="Center" FontWeight="Medium"/>
+                    <TextBlock x:Name="currentGraphMode" Text="Текущий режим: Перемещение" Canvas.Left="10" Canvas.Top="2" Width="321" Foreground="White" Height="16" Padding="1" FontSize="10" TextAlignment="Center" FontWeight="Medium"/>
                 </Canvas>
-                <Button x:Name="GraphModeChangerButton" Visibility="Hidden" Content="Графы" Click="FreeMode_Click" ToolTip = "Переключитиь на свободный режим" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" BorderBrush="White" Canvas.Left="456" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" ClipToBounds="True" Margin="0,7.5,10,0"/>
+                <Button x:Name="GraphModeChangerButton" Visibility="Hidden" Content="Графы" Click="FreeMode_Click" ToolTip = "Переключить на свободный режим" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" BorderBrush="White" Canvas.Left="456" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" ClipToBounds="True" Margin="0,7.5,10,0"/>
                 <!--Панель для работы с рисовалкой-->
                 <Canvas x:Name="PaintControlCanvas" Visibility="Visible" Margin="315,7.5,10,7.5" Background="#FF0E0E19">
                     <TextBlock x:Name="currentPaintMode" Text="Текущий режим: Курсор" Canvas.Left="10" Canvas.Top="2" Width="321" Foreground="White" Height="16" Padding="1" FontSize="10" TextAlignment="Center" FontWeight="Medium"/>
-                    <Button x:Name="BrushButton" Click="BrushButton_Click" ToolTip = "Включить Кисть" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="BrushButton" Tag="Ink" Click="BrushButton_Click" ToolTip = "Включить Кисть" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/brush.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Кисть" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="EraserButton" Click="EraserButton_Click" ToolTip = "Включить Ластик" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="EraserButton" Click="EraserButton_Click" ToolTip = "Включить Ластик" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="180" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/eraser.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Ластик" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="Eraser_SmartButton" Click="Eraser_SmartButton_Click" ToolTip = "Включить Ластик" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="Eraser_SmartButton" Click="Eraser_SmartButton_Click" ToolTip = "Включить Умный Ластик" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="180" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/eraser_smart.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Умный Ластик" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="SelectionButton" Click="SelectionButton_Click" ToolTip = "Включить режим Выделения" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="SelectionButton" Click="SelectionButton_Click" ToolTip = "Включить Режим Выделения" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/selection.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Выделение" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
+                    <materialDesign:ColorPicker x:Name="ColorPicker" Visibility="Visible" Canvas.Left="350" Canvas.Top="35" Height="100" Width="200" BorderBrush="White" BorderThickness="1" Background="White" Foreground="White" ColorChanged="ColorPicker_ColorChanged" Color="Black" LayoutUpdated="ColorPicker_LayoutUpdated" IsTabStop="False"/>
+                    <Slider x:Name="EraserSlider" IsSnapToTickEnabled="True" Canvas.Left="180" Canvas.Top="122" Width="150" BorderBrush="White" Foreground="White" LayoutUpdated="EraserSlider_LayoutUpdated" Minimum="10" Value="30" BorderThickness="0" MouseEnter="EraserSlider_MouseEnter" MouseLeave="EraserSlider_MouseLeave" IsTabStop="False" Background="#FF472781" SmallChange="0" LargeChange="0" Interval="1" TickFrequency="10" Maximum="100"/>
+                    <TextBlock x:Name="EraserTextBlock" Canvas.Left="181" TextWrapping="Wrap" Text="Размер Ластика: 30" Canvas.Top="108" Foreground="White" FontWeight="SemiBold" Width="150" FontSize="10" Height="14"/>
+                    <TextBlock x:Name="ColorPickerTextBlock" Canvas.Left="350" TextWrapping="Wrap" Text="Палитра цветов" Canvas.Top="21" Foreground="White" FontWeight="SemiBold" Width="200" FontSize="10" Height="14"/>
                 </Canvas>
                 <Button x:Name="PaintModeChangerButton" Visibility="Hidden" Content="Рисование" Click="FreeMode_Click" ToolTip = "Переключить на режим графов" Width="100" BorderBrush="White" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,7.5,10,0"/>
             </Grid>
