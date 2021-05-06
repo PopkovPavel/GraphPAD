@@ -107,7 +107,7 @@ namespace GraphPAD
                     JSONauth tempUser = JsonConvert.DeserializeObject<JSONauth>(responseData);
 
                     UserInfo.Email = tempUser.Data.Email;
-                    //UserInfo.ID = tempUser.ID;
+                    UserInfo.ID = tempUser.Data.userId;
                     UserInfo.Role = tempUser.Data.Role;
                     UserInfo.Token = tempUser.Token;
                     GuestInfo.Name = "exist";

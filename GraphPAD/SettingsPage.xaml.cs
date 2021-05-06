@@ -1,49 +1,50 @@
-﻿using CefSharp;
-using CefSharp.Wpf;
-using GraphPAD.Data.JSON;
-using GraphPAD.Data.User;
-using Newtonsoft.Json;
-using RestSharp;
+﻿using GraphPAD.Data.User;
+using Microsoft.Win32;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace GraphPAD
 {
     public partial class SettingsPage : Window
     {
+        #region Global Variables
+        string avatarsFolder = Path.GetFullPath(@"Avatars\Avatar.png");
+        string newAvatar;
+        #endregion
+        #region Initialize
         public SettingsPage()
         {
             InitializeComponent();
-            
-            //Avatar.UpdateLayout();
-
+            SettingsAvatar.Source = NonBlockingLoad(UserInfo.Avatar);
             userNameTextBlock.Text = UserInfo.Name;
             userRoleTextBlock.Text = "Пользователь";
             nameStingTextBlock.Text = UserInfo.Name;
             IDStingTextBlock.Text = UserInfo.ID;
             emailStingTextBlock.Text = UserInfo.Email;
-            //if (GuestInfo.Name == "exist")
-            //{
-            //    userNameTextBlock.Text = UserInfo.Name;
-            //    userRoleTextBlock.Text = UserInfo.Role;
-            //    nameStingTextBlock.Text = UserInfo.Name;
-            //    IDStingTextBlock.Text = UserInfo.ID;
-            //    emailStingTextBlock.Text = UserInfo.Email;
-            //}
-            //else
-            //{
-            //    userNameTextBlock.Text = GuestInfo.Name;
-            //    userRoleTextBlock.Text = UserInfo.Role;
-            //    nameStingTextBlock.Text = GuestInfo.Name;
-            //    IDStingTextBlock.Text = "...";
-            //    emailStingTextBlock.Text = "...";
-            //}
+            if (UserInfo.Name != null)
+            {
+                userNameTextBlock.Text = UserInfo.Name;
+                userRoleTextBlock.Text = "Пользователь";
+                nameStingTextBlock.Text = UserInfo.Name;
+                IDStingTextBlock.Text = UserInfo.ID;
+                emailStingTextBlock.Text = UserInfo.Email;
+            }
+            else
+            {
+                userNameTextBlock.Text = GuestInfo.Name;
+                userRoleTextBlock.Text = "Гость";
+                nameStingTextBlock.Text = GuestInfo.Name;
+                IDStingTextBlock.Text = "...";
+                emailStingTextBlock.Text = "...";
+            }
         }
+        #endregion
+        #region Left Buttons
         private void AccountButton_Click(object sender, RoutedEventArgs e)
         {
             AccountCanvas.Visibility = Visibility.Visible;
@@ -51,7 +52,6 @@ namespace GraphPAD
             VideoCanvas.Visibility = Visibility.Hidden;
             InterfaceCanvas.Visibility = Visibility.Hidden;
         }
-
         private void VoiceButton_Click(object sender, RoutedEventArgs e)
         {
             AccountCanvas.Visibility = Visibility.Hidden;
@@ -75,6 +75,8 @@ namespace GraphPAD
             VideoCanvas.Visibility = Visibility.Hidden;
             InterfaceCanvas.Visibility = Visibility.Visible;
         }
+        #endregion
+        #region Account Settings
         private void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
             File.Delete(@"Token.json");
@@ -96,66 +98,63 @@ namespace GraphPAD
         {
             Process.Start("http://www.google.com");
         }
+        private void ChangePasswordButton_Click(object sender, RoutedEventArgs e)
+        {
 
-        private void Button_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        }
+        #endregion
+        #region Avatar Changer
+        private void avatarButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             avatarButton.Content = "Изменить";
             avatarButton.Opacity = 0.8;
         }
-
         private void avatarButton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
             avatarButton.Content = null;
             avatarButton.Opacity = 0;
         }
-
+        public static ImageSource NonBlockingLoad(string path)
+        {
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.UriSource = new Uri(path);
+            image.EndInit();
+            image.Freeze();
+            return image;
+        }
         private void avatarButton_Clicked(object sender, RoutedEventArgs e)
         {
-            //fix this cringe! :(
-
-            //Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            //dlg.FileName = ""; // Default file name
-            //dlg.DefaultExt = ".png"; // Default file extension
-            //dlg.Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg|All files (*.*)|*.*"; // Filter files by extension
-            //dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            //Nullable<bool> result = dlg.ShowDialog();
-            //if (result == true)
-            //{
-            //    try
-            //    {
-            //        if (!Directory.Exists(Path.GetFullPath(@"Avatars")))
-            //        {
-            //            Directory.CreateDirectory(Path.GetFullPath(@"Avatars"));
-            //        }
-            //        string filepath = dlg.FileName;
-            //        string fileToReplace = Path.GetFullPath(@"Avatars\Avatar.png");
-            //        //Console.WriteLine("New Avatar - " + filepath);
-            //        //Console.WriteLine("Avatar path - " + fileToReplace);
-            //        File.Copy(filepath, fileToReplace, true);
-
-            //        //MessageBox.Show("Чтобы изменения вступили в силу, небходимо перезапустить приложение.", "Сообщение", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            //        //Обновление аватарки
-            //        Avatar.Source = null;
-            //        var converter = new ImageSourceConverter();
-            //        Avatar.Source = (ImageSource)converter.ConvertFromString(@"Avatars\Avatar.png");
-            //        //Console.WriteLine(Avatar.Source);
-            //    }
-            //    catch (IOException copyError)
-            //    {
-            //        Console.WriteLine(copyError.Message);
-            //        MessageBox.Show("Что-то пошло не так.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    }
-            //}
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.FileName = "Avatar"; // Default file name
+            dlg.DefaultExt = ".jpg"; // Default file extension
+            dlg.Filter = "Image files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png|All files (*.*)|*.*"; // Filter files by extension
+            dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            dlg.Title = "Выберите новый аватар";
+            bool? result = dlg.ShowDialog();
+            if (result == true && result != null)
+            {
+                try
+                {
+                    newAvatar = dlg.FileName;
+                    File.Copy(newAvatar, avatarsFolder, true);
+                    SettingsAvatar.Source = NonBlockingLoad(newAvatar);
+                    UserInfo.Avatar = newAvatar;
+                }
+                catch (IOException copyError)
+                {
+                    Console.WriteLine(copyError.Message);
+                    MessageBox.Show("Что-то пошло не так.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
-
-        private void ChangePasswordButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
+        #endregion
+        #region Etc.
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
 
         }
+        #endregion
     }
 }

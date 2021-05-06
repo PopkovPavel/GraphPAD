@@ -1,24 +1,24 @@
 ﻿using CefSharp;
 using CefSharp.Wpf;
-using GalaSoft.MvvmLight.Command;
 using GraphPAD.Data.JSON;
 using GraphPAD.Data.User;
+using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.CompilerServices;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Resources;
-using System.Windows.Ink;
-using MaterialDesignThemes.Wpf;
 
 namespace GraphPAD
 {
@@ -43,16 +43,17 @@ namespace GraphPAD
         public bool isEraserModeOn;
         public bool isEraser_SmartModeOn;
         public bool isSelectionModeOn;
+        public string desktopPath;
         //Etc.
         public int lobbyCount;
         public int lobbyButtonsMargin = -70;
         public int chatCount;
         public int chatTextblockMargin;
         private string ConferensionName;
-        //delegate void Function(object sender, MouseButtonEventArgs e);
-        //Function function;
         public delegate void Method();
         private static Method close;
+        //Путь к папке аватара
+        string avatarsFolder = Path.GetFullPath(@"Avatars\Avatar.png");
         //Доп. Кастомные Цвета
         public SolidColorBrush greenbrush = new SolidColorBrush(Color.FromRgb(19, 199, 19));
         public SolidColorBrush lightpurple = new SolidColorBrush(Color.FromRgb(85, 85, 147));
@@ -61,6 +62,25 @@ namespace GraphPAD
         public MainPage()
         {
             InitializeComponent();
+            //Создание папки "Avatars", если она не существует
+            if (!Directory.Exists(Path.GetFullPath(@"Avatars")))
+            {
+                Directory.CreateDirectory(Path.GetFullPath(@"Avatars"));
+                //MessageBox.Show(Path.GetFullPath("Avatars"));
+            }
+            //Создание файла "Avatar.png" в папке "Avatars", если его не существует
+            if (!File.Exists(Path.GetFullPath(@"Avatars/Avatar.png")))
+            {
+                using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("GraphPAD.Resources.avatar_default.png"))
+                {
+                    using (var file = new FileStream(Path.GetFullPath(@"Avatars/Avatar.png"), FileMode.Create, FileAccess.Write))
+                    {
+                        resource.CopyTo(file);
+                    }
+                }
+            }
+            UserInfo.Avatar = avatarsFolder;
+            Avatar.Source = NonBlockingLoad(UserInfo.Avatar);
             close = new Method(Close);
             this.KeyDown += new KeyEventHandler(MainWindow_KeyDown); //Отлов клавиши Enter для отправки сообщений
             Closing += OnClosing;  //Делегат для отлова закрытия окна
@@ -75,7 +95,7 @@ namespace GraphPAD
             voiceChatTextBlock.Text = "Голосовой чат подключен";
             videoTextBlock.Text = "Видео отключено";
             videoTextBlock.Foreground = Brushes.DarkGray;
-            
+            desktopPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\image.jpg";
             //Выключение всех режимов работы с графами
             isAddVetexOn = false;
             isRemoveVertexOn = false;
@@ -89,8 +109,9 @@ namespace GraphPAD
             isEraserModeOn = false;
             isEraser_SmartModeOn = false;
             isSelectionModeOn = false;
-
-            if (GuestInfo.Name != "exist")
+            //Отключение Кисти при запуске
+            PaintCanvas.EditingMode = InkCanvasEditingMode.None;
+            if (UserInfo.Name != null)
             {
                 nameString.Text = UserInfo.Name;
                 userRoleString.Text = "Пользователь";
@@ -101,7 +122,7 @@ namespace GraphPAD
                 userRoleString.Text = "Гость";
             }
             conferenssionString.Text = "Конференция ...";
-
+            
             //debug
             GraphCanvas.Visibility = Visibility.Hidden;
             PaintCanvas.Visibility = Visibility.Hidden;
@@ -113,13 +134,9 @@ namespace GraphPAD
             PaintCanvas.Visibility = Visibility.Hidden;
             leaveButton.Visibility = Visibility.Hidden;  
             chatGrid.Visibility = Visibility.Hidden;
-
             EraserTextBlock.Visibility = Visibility.Hidden;
             EraserSlider.Visibility = Visibility.Hidden;
-            //ColorPickerTextBlock.Visibility = Visibility.Hidden;
-            //ColorPicker.Visibility = Visibility.Hidden;
-            //Отключение Кисти при запуске
-            PaintCanvas.EditingMode = InkCanvasEditingMode.None;
+
             Chromium.settings.CefCommandLineArgs.Add("enable-media-stream", "1");
             Cef.Initialize(Chromium.settings);
             leaveButton.Click += (s, ea) =>
@@ -143,6 +160,16 @@ namespace GraphPAD
         }
         #endregion
         #region Functions
+        public static ImageSource NonBlockingLoad(string path)
+        {
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.UriSource = new Uri(path);
+            image.EndInit();
+            image.Freeze();
+            return image;
+        }
         public void ButtonsFix()
         {
             //GraphButtons fix
@@ -185,6 +212,9 @@ namespace GraphPAD
             EraserButton.IsEnabled = true;
             Eraser_SmartButton.IsEnabled = true;
             SelectionButton.IsEnabled = true;
+            ClearCanvasButton.IsEnabled = true;
+            SaveToFileButton.IsEnabled = true;
+            SaveToFileButton.Visibility = Visibility.Visible;
             PaintCanvas.EditingMode = InkCanvasEditingMode.None;
             EraserSlider.Visibility = Visibility.Hidden;
             EraserTextBlock.Visibility = Visibility.Hidden;
@@ -329,7 +359,7 @@ namespace GraphPAD
                             isSelectionModeOn = false;
                         };
 
-                        var path = "Resources/account.png";
+                        var path = "Resources/conferension.png";
                         Uri resourceUri = new Uri(path, UriKind.Relative);
                         StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
                         BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
@@ -413,8 +443,6 @@ namespace GraphPAD
             }
             return null;
         }
-        #endregion
-        #region Image Changer
         private void ChangeImage(string path, Button btn) //Функция для смены изображений в кнопке
         {
             Uri resourceUri = new Uri(path, UriKind.Relative);
@@ -481,7 +509,6 @@ namespace GraphPAD
                     MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
 
                 }
-
             }
         }
         #endregion
@@ -536,7 +563,6 @@ namespace GraphPAD
                         NewConferensionNameTextBox.Text = "";
                         NewConferensionNameTextBox.BorderBrush = Brushes.Transparent;
                         NewConferensionNameTextBox.ToolTip = null;
-                        
                         CancelCreateLobbyButton.Visibility = Visibility.Hidden;
                         ConfirmCreateLobbyButton.Visibility = Visibility.Hidden;
                         NewConferensionNameTextBox.Visibility = Visibility.Hidden;
@@ -639,6 +665,7 @@ namespace GraphPAD
             GraphCanvas.Visibility = Visibility.Hidden;
             GraphControlCanvas.Visibility = Visibility.Hidden;
             PaintCanvas.Visibility = Visibility.Hidden;
+            PaintCanvas.Strokes.Clear();
             PaintControlCanvas.Visibility = Visibility.Hidden;
             infoTextBlock.Visibility = Visibility.Visible;
             //Нижнее поле управления
@@ -828,16 +855,12 @@ namespace GraphPAD
             }
         }
         #endregion
-        #region Settings (broken avatar changer)
+        #region Settings
         private void SettingsButton_Clicked(object sender, RoutedEventArgs e)
         {
             SettingsPage settingsPage = new SettingsPage();
             settingsPage.ShowDialog(); //ShowDialog открывает окно поверх, блокируя основное
-            ////Обновление аватарки
-            //Avatar.Source = null;
-            //var converter = new ImageSourceConverter();
-            //Avatar.Source = (ImageSource)converter.ConvertFromString(@"..\..\Resources\Avatar.png");
-            //Console.WriteLine(Avatar.Source);
+            Avatar.Source = NonBlockingLoad(UserInfo.Avatar);
         }
         private void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
@@ -1074,6 +1097,8 @@ namespace GraphPAD
                 EraserButton.IsEnabled = false;
                 Eraser_SmartButton.IsEnabled = false;
                 SelectionButton.IsEnabled = false;
+                ClearCanvasButton.IsEnabled = false;
+                SaveToFileButton.IsEnabled = false;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.Ink;
                 currentPaintMode.Text = "Текущий режим: Кисть";
                 BrushButton.ToolTip = "Выключить Кисть";
@@ -1087,6 +1112,8 @@ namespace GraphPAD
                 EraserButton.IsEnabled = true;
                 Eraser_SmartButton.IsEnabled = true;
                 SelectionButton.IsEnabled = true;
+                ClearCanvasButton.IsEnabled = true;
+                SaveToFileButton.IsEnabled = true;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.None;
                 currentPaintMode.Text = "Текущий режим: Курсор";
                 BrushButton.ToolTip = "Включить Кисть";
@@ -1106,6 +1133,9 @@ namespace GraphPAD
                 //EraserButton.IsEnabled = false;
                 Eraser_SmartButton.IsEnabled = false;
                 SelectionButton.IsEnabled = false;
+                ClearCanvasButton.IsEnabled = false;
+                SaveToFileButton.IsEnabled = false;
+                SaveToFileButton.Visibility = Visibility.Hidden;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
                 currentPaintMode.Text = "Текущий режим: Ластик";
                 EraserButton.ToolTip = "Выключить Ластик";
@@ -1119,6 +1149,9 @@ namespace GraphPAD
                 //EraserButton.IsEnabled = true;
                 Eraser_SmartButton.IsEnabled = true;
                 SelectionButton.IsEnabled = true;
+                ClearCanvasButton.IsEnabled = true;
+                SaveToFileButton.IsEnabled = true;
+                SaveToFileButton.Visibility = Visibility.Visible;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.None;
                 currentPaintMode.Text = "Текущий режим: Курсор";
                 EraserButton.ToolTip = "Включить Ластик";
@@ -1137,6 +1170,8 @@ namespace GraphPAD
                 EraserButton.IsEnabled = false;
                 //Eraser_SmartButton.IsEnabled = false;
                 SelectionButton.IsEnabled = false;
+                ClearCanvasButton.IsEnabled = false;
+                SaveToFileButton.IsEnabled = false;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
                 currentPaintMode.Text = "Текущий режим: Умный Ластик";
                 Eraser_SmartButton.ToolTip = "Выключить Умный Ластик";
@@ -1148,6 +1183,8 @@ namespace GraphPAD
                 EraserButton.IsEnabled = true;
                 //Eraser_SmartButton.IsEnabled = true;
                 SelectionButton.IsEnabled = true;
+                ClearCanvasButton.IsEnabled = true;
+                SaveToFileButton.IsEnabled = true;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.None;
                 currentPaintMode.Text = "Текущий режим: Курсор";
                 Eraser_SmartButton.ToolTip = "Включить Умный Ластик";
@@ -1164,6 +1201,8 @@ namespace GraphPAD
                 EraserButton.IsEnabled = false;
                 Eraser_SmartButton.IsEnabled = false;
                 //SelectionButton.IsEnabled = false;
+                ClearCanvasButton.IsEnabled = false;
+                SaveToFileButton.IsEnabled = false;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.Select;
                 currentPaintMode.Text = "Текущий режим: Выделение";
                 SelectionButton.ToolTip = "Выключить Режим Выделения";
@@ -1175,6 +1214,8 @@ namespace GraphPAD
                 EraserButton.IsEnabled = true;
                 Eraser_SmartButton.IsEnabled = true;
                 //SelectionButton.IsEnabled = true;
+                ClearCanvasButton.IsEnabled = true;
+                SaveToFileButton.IsEnabled = true;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.None;
                 currentPaintMode.Text = "Текущий режим: Курсор";
                 SelectionButton.ToolTip = "Включить Режим Выделения";
@@ -1183,11 +1224,44 @@ namespace GraphPAD
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkOrange ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkOrange;
         }
+        private void ClearCanvasButton_Click(object sender, RoutedEventArgs e)
+        {
+            PaintCanvas.Strokes.Clear();
+        }
+        private void SaveToFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.FileName = "untitled"; // Default file name
+            dlg.DefaultExt = "jpg"; // Default file extension
+            dlg.AddExtension = true;
+            dlg.Filter = "jpg (*.jpg)|*.jpg|jpeg (*.jpeg)|*.jpeg|png (*.png)|*.png"; // Filter files by extension
+            dlg.InitialDirectory = desktopPath;
+            dlg.Title = "Сохранить изображение";
+            bool? result = dlg.ShowDialog();
+            if (result == true)
+            {
+                try
+                {
+                    string filepath = dlg.FileName;
+                    RenderTargetBitmap rtb = new RenderTargetBitmap((int)PaintCanvas.ActualWidth, (int)PaintCanvas.ActualHeight, 96d, 96d, PixelFormats.Default);
+                    rtb.Render(PaintCanvas);
+                    JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create(rtb));
+                    FileStream fs = File.Open(filepath, FileMode.Create);
+                    encoder.Save(fs);
+                    fs.Close();
+                }
+                catch (IOException copyError)
+                {
+                    Console.WriteLine(copyError.Message);
+                    MessageBox.Show("Что-то пошло не так.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
         private void ColorPicker_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var CurrentColor = ColorPicker.Color;
             PaintCanvas.DefaultDrawingAttributes.Color = CurrentColor;
-            //MessageBox.Show(CurrentColor.ToString());
         }
         private void ColorPicker_ColorChanged(object sender, RoutedPropertyChangedEventArgs<Color> e)
         {
@@ -1235,24 +1309,10 @@ namespace GraphPAD
             {
                 Process.GetCurrentProcess().Kill();
             }
-
         }
         public static void CloseForm()
         {
             close.Invoke();
-        }
-        #endregion
-        #region Symbol Counter
-        private void chatTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            string userInput = chatTextBox.Text;
-            char charCount;
-            if (userInput != "")
-            {
-                charCount = userInput[0];
-            }
-            
-            charCounterTextBlock.Text = "Символов " + userInput.Length.ToString() + "/200";
         }
         #endregion
         #region Chat
@@ -1275,7 +1335,18 @@ namespace GraphPAD
             }
         }
         #endregion
-        #region Trash
+        #region Etc.
+        private void chatTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string userInput = chatTextBox.Text;
+            char charCount;
+            if (userInput != "")
+            {
+                charCount = userInput[0];
+            }
+
+            charCounterTextBlock.Text = "Символов " + userInput.Length.ToString() + "/200";
+        }
         private void Ez_Click(object sender, RoutedEventArgs e)
         {
         }
@@ -1288,5 +1359,5 @@ namespace GraphPAD
 }
 
 //ToDo
-//1)Avatar Changer
-//2)
+//1)Online paint
+//2)Online graphs
