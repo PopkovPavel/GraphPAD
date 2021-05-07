@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         x:Name="MainWindow"
-        Title="GraphPAD" Height="800" Width="1400" WindowStartupLocation="CenterScreen" MinWidth="1400" MinHeight="800"
+        Title="GraphPAD" Height="700" Width="1300" WindowStartupLocation="CenterScreen" MinWidth="1235" MinHeight="600"
         Background="#FF141424" KeyDown="MainWindow_KeyDown" Icon="Resources/icon.jpg">
     <Window.Resources>
         <SolidColorBrush x:Key="MainPurple" Color="#FF3C226A"/>
@@ -73,7 +73,10 @@
                 </Canvas>
                 <!--Поля для графов и рисовалки-->
                 <Canvas x:Name="GraphCanvas" Visibility="Hidden" Background="White" Margin="0,0,0,10"/>
-                <InkCanvas x:Name="PaintCanvas" Visibility="Visible" Background="White" Margin="0,0,0,10" EditingMode="{Binding EditingMode}" ClipToBounds="True" DefaultDrawingAttributes="{Binding DrawingAttributes}"/>
+                <ScrollViewer x:Name="PaintCanvasScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <InkCanvas x:Name="PaintCanvas" Visibility="Visible" Background="White" Margin="0,0,0,0" EditingMode="{Binding EditingMode}" ClipToBounds="True" DefaultDrawingAttributes="{Binding DrawingAttributes}" MouseMove="PaintCanvas_MouseMove"/>
+                </ScrollViewer>
+                
             </Grid>
             <Grid Grid.Row="1" Background="#22223d">
                 <!--Нижняя часть интерфейса-->
@@ -153,7 +156,7 @@
                 <!--Панель для работы с рисовалкой-->
                 <Canvas x:Name="PaintControlCanvas" Visibility="Visible" Margin="315,7.5,10,7.5" Background="#FF0E0E19">
                     <TextBlock x:Name="currentPaintMode" Text="Текущий режим: Курсор" Canvas.Left="10" Canvas.Top="2" Width="321" Foreground="White" Height="16" Padding="1" FontSize="10" TextAlignment="Center" FontWeight="Medium"/>
-                    <Button x:Name="BrushButton" Tag="Ink" Click="BrushButton_Click" ToolTip="Включить Кисть" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="BrushButton" Tag="Ink" Click="BrushButton_Click" ToolTip="Включить Кисть" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False" LayoutUpdated="BrushButton_LayoutUpdated">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/brush.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Кисть" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
@@ -189,10 +192,10 @@
                             <TextBlock TextWrapping="NoWrap" Text="Сохранить в файл" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <materialDesign:ColorPicker x:Name="ColorPicker" Visibility="Visible" Canvas.Left="350" Canvas.Top="35" Height="100" Width="200" BorderBrush="White" BorderThickness="1" Background="White" Foreground="White" ColorChanged="ColorPicker_ColorChanged" Color="Black" LayoutUpdated="ColorPicker_LayoutUpdated" IsTabStop="False"/>
+                    <TextBlock x:Name="ColorPickerTextBlock" Visibility="Hidden" Canvas.Left="180" TextWrapping="Wrap" Text="Палитра цветов" Canvas.Top="21" Foreground="White" FontWeight="SemiBold" Width="200" FontSize="10" Height="14"/>
+                    <materialDesign:ColorPicker x:Name="ColorPicker" Visibility="Hidden" Canvas.Left="180" Canvas.Top="35" Height="100" Width="200" BorderBrush="White" BorderThickness="1" Background="White" Foreground="White" ColorChanged="ColorPicker_ColorChanged" Color="Black" LayoutUpdated="ColorPicker_LayoutUpdated" IsTabStop="False"/>
                     <Slider x:Name="EraserSlider" Visibility="Hidden" IsSnapToTickEnabled="True" Canvas.Left="180" Canvas.Top="122" Width="150" BorderBrush="White" Foreground="White" LayoutUpdated="EraserSlider_LayoutUpdated" Minimum="10" Value="30" BorderThickness="0" MouseEnter="EraserSlider_MouseEnter" MouseLeave="EraserSlider_MouseLeave" IsTabStop="False" SmallChange="0" LargeChange="0" Interval="1" TickFrequency="10" Maximum="100"/>
                     <TextBlock x:Name="EraserTextBlock" Visibility="Hidden" Canvas.Left="181" TextWrapping="Wrap" Text="Размер Ластика: 30" Canvas.Top="108" Foreground="White" FontWeight="SemiBold" Width="150" FontSize="10" Height="14"/>
-                    <TextBlock x:Name="ColorPickerTextBlock" Canvas.Left="350" TextWrapping="Wrap" Text="Палитра цветов" Canvas.Top="21" Foreground="White" FontWeight="SemiBold" Width="200" FontSize="10" Height="14"/>
                 </Canvas>
                 <Button x:Name="PaintModeChangerButton" Visibility="Hidden" Content="Рисование" Click="FreeMode_Click" ToolTip="Переключить на режим графов" Width="100" BorderBrush="White" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,7.5,10,0"/>
             </Grid>

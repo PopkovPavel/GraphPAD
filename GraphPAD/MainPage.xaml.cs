@@ -214,8 +214,12 @@ namespace GraphPAD
             SelectionButton.IsEnabled = true;
             ClearCanvasButton.IsEnabled = true;
             SaveToFileButton.IsEnabled = true;
-            SaveToFileButton.Visibility = Visibility.Visible;
             PaintCanvas.EditingMode = InkCanvasEditingMode.None;
+            ColorPickerTextBlock.Visibility = Visibility.Hidden;
+            ColorPicker.Visibility = Visibility.Hidden;
+            EraserButton.Visibility = Visibility.Visible;
+            Eraser_SmartButton.Visibility = Visibility.Visible;
+            SaveToFileButton.Visibility = Visibility.Visible;
             EraserSlider.Visibility = Visibility.Hidden;
             EraserTextBlock.Visibility = Visibility.Hidden;
             currentPaintMode.Text = "Текущий режим: Курсор";
@@ -274,6 +278,11 @@ namespace GraphPAD
                             Header = "Скопировать ID",
                             ToolTip = "Скопировать ID конференции в буфер"
                         };
+                        var contextMenu = new ContextMenu()
+                        {
+                            Background = Brushes.Transparent
+                        };
+                        contextMenu.Items.Add(menuCopyItem);
 
                         menuCopyItem.Click += (sender1, e1) =>
                         {
@@ -281,55 +290,54 @@ namespace GraphPAD
                             Clipboard.SetData(DataFormats.Text, (Object)room.RoomID);
                             MessageBox.Show("ID скопирован", "Сообщение");
                         };
-
-                        //Второй элемент контекстного меню
-                        var menuLeaveItem = new MenuItem()
+                        if (room.RoomOwner.Id != UserInfo.ID)
                         {
-                            Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF181840"),
-                            Foreground = Brushes.White,
-                            FontFamily = new FontFamily("Segoe UI"),
-                            FontSize = 14,
-                            FontStyle = FontStyles.Normal,
-                            FontWeight = FontWeights.Bold,
-                            Cursor = Cursors.Hand,
-                            Padding = new Thickness(10, 0, 0, 0),
-                            Height = 40,
-                            Width = 190,
-                            Header = "Покинуть конференцию",
-                            ToolTip = "Покинуть конференцию"
-                        };                        
-                        menuLeaveItem.Click += (s, ea) =>
+                            //Второй элемент контекстного меню
+                            var menuLeaveItem = new MenuItem()
+                            {
+                                Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF181840"),
+                                Foreground = Brushes.White,
+                                FontFamily = new FontFamily("Segoe UI"),
+                                FontSize = 14,
+                                FontStyle = FontStyles.Normal,
+                                FontWeight = FontWeights.Bold,
+                                Cursor = Cursors.Hand,
+                                Padding = new Thickness(10, 0, 0, 0),
+                                Height = 40,
+                                Width = 190,
+                                Header = "Покинуть конференцию",
+                                ToolTip = "Покинуть конференцию"
+                            };
+                            menuLeaveItem.Click += (s, ea) =>
+                            {
+                                LeaveRoom($"{room.RoomID}", $"{room.RoomName}");
+                            };
+                            contextMenu.Items.Add(menuLeaveItem);
+                        }
+                        else
                         {
-                            LeaveRoom($"{room.RoomID}", $"{room.RoomName}");
-                        };
-                        
-                        //Третий элемент контекстного меню
-                        var menuDeleteItem = new MenuItem()
-                        {
-                            Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF181840"),
-                            Foreground = Brushes.White,
-                            FontFamily = new FontFamily("Segoe UI"),
-                            FontSize = 14,
-                            FontStyle = FontStyles.Normal,
-                            FontWeight = FontWeights.Bold,
-                            Cursor = Cursors.Hand,
-                            Padding = new Thickness(10, 0, 0, 0),
-                            Height = 40,
-                            Width = 190,
-                            Header = "Удалить конференцию",
-                            ToolTip = "Удалить конференцию"
-                        };
-                        menuDeleteItem.Click += (s, ea) =>
-                        {
-                            DeleteRoom($"{room.RoomID}", $"{room.RoomName}");
-                        };
-                        var contextMenu = new ContextMenu()
-                        {
-                            Background = Brushes.Transparent
-                        };
-                        contextMenu.Items.Add(menuCopyItem);
-                        contextMenu.Items.Add(menuLeaveItem);
-                        contextMenu.Items.Add(menuDeleteItem);
+                            //Третий элемент контекстного меню
+                            var menuDeleteItem = new MenuItem()
+                            {
+                                Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FF181840"),
+                                Foreground = Brushes.White,
+                                FontFamily = new FontFamily("Segoe UI"),
+                                FontSize = 14,
+                                FontStyle = FontStyles.Normal,
+                                FontWeight = FontWeights.Bold,
+                                Cursor = Cursors.Hand,
+                                Padding = new Thickness(10, 0, 0, 0),
+                                Height = 40,
+                                Width = 190,
+                                Header = "Удалить конференцию",
+                                ToolTip = "Удалить конференцию"
+                            };
+                            menuDeleteItem.Click += (s, ea) =>
+                            {
+                                DeleteRoom($"{room.RoomID}", $"{room.RoomName}");
+                            };
+                            contextMenu.Items.Add(menuDeleteItem);
+                        }
 
                         var ConfButton = new Button()
                         {
@@ -900,7 +908,7 @@ namespace GraphPAD
             }
         }
         #endregion
-        #region Graph panel buttons
+        #region Graph panel
         private void AddVertex_Click(object sender, RoutedEventArgs e)
         {
             if (!isAddVetexOn)
@@ -1088,7 +1096,7 @@ namespace GraphPAD
             btn.Background = btn.Background == Brushes.DarkGray ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGray;
         }
         #endregion
-        #region Paint panel buttons
+        #region Paint panel
         private void BrushButton_Click(object sender, RoutedEventArgs e)
         {
             if (!isBrushModeOn)
@@ -1099,6 +1107,20 @@ namespace GraphPAD
                 SelectionButton.IsEnabled = false;
                 ClearCanvasButton.IsEnabled = false;
                 SaveToFileButton.IsEnabled = false;
+                if (MainWindow.ActualWidth >= 1400)
+                {
+                    EraserButton.Visibility = Visibility.Visible;
+                    Eraser_SmartButton.Visibility = Visibility.Visible;
+                    SaveToFileButton.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    EraserButton.Visibility = Visibility.Hidden;
+                    Eraser_SmartButton.Visibility = Visibility.Hidden;
+                    SaveToFileButton.Visibility = Visibility.Hidden;
+                }
+                ColorPickerTextBlock.Visibility = Visibility.Visible;
+                ColorPicker.Visibility = Visibility.Visible;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.Ink;
                 currentPaintMode.Text = "Текущий режим: Кисть";
                 BrushButton.ToolTip = "Выключить Кисть";
@@ -1114,6 +1136,11 @@ namespace GraphPAD
                 SelectionButton.IsEnabled = true;
                 ClearCanvasButton.IsEnabled = true;
                 SaveToFileButton.IsEnabled = true;
+                EraserButton.Visibility = Visibility.Visible;
+                Eraser_SmartButton.Visibility = Visibility.Visible;
+                SaveToFileButton.Visibility = Visibility.Visible;
+                ColorPickerTextBlock.Visibility = Visibility.Hidden;
+                ColorPicker.Visibility = Visibility.Hidden;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.None;
                 currentPaintMode.Text = "Текущий режим: Курсор";
                 BrushButton.ToolTip = "Включить Кисть";
@@ -1230,6 +1257,8 @@ namespace GraphPAD
         }
         private void SaveToFileButton_Click(object sender, RoutedEventArgs e)
         {
+            PaintCanvasScroll.ScrollToTop();
+            PaintCanvasScroll.ScrollToLeftEnd();
             SaveFileDialog dlg = new SaveFileDialog();
             dlg.FileName = "untitled"; // Default file name
             dlg.DefaultExt = "jpg"; // Default file extension
@@ -1242,6 +1271,7 @@ namespace GraphPAD
             {
                 try
                 {
+
                     string filepath = dlg.FileName;
                     RenderTargetBitmap rtb = new RenderTargetBitmap((int)PaintCanvas.ActualWidth, (int)PaintCanvas.ActualHeight, 96d, 96d, PixelFormats.Default);
                     rtb.Render(PaintCanvas);
@@ -1297,6 +1327,31 @@ namespace GraphPAD
                 PaintCanvas.EraserShape = new EllipseStylusShape(eraserSize, eraserSize);
             }
         }
+        private void BrushButton_LayoutUpdated(object sender, EventArgs e)
+        {
+            if (MainWindow.ActualWidth >= 1400 && isBrushModeOn == true)
+            {
+                EraserButton.Visibility = Visibility.Visible;
+                Eraser_SmartButton.Visibility = Visibility.Visible;
+                SaveToFileButton.Visibility = Visibility.Visible;
+                ColorPickerTextBlock.SetValue(Canvas.LeftProperty, 350.0);
+                ColorPicker.SetValue(Canvas.LeftProperty, 350.0);
+            }
+            else if (MainWindow.ActualWidth < 1400 && isBrushModeOn == true)
+            {
+                EraserButton.Visibility = Visibility.Hidden;
+                Eraser_SmartButton.Visibility = Visibility.Hidden;
+                SaveToFileButton.Visibility = Visibility.Hidden;
+                ColorPickerTextBlock.SetValue(Canvas.LeftProperty, 180.0);
+                ColorPicker.SetValue(Canvas.LeftProperty, 180.0);
+            }
+        }
+        private void PaintCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            //Координаты мыши на paint-канвасе
+            //Point p = Mouse.GetPosition(PaintCanvas);
+            //currentPaintMode.Text = p.ToString();
+        }
         #endregion
         #region Closing
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
@@ -1344,7 +1399,6 @@ namespace GraphPAD
             {
                 charCount = userInput[0];
             }
-
             charCounterTextBlock.Text = "Символов " + userInput.Length.ToString() + "/200";
         }
         private void Ez_Click(object sender, RoutedEventArgs e)
