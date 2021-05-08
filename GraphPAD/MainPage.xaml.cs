@@ -2,14 +2,21 @@
 using CefSharp.Wpf;
 using GraphPAD.Data.JSON;
 using GraphPAD.Data.User;
+using GraphPAD.GraphData.Model;
+using GraphPAD.GraphData.Pattern;
+using GraphX.Controls;
+using GraphX.Controls.Models;
+using GraphX.PCL.Common.Enums;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +32,33 @@ namespace GraphPAD
     public partial class MainPage : Window
     {
         #region Global Variables
+        /// <summary>
+        /// Фабрика
+        /// </summary>
+        private Painter _creator;
+
+        /// <summary>
+        /// Строитель
+        /// </summary>
+        private Director _director;
+
+        private EditorOperationMode _opMode = EditorOperationMode.Select;
+        private VertexControl _ecFrom;
+        private readonly EditorObjectManager _editorManager;
+        public enum EditorOperationMode
+        {
+            Select = 0,
+            Edit,
+            Delete
+        }
+
+        /// <summary>
+        /// Для управления командами
+        /// </summary>
+        private readonly List<Command> _commands = new List<Command>();
+
+        private Command _currentCommand;
+        private int _commandCounter = -1;
         //User Controls
         public bool isMicOn;
         public bool isHeadPhonesOn;
@@ -62,6 +96,32 @@ namespace GraphPAD
         public MainPage()
         {
             InitializeComponent();
+        #region grapharea + zoom ctrl
+
+            //Элементы на поле отрисовки графа
+            var dgLogic = new GraphLogic();
+
+            GraphArea.LogicCore = dgLogic;
+            GraphArea.VertexSelected += GraphArea_VertexSelected;
+            GraphArea.EdgeSelected += GraphArea_EdgeSelected;
+            GraphArea.SetVerticesMathShape(VertexShape.Ellipse);
+
+            GraphArea.VertexLabelFactory = new DefaultVertexlabelFactory();
+            GraphArea.EdgeLabelFactory = new DefaultEdgelabelFactory();
+            GraphArea.ShowAllEdgesLabels(true);
+            GraphArea.ShowAllEdgesArrows(true);
+            dgLogic.EdgeCurvingEnabled = true;
+            ZoomCtrl.IsAnimationEnabled = true;
+            //dgLogic.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.Custom;
+            //dgLogic.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.None;
+            //dgLogic.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.None;
+
+            _editorManager = new EditorObjectManager(GraphArea, ZoomCtrl);
+            ZoomControl.SetViewFinderVisibility(ZoomCtrl, Visibility.Visible);
+            Painter.GraphZone = GraphArea;
+          //  DeleteCliqueCommand.Sp = SpDeletedClicks;
+            ZoomCtrl.MouseDown += ZoomCtrl_MouseDown;
+            #endregion
             //Создание папки "Avatars", если она не существует
             if (!Directory.Exists(Path.GetFullPath(@"Avatars")))
             {
@@ -124,7 +184,7 @@ namespace GraphPAD
             conferenssionString.Text = "Конференция ...";
             
             //debug
-            GraphCanvas.Visibility = Visibility.Hidden;
+            ZoomCtrl.Visibility = Visibility.Hidden;
             PaintCanvas.Visibility = Visibility.Hidden;
             GraphControlCanvas.Visibility = Visibility.Hidden;
             GraphModeChangerButton.Visibility = Visibility.Hidden;
@@ -158,6 +218,127 @@ namespace GraphPAD
             };
             RefreshRooms();
         }
+
+
+        #endregion
+        #region GraphArea Functions
+        private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            //create vertices and edges only in Edit mode
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (_opMode == EditorOperationMode.Edit)
+                {
+                    var pos = ZoomCtrl.TranslatePoint(e.GetPosition(ZoomCtrl), GraphArea);
+                    pos.Offset(-22.5, -22.5);
+                    var vc = CreateVertexControl(pos);
+                    if (_ecFrom != null)
+                        CreateEdgeControl(vc);
+                }
+                else if (_opMode == EditorOperationMode.Select)
+                {
+                    ClearSelectMode(true);
+                }
+            }
+        }
+        /// <summary>
+        /// Выбор вершины
+        /// </summary>
+        /// <param name="vc"></param>
+        private static void SelectVertex(DependencyObject vc)
+        {
+            if (DragBehaviour.GetIsTagged(vc))
+            {
+                HighlightBehaviour.SetHighlighted(vc, false);
+                DragBehaviour.SetIsTagged(vc, false);
+            }
+            else
+            {
+                HighlightBehaviour.SetHighlighted(vc, true);
+                DragBehaviour.SetIsTagged(vc, true);
+            }
+        }
+        /// <summary>
+        /// Сбросить режим перемещения вершин
+        /// </summary>
+        /// <param name="soft"></param>
+        private void ClearSelectMode(bool soft = false)
+        {
+            GraphArea.VertexList.Values
+                .Where(DragBehaviour.GetIsTagged)
+                .ToList()
+                .ForEach(a =>
+                {
+                    HighlightBehaviour.SetHighlighted(a, false);
+                    DragBehaviour.SetIsTagged(a, false);
+                });
+
+            if (!soft)
+                GraphArea.SetVerticesDrag(false);
+        }
+        private void ClearEditMode()
+        {
+            if (_ecFrom != null) HighlightBehaviour.SetHighlighted(_ecFrom, false);
+            _editorManager.DestroyVirtualEdge();
+            _ecFrom = null;
+        }
+        private VertexControl CreateVertexControl(Point position)
+        {
+            var data = new DataVertex((GraphArea.VertexList.Count + 1).ToString()) { };
+            var vc = new VertexControl(data);
+            vc.SetPosition(position);
+            GraphArea.AddVertexAndData(data, vc, true);
+            return vc;
+        }
+        private void CreateEdgeControl(VertexControl vc)
+        {
+            if (_ecFrom == null)
+            {
+                _editorManager.CreateVirtualEdge(vc, vc.GetPosition());
+                _ecFrom = vc;
+                HighlightBehaviour.SetHighlighted(_ecFrom, true);
+                return;
+            }
+            if (_ecFrom == vc) return;
+
+            var data = new DataEdge((DataVertex)_ecFrom.Vertex, (DataVertex)vc.Vertex, 10);
+            var ec = new EdgeControl(_ecFrom, vc, data);
+            GraphArea.InsertEdgeAndData(data, ec, 0, true);
+
+            HighlightBehaviour.SetHighlighted(_ecFrom, false);
+            _ecFrom = null;
+            _editorManager.DestroyVirtualEdge();
+        }
+        private void SafeRemoveVertex(VertexControl vc)
+        {
+            //remove vertex and all adjacent edges from layout and data graph
+            GraphArea.RemoveVertexAndEdges(vc.Vertex as DataVertex);
+        }
+        void GraphArea_VertexSelected(object sender, VertexSelectedEventArgs args)
+        {
+            if (args.MouseArgs.LeftButton == MouseButtonState.Pressed)
+            {
+                switch (_opMode)
+                {
+                    case EditorOperationMode.Edit:
+                        CreateEdgeControl(args.VertexControl);
+                        break;
+                    case EditorOperationMode.Delete:
+                        SafeRemoveVertex(args.VertexControl);
+                        break;
+                    default:
+                        if (_opMode == EditorOperationMode.Select && args.Modifiers == ModifierKeys.Control)
+                            SelectVertex(args.VertexControl);
+                        break;
+                }
+            }
+        }
+        void GraphArea_EdgeSelected(object sender, EdgeSelectedEventArgs args)
+        {
+            if (args.MouseArgs.LeftButton == MouseButtonState.Pressed && _opMode == EditorOperationMode.Delete)
+                GraphArea.RemoveEdge(args.EdgeControl.Edge as DataEdge, true);
+        }
+
         #endregion
         #region Functions
         public static ImageSource NonBlockingLoad(string path)
@@ -604,7 +785,7 @@ namespace GraphPAD
             //Список конференций в левой части окна
             LobbysCanvas.Visibility = Visibility.Hidden;
             //Нижнее поле управления
-            GraphCanvas.Visibility = Visibility.Visible;
+            ZoomCtrl.Visibility = Visibility.Visible;
             GraphControlCanvas.Visibility = Visibility.Visible;
             GraphModeChangerButton.Visibility = Visibility.Visible;
             PaintCanvas.Visibility = Visibility.Hidden;
@@ -670,7 +851,7 @@ namespace GraphPAD
             //Список конференций в левой части окна
             LobbysCanvas.Visibility = Visibility.Visible;
             //Главные поля и панели для работы
-            GraphCanvas.Visibility = Visibility.Hidden;
+            ZoomCtrl.Visibility = Visibility.Hidden;
             GraphControlCanvas.Visibility = Visibility.Hidden;
             PaintCanvas.Visibility = Visibility.Hidden;
             PaintCanvas.Strokes.Clear();
@@ -889,7 +1070,7 @@ namespace GraphPAD
                 GraphModeChangerButton.Visibility = Visibility.Hidden;
                 PaintControlCanvas.Visibility = Visibility.Visible;
                 PaintModeChangerButton.Visibility = Visibility.Visible;
-                GraphCanvas.Visibility = Visibility.Hidden;
+                ZoomCtrl.Visibility = Visibility.Hidden;
                 PaintCanvas.Visibility = Visibility.Visible;
                 BGgrid.Background = Brushes.DarkSlateGray;
 
@@ -901,7 +1082,7 @@ namespace GraphPAD
                 GraphModeChangerButton.Visibility = Visibility.Visible;
                 PaintControlCanvas.Visibility = Visibility.Hidden;
                 PaintModeChangerButton.Visibility = Visibility.Hidden;
-                GraphCanvas.Visibility = Visibility.Visible;
+                ZoomCtrl.Visibility = Visibility.Visible;
                 PaintCanvas.Visibility = Visibility.Hidden;
                 BGgrid.Background = Brushes.DarkGray;
                 ButtonsFix();
@@ -923,6 +1104,10 @@ namespace GraphPAD
                 currentGraphMode.Text = "Текущий режим: Добавление вершин";
                 isAddVetexOn = true;
                 addVertexBtn.ToolTip = "Выключить режим добавления вершин";
+
+                ZoomCtrl.Cursor = Cursors.Pen;
+                _opMode = EditorOperationMode.Edit;
+                ClearSelectMode();
             }
             else
             {
@@ -954,6 +1139,11 @@ namespace GraphPAD
                 currentGraphMode.Text = "Текущий режим: Удаление вершин";
                 isRemoveVertexOn = true;
                 deleteVertexBtn.ToolTip = "Выключить режим удаления вершин";
+
+                ZoomCtrl.Cursor = Cursors.Help;
+                _opMode = EditorOperationMode.Delete;
+                ClearEditMode();
+                ClearSelectMode();
             }
             else
             {
@@ -986,6 +1176,11 @@ namespace GraphPAD
                 currentGraphMode.Text = "Текущий режим: Соединение вершин";
                 isConnectVertexOn = true;
                 connectVertexBtn.ToolTip = "Выключить режим соединения вершин";
+
+                ZoomCtrl.Cursor = Cursors.Hand;
+                _opMode = EditorOperationMode.Select;
+                GraphArea.SetVerticesDrag(true, true);
+                ClearEditMode();
             }
             else
             {
