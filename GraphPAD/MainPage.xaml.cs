@@ -18,6 +18,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -71,6 +72,9 @@ namespace GraphPAD
         public bool isDisconnectVertexOn;
         public bool isGraphGeneratorOn;
         public bool isAlgorithmsOn;
+        //Graph Controls (Generation)
+        public bool isRandomTreeOn;
+        public bool isRandomConnectedGraphOn;
         //Paint Controls
         public bool isFreeModeOn;
         public bool isBrushModeOn;
@@ -163,12 +167,16 @@ namespace GraphPAD
             isDisconnectVertexOn = false;
             isGraphGeneratorOn = false;
             isAlgorithmsOn = false;
-            isFreeModeOn = false;
+            isRandomTreeOn = false;
+            isRandomConnectedGraphOn = false;
+
             //Выключение всех режимов работы с рисовалкой
             isBrushModeOn = false;
             isEraserModeOn = false;
             isEraser_SmartModeOn = false;
             isSelectionModeOn = false;
+
+            isFreeModeOn = false;
             //Отключение Кисти при запуске
             PaintCanvas.EditingMode = InkCanvasEditingMode.None;
             if (UserInfo.Name != null)
@@ -191,11 +199,12 @@ namespace GraphPAD
             PaintControlCanvas.Visibility = Visibility.Hidden;
             PaintModeChangerButton.Visibility = Visibility.Hidden;
             infoTextBlock.Visibility = Visibility.Visible;
-            PaintCanvas.Visibility = Visibility.Hidden;
             leaveButton.Visibility = Visibility.Hidden;  
             chatGrid.Visibility = Visibility.Hidden;
             EraserTextBlock.Visibility = Visibility.Hidden;
             EraserSlider.Visibility = Visibility.Hidden;
+            edgesWeightTextBox.Visibility = Visibility.Hidden;
+            orientedCheckbox.Visibility = Visibility.Hidden;
 
             Chromium.settings.CefCommandLineArgs.Add("enable-media-stream", "1");
             Cef.Initialize(Chromium.settings);
@@ -213,10 +222,9 @@ namespace GraphPAD
                     catch { }
 
                 }
-                ButtonsFix();
-
             };
             RefreshRooms();
+            ButtonsFix();
         }
 
 
@@ -361,24 +369,37 @@ namespace GraphPAD
             isGraphGeneratorOn = false;
             isAlgorithmsOn = false;
             isFreeModeOn = false;
+            isRandomTreeOn = false;
+            isRandomConnectedGraphOn = false;
             addVertexBtn.Background = Brushes.Transparent;
             deleteVertexBtn.Background = Brushes.Transparent;
-            connectVertexBtn.Background = Brushes.Transparent;
-            disconnectVertexBtn.Background = Brushes.Transparent;
+            edgesWeightTextBox.Background = Brushes.Transparent;
+            
             graphGeneratorBtn.Background = Brushes.Transparent;
             algorithmsBtn.Background = Brushes.Transparent;
+            randomTreeButton.Background = Brushes.Transparent;
+            randomConnectedGraphButton.Background = Brushes.Transparent;
             addVertexBtn.IsEnabled = true;
             deleteVertexBtn.IsEnabled = true;
-            connectVertexBtn.IsEnabled = true;
-            disconnectVertexBtn.IsEnabled = true;
+            edgesWeightTextBox.IsEnabled = true;
+            orientedCheckbox.IsEnabled = true;
             graphGeneratorBtn.IsEnabled = true;
             algorithmsBtn.IsEnabled = true;
+            randomTreeButton.IsEnabled = true;
+            randomConnectedGraphButton.IsEnabled = true;
             addVertexBtn.Visibility = Visibility.Visible;
             deleteVertexBtn.Visibility = Visibility.Visible;
-            connectVertexBtn.Visibility = Visibility.Visible;
-            disconnectVertexBtn.Visibility = Visibility.Visible;
+            edgesWeightTextBox.Visibility = Visibility.Hidden;
+            orientedCheckbox.Visibility = Visibility.Hidden;
+            orientedCheckbox.IsChecked = false;
             graphGeneratorBtn.Visibility = Visibility.Visible;
             algorithmsBtn.Visibility = Visibility.Visible;
+            randomTreeButton.Visibility = Visibility.Hidden;
+            randomConnectedGraphButton.Visibility = Visibility.Hidden;
+            vertexAmountTextBox.Visibility = Visibility.Hidden;
+            edgesAmountTextBox.Visibility = Visibility.Hidden;
+            downloadGraphButton.Visibility = Visibility.Hidden;
+            createGraphButton.Visibility = Visibility.Hidden;
             currentGraphMode.Text = "Текущий режим: Перемещение";
             //PaintButtons Fix
             isBrushModeOn = false;
@@ -1073,7 +1094,6 @@ namespace GraphPAD
                 ZoomCtrl.Visibility = Visibility.Hidden;
                 PaintCanvas.Visibility = Visibility.Visible;
                 BGgrid.Background = Brushes.DarkSlateGray;
-
             }
             else
             {
@@ -1095,12 +1115,11 @@ namespace GraphPAD
             if (!isAddVetexOn)
             {
                 //function = AddVertex;
-                //addVertexBtn.IsEnabled = false;
                 deleteVertexBtn.IsEnabled = false;
-                connectVertexBtn.IsEnabled = false;
-                disconnectVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
+                edgesWeightTextBox.Visibility = Visibility.Visible;
+                orientedCheckbox.Visibility = Visibility.Visible;
                 currentGraphMode.Text = "Текущий режим: Добавление вершин";
                 isAddVetexOn = true;
                 addVertexBtn.ToolTip = "Выключить режим добавления вершин";
@@ -1112,12 +1131,11 @@ namespace GraphPAD
             else
             {
                 //function = null;
-                //addVertexBtn.IsEnabled = true;
                 deleteVertexBtn.IsEnabled = true;
-                connectVertexBtn.IsEnabled = true;
-                disconnectVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
+                edgesWeightTextBox.Visibility = Visibility.Hidden;
+                orientedCheckbox.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
                 isAddVetexOn = false;
                 addVertexBtn.ToolTip = "Включить режим добавления вершин";
@@ -1131,9 +1149,6 @@ namespace GraphPAD
             {
                 //function = DeleteVertex;
                 addVertexBtn.IsEnabled = false;
-                //deleteVertexBtn.IsEnabled = false;
-                connectVertexBtn.IsEnabled = false;
-                disconnectVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
                 currentGraphMode.Text = "Текущий режим: Удаление вершин";
@@ -1149,9 +1164,6 @@ namespace GraphPAD
             {
                 //function = null;
                 addVertexBtn.IsEnabled = true;
-                //deleteVertexBtn.IsEnabled = true;
-                connectVertexBtn.IsEnabled = true;
-                disconnectVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
@@ -1161,101 +1173,33 @@ namespace GraphPAD
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkRed ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkRed;
         }
-
-        private void ConnectVertex_Click(object sender, RoutedEventArgs e)
-        {
-            if (!isConnectVertexOn)
-            {
-                //function = ConnectVertex;
-                addVertexBtn.IsEnabled = false;
-                deleteVertexBtn.IsEnabled = false;
-                //connectVertexBtn.IsEnabled = false;
-                disconnectVertexBtn.IsEnabled = false;
-                graphGeneratorBtn.IsEnabled = false;
-                algorithmsBtn.IsEnabled = false;
-                currentGraphMode.Text = "Текущий режим: Соединение вершин";
-                isConnectVertexOn = true;
-                connectVertexBtn.ToolTip = "Выключить режим соединения вершин";
-
-                ZoomCtrl.Cursor = Cursors.Hand;
-                _opMode = EditorOperationMode.Select;
-                GraphArea.SetVerticesDrag(true, true);
-                ClearEditMode();
-            }
-            else
-            {
-                //function = null;
-                addVertexBtn.IsEnabled = true;
-                deleteVertexBtn.IsEnabled = true;
-                //connectVertexBtn.IsEnabled = true;
-                disconnectVertexBtn.IsEnabled = true;
-                graphGeneratorBtn.IsEnabled = true;
-                algorithmsBtn.IsEnabled = true;
-                currentGraphMode.Text = "Текущий режим: Перемещение";
-                isConnectVertexOn = false;
-                connectVertexBtn.ToolTip = "Включить режим соединения вершин";
-            }
-            Button btn = sender as Button;
-            btn.Background = btn.Background == Brushes.DarkGreen ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGreen;
-        }
-
-        private void DisconnectVertex_Click(object sender, RoutedEventArgs e)
-        {
-            if (!isDisconnectVertexOn)
-            {
-                //function = DisconnectVertex;
-                addVertexBtn.IsEnabled = false;
-                deleteVertexBtn.IsEnabled = false;
-                connectVertexBtn.IsEnabled = false;
-                //disconnectVertexBtn.IsEnabled = false;
-                graphGeneratorBtn.IsEnabled = false;
-                algorithmsBtn.IsEnabled = false;
-                currentGraphMode.Text = "Текущий режим: Удаление связей";
-                isDisconnectVertexOn = true;
-                disconnectVertexBtn.ToolTip = "Выключить режим удаления связей";
-            }
-            else
-            {
-                //function = null;
-                addVertexBtn.IsEnabled = true;
-                deleteVertexBtn.IsEnabled = true;
-                connectVertexBtn.IsEnabled = true;
-                //disconnectVertexBtn.IsEnabled = true;
-                graphGeneratorBtn.IsEnabled = true;
-                algorithmsBtn.IsEnabled = true;
-                currentGraphMode.Text = "Текущий режим: Перемещение";
-                isDisconnectVertexOn = false;
-                disconnectVertexBtn.ToolTip = "Включить режим удаления связей";
-            }
-            Button btn = sender as Button;
-            btn.Background = btn.Background == Brushes.DarkRed ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkRed;
-        }
-
         private void GraphGenerator_Click(object sender, RoutedEventArgs e)
         {
             if (!isGraphGeneratorOn)
             {
                 addVertexBtn.Visibility = Visibility.Hidden;
                 deleteVertexBtn.Visibility = Visibility.Hidden;
-                connectVertexBtn.Visibility = Visibility.Hidden;
-                disconnectVertexBtn.Visibility = Visibility.Hidden;
-                //graphGeneratorBtn.Visibility = Visibility.Hidden;
                 algorithmsBtn.Visibility = Visibility.Hidden;
+                randomTreeButton.Visibility = Visibility.Visible;
+                randomConnectedGraphButton.Visibility = Visibility.Visible;
+                downloadGraphButton.Visibility = Visibility.Visible;
+                createGraphButton.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = "Текущий режим: Генерация графов";                
                 isGraphGeneratorOn = true;
-                graphGeneratorBtn.ToolTip = "Выключить режим удаления связей";
+                graphGeneratorBtn.ToolTip = "Включить режим генерации графов";
             }
             else
             {
                 addVertexBtn.Visibility = Visibility.Visible;
                 deleteVertexBtn.Visibility = Visibility.Visible;
-                connectVertexBtn.Visibility = Visibility.Visible;
-                disconnectVertexBtn.Visibility = Visibility.Visible;
-                //graphGeneratorBtn.Visibility = Visibility.Visible;
                 algorithmsBtn.Visibility = Visibility.Visible;
+                randomTreeButton.Visibility = Visibility.Hidden;
+                randomConnectedGraphButton.Visibility = Visibility.Hidden;
+                downloadGraphButton.Visibility = Visibility.Hidden;
+                createGraphButton.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
                 isGraphGeneratorOn = false;
-                disconnectVertexBtn.ToolTip = "Включить режим удаления связей";
+                graphGeneratorBtn.ToolTip = "Выключить режим генерации графов";
             }
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGray ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGray;
@@ -1267,28 +1211,108 @@ namespace GraphPAD
             {
                 addVertexBtn.Visibility = Visibility.Hidden;
                 deleteVertexBtn.Visibility = Visibility.Hidden;
-                connectVertexBtn.Visibility = Visibility.Hidden;
-                disconnectVertexBtn.Visibility = Visibility.Hidden;
                 graphGeneratorBtn.Visibility = Visibility.Hidden;
-                //algorithmsBtn.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = "Текущий режим: Алгоритмы";
                 isAlgorithmsOn = true;
-                graphGeneratorBtn.ToolTip = "Выключить режим удаления связей";
+                algorithmsBtn.ToolTip = "Выключить режим алгоритмов";
             }
             else
             {
                 addVertexBtn.Visibility = Visibility.Visible;
                 deleteVertexBtn.Visibility = Visibility.Visible;
-                connectVertexBtn.Visibility = Visibility.Visible;
-                disconnectVertexBtn.Visibility = Visibility.Visible;
                 graphGeneratorBtn.Visibility = Visibility.Visible;
-                //algorithmsBtn.Visibility = Visibility.Visible;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
                 isAlgorithmsOn = false;
-                disconnectVertexBtn.ToolTip = "Включить режим удаления связей";
+                algorithmsBtn.ToolTip = "Включить режим алгоритмов";
             }
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGray ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGray;
+        }
+        private void randomTreeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isRandomTreeOn)
+            {
+                randomConnectedGraphButton.IsEnabled = false;
+                vertexAmountTextBox.Visibility = Visibility.Visible;
+                edgesAmountTextBox.Visibility = Visibility.Hidden;
+                graphGeneratorBtn.IsEnabled = false;
+                downloadGraphButton.Visibility = Visibility.Hidden;
+                createGraphButton.Visibility = Visibility.Visible;
+                currentGraphMode.Text = "Текущий режим: Случайное дерево";
+                isRandomTreeOn = true;
+                randomTreeButton.ToolTip = "Выключить генерацию случайного дерева";
+            }
+            else
+            {
+                randomConnectedGraphButton.IsEnabled = true;
+                vertexAmountTextBox.Visibility = Visibility.Hidden;
+                edgesAmountTextBox.Visibility = Visibility.Hidden;
+                graphGeneratorBtn.IsEnabled = true;
+                downloadGraphButton.Visibility = Visibility.Visible;
+                createGraphButton.Visibility = Visibility.Hidden;
+                currentGraphMode.Text = "Текущий режим: Генерация графов";
+                isRandomTreeOn = false;
+                randomTreeButton.ToolTip = "Включить генерацию случайного дерева";
+            }
+            Button btn = sender as Button;
+            btn.Background = btn.Background == Brushes.DarkGreen ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGreen;
+        }
+        private void randomConnectedGraphButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isRandomConnectedGraphOn)
+            {
+                randomTreeButton.IsEnabled = false;
+                vertexAmountTextBox.Visibility = Visibility.Visible;
+                edgesAmountTextBox.Visibility = Visibility.Visible;
+                graphGeneratorBtn.IsEnabled = false;
+                downloadGraphButton.Visibility = Visibility.Hidden;
+                createGraphButton.Visibility = Visibility.Visible;
+                currentGraphMode.Text = "Текущий режим: Случайный сввязный граф";
+                isRandomConnectedGraphOn = true;
+                randomTreeButton.ToolTip = "Выключить генерацию случайного связного графа";
+            }
+            else
+            {
+                randomTreeButton.IsEnabled = true;
+                vertexAmountTextBox.Visibility = Visibility.Hidden;
+                edgesAmountTextBox.Visibility = Visibility.Hidden;
+                graphGeneratorBtn.IsEnabled = true;
+                downloadGraphButton.Visibility = Visibility.Visible;
+                createGraphButton.Visibility = Visibility.Hidden;
+                currentGraphMode.Text = "Текущий режим: Генерация графов";
+                isRandomConnectedGraphOn = false;
+                randomTreeButton.ToolTip = "Включить генерацию случайного связного графа";
+            }
+            Button btn = sender as Button;
+            btn.Background = btn.Background == Brushes.DarkGreen ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGreen;
+        }
+        private void edgesVeightTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            edgesWeightTextBox.Text = edgesWeightTextBox.Text.Replace(" ", "");
+            edgesWeightTextBox.SelectionStart = edgesWeightTextBox.Text.Length;
+        }
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+        private void downloadGraphButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void vertexAmountTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            vertexAmountTextBox.Text = vertexAmountTextBox.Text.Replace(" ", "");
+            vertexAmountTextBox.SelectionStart = vertexAmountTextBox.Text.Length;
+        }
+        private void edgesAmountTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            edgesAmountTextBox.Text = edgesAmountTextBox.Text.Replace(" ", "");
+            edgesAmountTextBox.SelectionStart = edgesAmountTextBox.Text.Length;
+        }
+        private void createGraphButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
         #endregion
         #region Paint panel

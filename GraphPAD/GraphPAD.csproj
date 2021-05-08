@@ -234,10 +234,10 @@
     <Resource Include="Resources\remove_vertex.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\graph_generator.png" />
+    <Resource Include="Resources\tree.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\connect_vertex.png" />
+    <Resource Include="Resources\create_graph.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\disconnect_vertex.png" />
@@ -321,6 +321,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="GraphData\Examples\60.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\download.png" />
+    <Resource Include="Resources\graph_generator.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\connected_graph.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />
