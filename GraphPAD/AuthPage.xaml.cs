@@ -75,7 +75,7 @@ namespace GraphPAD
             } 
             else //Логин верен
             {
-                textboxLogin.ToolTip = _Email;
+                textboxLogin.ToolTip = null;
                 textboxLogin.BorderBrush = Brushes.Gray;
                 loginCorrect = true;
             }
@@ -86,7 +86,7 @@ namespace GraphPAD
             }
             else //Пароль верен
             {
-                passwordboxPassword.ToolTip = "";
+                passwordboxPassword.ToolTip = null;
                 passwordboxPassword.BorderBrush = Brushes.Gray;
                 passCorrect = true;
             }
@@ -107,7 +107,7 @@ namespace GraphPAD
                     JSONauth tempUser = JsonConvert.DeserializeObject<JSONauth>(responseData);
 
                     UserInfo.Email = tempUser.Data.Email;
-                    //UserInfo.ID = tempUser.ID;
+                    UserInfo.ID = tempUser.Data.userId;
                     UserInfo.Role = tempUser.Data.Role;
                     UserInfo.Token = tempUser.Token;
                     GuestInfo.Name = "exist";

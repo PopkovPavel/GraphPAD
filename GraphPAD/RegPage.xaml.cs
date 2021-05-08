@@ -42,7 +42,7 @@ namespace GraphPAD
             }
             else //Имя верно
             {
-                textboxName.ToolTip = _name;
+                textboxName.ToolTip = null;
                 textboxName.BorderBrush = Brushes.Gray;
                 nameCorrect = true;
             }
@@ -58,7 +58,7 @@ namespace GraphPAD
             }
             else //Почта верна
             {
-                textboxEmail.ToolTip = _Email;
+                textboxEmail.ToolTip = null;
                 textboxEmail.BorderBrush = Brushes.Gray;
                 emailCorrect = true;
             }
@@ -78,9 +78,9 @@ namespace GraphPAD
             }
             else //Пароли совпадают
             {
-                passwordbox_1.ToolTip = "Пароли совпадают";
+                passwordbox_1.ToolTip = null;
                 passwordbox_1.BorderBrush = Brushes.Gray;
-                passwordbox_2.ToolTip = "Пароли совпадают";
+                passwordbox_2.ToolTip = null;
                 passwordbox_2.BorderBrush = Brushes.Gray;
                 ispassEqual = true;
             }
