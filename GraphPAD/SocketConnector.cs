@@ -60,6 +60,14 @@ namespace GraphPAD
         {
             client.EmitAsync("send-chat-message", message);
         }
+        public static void UpdateGraph(string message)
+        {
+            
+        }
+        public static void UpdatePaint(string message)
+        {
+            
+        }
     }
 }
 

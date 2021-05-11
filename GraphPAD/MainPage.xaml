@@ -15,12 +15,12 @@
             <Setter Property="Background" Value="#22223d"></Setter>
             <Setter Property="Foreground" Value="White"></Setter>
         </Style>
-        <Style TargetType="ScrollBar">
+        <!--<Style TargetType="ScrollBar">
             <Setter Property="Background" Value="#FF141424"/>
             <Setter Property="Foreground" Value="Red"/>
             <Setter Property="BorderBrush" Value="Gray"/>
             <Setter Property="BorderThickness" Value="1"/>
-        </Style>
+        </Style>-->
         <Style TargetType="RepeatButton">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -113,13 +113,13 @@
 
                 <!--Панель для работы с графами-->
                 <Canvas x:Name="GraphControlCanvas" Visibility="Visible" Margin="315,7.5,10,7.5" Background="#FF0E0E19">
-                    <Button x:Name="addVertexBtn" Click="AddVertex_Click" Visibility="Hidden" ToolTip="Включить режим добавления вершин" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="addVertexBtn" Click="AddVertex_Click" Visibility="Hidden" ToolTip="Включить режим создания" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/add_vertex.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Добавление" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="deleteVertexBtn" Click="RemoveVertex_Click" Visibility="Hidden" ToolTip="Включить режим удаления вершин" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="deleteVertexBtn" Click="RemoveVertex_Click" Visibility="Hidden" ToolTip="Включить режим удаления" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/remove_vertex.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Удаление" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
@@ -152,7 +152,7 @@
                             <TextBlock TextWrapping="NoWrap" Text="Случайное дерево" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="randomConnectedGraphButton" Click="randomConnectedGraphButton_Click" Visibility="Visible" ToolTip="Случайный связный граф" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="randomConnectedGraphButton" Click="randomConnectedGraphButton_Click" Visibility="Visible" ToolTip="Включить генерацию случайного связного графа" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/connected_graph.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Случ. связный граф" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
@@ -160,7 +160,7 @@
                     </Button>
                     <TextBox x:Name="vertexAmountTextBox" Visibility="Visible" TextChanged="vertexAmountTextBox_TextChanged" PreviewTextInput="NumberValidationTextBox" materialDesign:HintAssist.Hint="Кол-во вершин" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False" Height="30" BorderThickness="0,0,0,1" ClipToBounds="True" Foreground="White" MaxLines="1" MaxLength="3" HorizontalAlignment="Left" VerticalAlignment="Top" CaretBrush="White" Padding="0" FontSize="14"/>
                     <TextBox x:Name="edgesAmountTextBox" Visibility="Visible" TextChanged="edgesAmountTextBox_TextChanged" PreviewTextInput="NumberValidationTextBox" materialDesign:HintAssist.Hint="Кол-во рёбер" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False" Height="30" BorderThickness="0,0,0,1" ClipToBounds="True" Foreground="White" MaxLines="1" MaxLength="3" HorizontalAlignment="Left" VerticalAlignment="Top" CaretBrush="White" Padding="0" FontSize="14"/>
-                    <Button x:Name="downloadGraphButton" Click="downloadGraphButton_Click" Visibility="Visible" ToolTip="Загрузить граф" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="downloadGraphButton" Click="downloadGraphButton_Click" Visibility="Visible" ToolTip="Загрузить граф из файла" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/download.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Загрузить граф" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
@@ -201,13 +201,13 @@
                             <TextBlock TextWrapping="NoWrap" Text="Выделение" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="ClearCanvasButton" Click="ClearCanvasButton_Click" ToolTip="Отчистить поле" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="108" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="ClearCanvasButton" Visibility="Visible" Click="ClearCanvasButton_Click" ToolTip="Отчистить поле" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="108" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/clear.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Отчистить поле" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="SaveToFileButton" Click="SaveToFileButton_Click" ToolTip="Сохранить в файл (.jpg)" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="180" Canvas.Top="108" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="SaveToFileButton" Visibility="Visible" Click="SaveToFileButton_Click" ToolTip="Сохранить в файл (.jpg)" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="180" Canvas.Top="108" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/save.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Сохранить в файл" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
@@ -215,8 +215,10 @@
                     </Button>
                     <TextBlock x:Name="ColorPickerTextBlock" Visibility="Hidden" Canvas.Left="180" TextWrapping="Wrap" Text="Палитра цветов" Canvas.Top="21" Foreground="White" FontWeight="SemiBold" Width="200" FontSize="10" Height="14"/>
                     <materialDesign:ColorPicker x:Name="ColorPicker" Visibility="Hidden" Canvas.Left="180" Canvas.Top="35" Height="100" Width="200" BorderBrush="White" BorderThickness="1" Background="White" Foreground="White" ColorChanged="ColorPicker_ColorChanged" Color="Black" LayoutUpdated="ColorPicker_LayoutUpdated" IsTabStop="False"/>
-                    <Slider x:Name="EraserSlider" Visibility="Hidden" IsSnapToTickEnabled="True" Canvas.Left="180" Canvas.Top="122" Width="150" BorderBrush="White" Foreground="White" LayoutUpdated="EraserSlider_LayoutUpdated" Minimum="10" Value="30" BorderThickness="0" MouseEnter="EraserSlider_MouseEnter" MouseLeave="EraserSlider_MouseLeave" IsTabStop="False" SmallChange="0" LargeChange="0" Interval="1" TickFrequency="10" Maximum="100"/>
+                    <Slider x:Name="EraserSlider" Visibility="Hidden" IsSnapToTickEnabled="True" Canvas.Left="180" Canvas.Top="122" Width="150" BorderBrush="White" Foreground="White" LayoutUpdated="EraserSlider_LayoutUpdated" Minimum="10" Maximum="100" Value="30" BorderThickness="0" MouseEnter="EraserSlider_MouseEnter" MouseLeave="EraserSlider_MouseLeave" IsTabStop="False" SmallChange="0" LargeChange="0" Interval="1" TickFrequency="10"/>
+                    <Slider x:Name="BrushSlider" Visibility="Hidden" IsSnapToTickEnabled="True" Canvas.Left="10" Canvas.Top="122" Width="150" BorderBrush="White" Foreground="White" LayoutUpdated="BrushSlider_LayoutUpdated" Minimum="1"  Maximum="20" Value="2" BorderThickness="0" MouseEnter="BrushSlider_MouseEnter" MouseLeave="BrushSlider_MouseLeave" IsTabStop="False" SmallChange="0" LargeChange="0" Interval="1" TickFrequency="1"/>
                     <TextBlock x:Name="EraserTextBlock" Visibility="Hidden" Canvas.Left="181" TextWrapping="Wrap" Text="Размер Ластика: 30" Canvas.Top="108" Foreground="White" FontWeight="SemiBold" Width="150" FontSize="10" Height="14"/>
+                    <TextBlock x:Name="BrushTextBlock" Visibility="Hidden" Canvas.Left="11" TextWrapping="Wrap" Text="Размер Кисти: 2" Canvas.Top="108" Foreground="White" FontWeight="SemiBold" Width="150" FontSize="10" Height="14"/>
                 </Canvas>
                 <Button x:Name="PaintModeChangerButton" Visibility="Hidden" Content="Рисование" Click="FreeMode_Click" ToolTip="Переключить на режим графов" Width="100" BorderBrush="White" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,7.5,10,0"/>
             </Grid>
@@ -256,7 +258,7 @@
             </Grid>
             <Grid Grid.Row="3">
                 <!--Элементы для чата-->
-                <TextBox x:Name="chatTextBox" Height="120" materialDesign:HintAssist.Hint="Напишите сообщение ..." Background="#FF323232" FontSize="16" MaxLength="200" MaxLines="20" MinLines="1" TextWrapping="Wrap" TextAlignment="Left" CaretBrush="{x:Null}" Foreground="White" TextChanged="chatTextBox_TextChanged" SpellCheck.IsEnabled="True" VerticalAlignment="Bottom" Margin="5,0,50,8.5"/>
+                <TextBox x:Name="chatTextBox" Height="120" materialDesign:HintAssist.Hint="Напишите сообщение ..." Background="#FF323232" FontSize="16" MaxLength="200" MaxLines="20" MinLines="1" TextWrapping="Wrap" TextAlignment="Left" CaretBrush="{x:Null}" Foreground="White" TextChanged="ChatTextBox_TextChanged" SpellCheck.IsEnabled="True" VerticalAlignment="Bottom" Margin="5,0,50,8.5"/>
                 <TextBlock x:Name="charCounterTextBlock" TextWrapping="Wrap" Text="Символов 0/200" Foreground="White" Margin="5,0,250,128" VerticalAlignment="Bottom"/>
                 <Button x:Name="sendButton" Click="SendButton_Clicked" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionButton}" Width="48" Height="48" FontSize="16" Foreground="{x:Null}" BorderBrush="{x:Null}" IsTabStop="False" Margin="0,0,0,8.5" VerticalAlignment="Bottom">
                     <Button.Background>

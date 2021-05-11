@@ -120,7 +120,6 @@ namespace GraphPAD
                     {
                         textboxEmail.ToolTip = "Пользователь с таким E-Mail-ом уже существует";
                         textboxEmail.BorderBrush = Brushes.Red;
-                        //MessageBox.Show("Возможно пользователь с таким E-Mail-ом уже существует", "Что-то пошло не так", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
             }

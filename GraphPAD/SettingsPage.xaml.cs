@@ -1,9 +1,13 @@
-﻿using GraphPAD.Data.User;
+﻿using GraphPAD.Data.JSON;
+using GraphPAD.Data.User;
 using Microsoft.Win32;
+using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -47,32 +51,20 @@ namespace GraphPAD
         #region Left Buttons
         private void AccountButton_Click(object sender, RoutedEventArgs e)
         {
-            AccountCanvas.Visibility = Visibility.Visible;
+            AccountCanvasScrollView.Visibility = Visibility.Visible;//AccountCanvas.Visibility = Visibility.Visible;
             VoiceCanvas.Visibility = Visibility.Hidden;
-            VideoCanvas.Visibility = Visibility.Hidden;
             InterfaceCanvas.Visibility = Visibility.Hidden;
         }
         private void VoiceButton_Click(object sender, RoutedEventArgs e)
         {
-            AccountCanvas.Visibility = Visibility.Hidden;
+            AccountCanvasScrollView.Visibility = Visibility.Hidden;//AccountCanvas.Visibility = Visibility.Hidden;
             VoiceCanvas.Visibility = Visibility.Visible;
-            VideoCanvas.Visibility = Visibility.Hidden;
             InterfaceCanvas.Visibility = Visibility.Hidden;
         }
-
-        private void VideoButton_Click(object sender, RoutedEventArgs e)
-        {
-            AccountCanvas.Visibility = Visibility.Hidden;
-            VoiceCanvas.Visibility = Visibility.Hidden;
-            VideoCanvas.Visibility = Visibility.Visible;
-            InterfaceCanvas.Visibility = Visibility.Hidden;
-        }
-
         private void InterfaceButton_Click(object sender, RoutedEventArgs e)
         {
-            AccountCanvas.Visibility = Visibility.Hidden;
+            AccountCanvasScrollView.Visibility = Visibility.Hidden;//AccountCanvas.Visibility = Visibility.Hidden;
             VoiceCanvas.Visibility = Visibility.Hidden;
-            VideoCanvas.Visibility = Visibility.Hidden;
             InterfaceCanvas.Visibility = Visibility.Visible;
         }
         #endregion
@@ -83,7 +75,6 @@ namespace GraphPAD
             this.Close();
             MainPage.CloseForm();
         }
-
         private void vkButton_Clicked(object sender, RoutedEventArgs e)
         {
             Process.Start("https://vk.com/graphpad");
@@ -100,16 +91,71 @@ namespace GraphPAD
         }
         private void ChangePasswordButton_Click(object sender, RoutedEventArgs e)
         {
+            AccountCanvas.Height = 470;
+            newPasswordBox.Visibility = Visibility.Visible;
+            CancelChangePassword.Visibility = Visibility.Visible;
+            ConfirmChangePasswordButton.Visibility = Visibility.Visible;
+            AccountCanvasScrollView.ScrollToBottom();
+        }
+        private void CancelChangePasswordButton_Click(object sender, RoutedEventArgs e)
+        {
+            newPasswordBox.ToolTip = null;
+            newPasswordBox.BorderBrush = Brushes.Black;
 
+            AccountCanvas.Height = 390;
+            newPasswordBox.Password = null;
+            newPasswordBox.Visibility = Visibility.Hidden;
+            CancelChangePassword.Visibility = Visibility.Hidden;
+            ConfirmChangePasswordButton.Visibility = Visibility.Hidden;
+        }
+        private void ConfirmChangePasswordButton_Click(object sender, RoutedEventArgs e)
+        {
+            string _newPassword = newPasswordBox.Password.Trim();
+            if (_newPassword == null || _newPassword == "")
+            {
+                newPasswordBox.ToolTip = "Введите новый пароль.";
+                newPasswordBox.BorderBrush = Brushes.Red;
+            }
+            else if (_newPassword.Length < 8)
+            {
+                newPasswordBox.ToolTip = "Пароль слишком короткий.\nМинимальная длина пароля - 8 символов.";
+                newPasswordBox.BorderBrush = Brushes.Red;
+            }
+            if (_newPassword.Length >= 8)
+            {
+                newPasswordBox.ToolTip = null;
+                newPasswordBox.BorderBrush = Brushes.Black;
+                //Изменение пароля на новый
+                var client = new RestClient($"http://testingwebrtc.herokuapp.com/user");
+                client.Timeout = -1;
+                var request = new RestRequest(Method.PUT);
+                request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+                request.AddHeader("x-access-token", $"{UserInfo.Token}");
+                request.AddParameter("password", _newPassword.ToString());
+                IRestResponse response = client.Execute(request);
+                if (response.IsSuccessful)
+                {
+                    File.Delete(@"Token.json");
+                    MessageBox.Show("Пароль успешно изменён.", "Сообщение", MessageBoxButton.OK);
+                    AccountCanvas.Height = 390;
+                    newPasswordBox.Password = null;
+                    newPasswordBox.Visibility = Visibility.Hidden;
+                    CancelChangePassword.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    MessageBox.Show("Что-то пошло не так.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
         #endregion
         #region Avatar Changer
-        private void avatarButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        private void AvatarButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             avatarButton.Content = "Изменить";
             avatarButton.Opacity = 0.8;
         }
-        private void avatarButton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        private void AvatarButton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
             avatarButton.Content = null;
             avatarButton.Opacity = 0;
@@ -124,7 +170,7 @@ namespace GraphPAD
             image.Freeze();
             return image;
         }
-        private void avatarButton_Clicked(object sender, RoutedEventArgs e)
+        private void AvatarButton_Clicked(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.FileName = "Avatar"; // Default file name
