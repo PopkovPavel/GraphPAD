@@ -1,10 +1,13 @@
-﻿using SocketIOClient;
+﻿using GraphPAD.Data.JSON;
+using Newtonsoft.Json;
+using SocketIOClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Ink;
 
 namespace GraphPAD
 {
@@ -59,6 +62,27 @@ namespace GraphPAD
         public static void SendMessage(string message)
         {
             client.EmitAsync("send-chat-message", message);
+        }
+        public static void SendStroke(Stroke stroke)
+        {
+            var stylusPoints = stroke.StylusPoints;
+            var color = stroke.DrawingAttributes.Color;
+            var width = stroke.DrawingAttributes.Width;
+            JSONstroke jSONstroke = new JSONstroke()
+            {
+                StrokeArray = stylusPoints,
+                Color = color,
+                Width = width
+                //Color = color.ToString(),
+                //Width = width.ToString()
+            };
+                
+            var strokeJSON = JsonConvert.SerializeObject(jSONstroke);
+            client.EmitAsync("update-paint-canvas", jSONstroke);
+        }
+        public static void SendGraph(string graph)
+        {
+            client.EmitAsync("send-graph", graph);
         }
     }
 }

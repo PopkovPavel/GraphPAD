@@ -1,7 +1,8 @@
 ﻿using GraphPAD.GraphData.Model;
 using QuickGraph;
+using System;
 using System.Collections.Generic;
-
+using System.Windows.Media;
 
 namespace GraphPAD.GraphData.Pattern
 {
@@ -55,10 +56,17 @@ namespace GraphPAD.GraphData.Pattern
             Graph = new BidirectionalGraph<DataVertex, DataEdge>();
             var vertices = new List<DataVertex>();
             var edges = new List<DataEdge>();
-
+            Random rnd = new Random();
             for (var i = 0; i < size; i++)
             {
-                var vertex = new DataVertex((i + 1).ToString()) { ID = i };
+                
+                byte c1 = (byte)rnd.Next(33, 160);
+                byte c2 = (byte)rnd.Next(33, 160);
+                byte c3 = (byte)rnd.Next(33, 160);
+                
+                var VertexColor = new SolidColorBrush(Color.FromRgb(c1, c2, c3));
+              
+                var vertex = new DataVertex((i + 1).ToString(), VertexColor) { ID = i };
                 vertices.Add(vertex);
             }
 
@@ -71,7 +79,7 @@ namespace GraphPAD.GraphData.Pattern
                         var weight = GraphMatrix[i, j];
                         if (weight > 0)
                         {
-                            edges.Add(new DataEdge(vertices[i], vertices[j], weight));
+                            edges.Add(new DataEdge(vertices[i], vertices[j], weight, Brushes.Black));
                             vertices[i].E++;
                             vertices[j].E++;
                         }

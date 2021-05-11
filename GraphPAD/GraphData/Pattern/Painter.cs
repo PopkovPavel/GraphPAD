@@ -39,7 +39,7 @@ namespace GraphPAD.GraphData.Pattern
             string test = null;
             foreach (DataEdge dataEdge in GraphZone.EdgesList.Keys)
             {
- //               dataEdge.Source.
+
             }
             return test;
         }

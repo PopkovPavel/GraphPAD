@@ -2,6 +2,7 @@
 using GraphX.PCL.Common.Models;
 using System;
 using System.ComponentModel;
+using System.Windows.Media;
 
 namespace GraphPAD.GraphData.Model
 {
@@ -10,9 +11,11 @@ namespace GraphPAD.GraphData.Model
     {
         public override Point[] RoutingPoints { get; set; }
 
-        public DataEdge(DataVertex source, DataVertex target, double weight = 1)
+        public DataEdge(DataVertex source, DataVertex target, double weight = 1, Brush colorBrush = null)
             : base(source, target, weight)
         {
+            if (colorBrush == null) ArrowBrush = Brushes.Black;
+            ArrowBrush = (SolidColorBrush)colorBrush;
             Angle = 90;
             Text = weight.ToString();
         }
@@ -20,12 +23,15 @@ namespace GraphPAD.GraphData.Model
         public DataEdge()
             : base(null, null, 1)
         {
-            Angle = 90;
+            ArrowBrush = Brushes.Black;
+            Angle = 90; 
         }
 
         public bool ArrowTarget { get; set; }
 
         public double Angle { get; set; }
+        public SolidColorBrush EdgeBrush { get; set; } = Brushes.Black;
+        public SolidColorBrush ArrowBrush { get; set; } = Brushes.Black;
 
         /// <summary>
         /// Node main description (header)
