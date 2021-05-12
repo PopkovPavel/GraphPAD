@@ -246,6 +246,7 @@ namespace GraphPAD
         #region GraphArea Functions
         private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e)
         {
+
             //create vertices and edges only in Edit mode
             if (e.LeftButton == MouseButtonState.Pressed)
             {
@@ -306,7 +307,13 @@ namespace GraphPAD
         }
         private VertexControl CreateVertexControl(Point position)
         {
-            var data = new DataVertex((GraphArea.VertexList.Count + 1).ToString()) { };
+            Random rnd = new Random();
+            byte c1 = (byte)rnd.Next(0, 160);
+            byte c2 = (byte)rnd.Next(0, 160);
+            byte c3 = (byte)rnd.Next(0, 160);
+
+            var vertexColor = new SolidColorBrush(Color.FromRgb(c1, c2, c3));
+            var data = new DataVertex((GraphArea.VertexList.Count + 1).ToString(), vertexColor) { };
             var vc = new VertexControl(data);
             vc.SetPosition(position);
             GraphArea.AddVertexAndData(data, vc, true);
@@ -1221,6 +1228,7 @@ namespace GraphPAD
         {
             if (!isRemoveVertexOn)
             {
+                GraphArea.RelayoutGraph();
                 //function = DeleteVertex;
                 addVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
@@ -1949,7 +1957,7 @@ namespace GraphPAD
             RefreshRooms();
         }
         #endregion
-
+        
         private void PaintCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
             //var strokeJSON = JsonConvert.SerializeObject(PaintCanvas.Strokes.Last().StylusPoints.ToList());

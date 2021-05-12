@@ -77,7 +77,7 @@ namespace GraphPAD
                 //Width = width.ToString()
             };
                 
-            var strokeJSON = JsonConvert.SerializeObject(jSONstroke);
+            //var strokeJSON = JsonConvert.SerializeObject(jSONstroke);
             client.EmitAsync("update-paint-canvas", jSONstroke);
         }
         public static void SendGraph(string graph)

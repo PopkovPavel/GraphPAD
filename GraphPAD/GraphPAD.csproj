@@ -135,6 +135,7 @@
     <Compile Include="Data\JSON\JSONuserInfo.cs" />
     <Compile Include="Data\User\GuestInfo.cs" />
     <Compile Include="Data\User\UserInfo.cs" />
+    <Compile Include="GraphData\Algorithms\MainPage.Algorithms.Djkstra.cs" />
     <Compile Include="GraphData\Model\DaraVertex.cs" />
     <Compile Include="GraphData\Model\DataEdge.cs" />
     <Compile Include="GraphData\Model\EditorObjectManager.cs" />
@@ -293,9 +294,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\avatar_default.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GraphData\Algorithms\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="GraphData\Examples\11.txt" />
   </ItemGroup>
