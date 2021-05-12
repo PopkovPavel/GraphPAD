@@ -482,6 +482,8 @@ namespace GraphPAD
             SaveToFileButton.Visibility = Visibility.Visible;
             EraserSlider.Visibility = Visibility.Hidden;
             EraserTextBlock.Visibility = Visibility.Hidden;
+            BrushSlider.Visibility = Visibility.Hidden;
+            BrushTextBlock.Visibility = Visibility.Hidden;
             currentPaintMode.Text = "Текущий режим: Курсор";
             //Menu Fix
             CancelCreateLobbyButton.Visibility = Visibility.Hidden;
@@ -1196,7 +1198,7 @@ namespace GraphPAD
                 algorithmsBtn.IsEnabled = false;
                 edgesWeightTextBox.Visibility = Visibility.Visible;
                 orientedCheckbox.Visibility = Visibility.Visible;
-                currentGraphMode.Text = "Текущий режим: Добавление вершин";
+                currentGraphMode.Text = "Текущий режим: Создание";
                 isAddVetexOn = true;
                 addVertexBtn.ToolTip = "Выключить режим добавления вершин";
 
@@ -1233,7 +1235,7 @@ namespace GraphPAD
                 addVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
-                currentGraphMode.Text = "Текущий режим: Удаление вершин";
+                currentGraphMode.Text = "Текущий режим: Удаление";
                 isRemoveVertexOn = true;
                 deleteVertexBtn.ToolTip = "Выключить режим удаления вершин";
 
@@ -1272,7 +1274,7 @@ namespace GraphPAD
                 createGraphButton.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = "Текущий режим: Генерация графов";
                 isGraphGeneratorOn = true;
-                graphGeneratorBtn.ToolTip = "Включить режим генерации графов";
+                graphGeneratorBtn.ToolTip = "Вылючить режим генерации графов";
             }
             else
             {
@@ -1285,7 +1287,7 @@ namespace GraphPAD
                 createGraphButton.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
                 isGraphGeneratorOn = false;
-                graphGeneratorBtn.ToolTip = "Выключить режим генерации графов";
+                graphGeneratorBtn.ToolTip = "Включить режим генерации графов";
             }
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGray ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGray;
@@ -1355,7 +1357,7 @@ namespace GraphPAD
                 createGraphButton.Visibility = Visibility.Visible;
                 currentGraphMode.Text = "Текущий режим: Случайный сввязный граф";
                 isRandomConnectedGraphOn = true;
-                randomTreeButton.ToolTip = "Выключить генерацию случайного связного графа";
+                randomConnectedGraphButton.ToolTip = "Выключить генерацию случайного связного графа";
             }
             else
             {
@@ -1367,7 +1369,7 @@ namespace GraphPAD
                 createGraphButton.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = "Текущий режим: Генерация графов";
                 isRandomConnectedGraphOn = false;
-                randomTreeButton.ToolTip = "Включить генерацию случайного связного графа";
+                randomConnectedGraphButton.ToolTip = "Включить генерацию случайного связного графа";
             }
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGreen ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGreen;
@@ -1665,6 +1667,9 @@ namespace GraphPAD
                     Eraser_SmartButton.Visibility = Visibility.Hidden;
                     SaveToFileButton.Visibility = Visibility.Hidden;
                 }
+                ClearCanvasButton.Visibility = Visibility.Hidden;
+                BrushSlider.Visibility = Visibility.Visible;
+                BrushTextBlock.Visibility = Visibility.Visible;
                 ColorPickerTextBlock.Visibility = Visibility.Visible;
                 ColorPicker.Visibility = Visibility.Visible;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.Ink;
@@ -1685,6 +1690,9 @@ namespace GraphPAD
                 EraserButton.Visibility = Visibility.Visible;
                 Eraser_SmartButton.Visibility = Visibility.Visible;
                 SaveToFileButton.Visibility = Visibility.Visible;
+                ClearCanvasButton.Visibility = Visibility.Visible;
+                BrushSlider.Visibility = Visibility.Hidden;
+                BrushTextBlock.Visibility = Visibility.Hidden;
                 ColorPickerTextBlock.Visibility = Visibility.Hidden;
                 ColorPicker.Visibility = Visibility.Hidden;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.None;
@@ -1937,9 +1945,7 @@ namespace GraphPAD
                 this.sendButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
             }
         }
-        #endregion
-        #region Etc.
-        private void chatTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void ChatTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string userInput = chatTextBox.Text;
             char charCount;
@@ -1957,6 +1963,30 @@ namespace GraphPAD
             RefreshRooms();
         }
         #endregion
+
+        private void BrushSlider_LayoutUpdated(object sender, EventArgs e)
+        {
+            var brushSize = BrushSlider.Value;
+            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
+            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
+            BrushTextBlock.Text = "Размер Кисти: " + (brushSize).ToString();
+        }
+
+        private void BrushSlider_MouseEnter(object sender, MouseEventArgs e)
+        {
+            var brushSize = BrushSlider.Value;
+            PaintCanvas.EditingMode = InkCanvasEditingMode.None;
+            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
+            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
+        }
+
+        private void BrushSlider_MouseLeave(object sender, MouseEventArgs e)
+        {
+            var brushSize = BrushSlider.Value;
+            PaintCanvas.EditingMode = InkCanvasEditingMode.Ink;
+            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
+            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
+        }
         
         private void PaintCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
