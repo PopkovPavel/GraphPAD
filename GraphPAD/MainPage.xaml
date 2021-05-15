@@ -18,18 +18,27 @@
             <Setter Property="Background" Value="#22223d"></Setter>
             <Setter Property="Foreground" Value="White"></Setter>
         </Style>
+        <!--<Style TargetType="{x:Type ComboBox}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="IsDropDownOpen" Value="true"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>-->
         <!--<Style TargetType="ScrollBar">
             <Setter Property="Background" Value="#FF141424"/>
             <Setter Property="Foreground" Value="Red"/>
             <Setter Property="BorderBrush" Value="Gray"/>
             <Setter Property="BorderThickness" Value="1"/>
         </Style>-->
+
         <Style TargetType="RepeatButton">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
         </Style>
+        
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -134,6 +143,23 @@
                             <TextBlock TextWrapping="NoWrap" Text="Добавление" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
+                    <Button x:Name="clearGraph" Click="ClearGraphs_Click" Visibility="Hidden" ToolTip="Очистить поле для графов" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
+                        <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
+                            <Image Source="Resources/clear.png"/>
+                            <TextBlock TextWrapping="NoWrap" Text="Очистить поле" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="reorderGraph" Click="ReorderGraph_Click" Visibility="Hidden" ToolTip="Упорядочить граф" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
+                        <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
+                            <Image Source="Resources/reorder.png"/>
+                            <TextBlock TextWrapping="NoWrap" Text="Упорядочить граф" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="saveGraph" Click="SaveGraph_Click" Visibility="Visible" ToolTip="Сохранить в файл" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" BorderBrush="White" Canvas.Left="343" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                        <StackPanel Margin="-20" Width="32" Height="30" Orientation="Horizontal">
+                            <Image Source="Resources/save.png" Width="32"/>
+                        </StackPanel>
+                    </Button>
                     <Button x:Name="deleteVertexBtn" Click="RemoveVertex_Click" Visibility="Hidden" ToolTip="Включить режим удаления" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/remove_vertex.png"/>
@@ -146,36 +172,37 @@
                             <SolidColorBrush x:Key="MaterialDesignCheckBoxOff" Color="White"/>
                         </CheckBox.Resources>
                     </CheckBox>
-                    <Button x:Name="graphGeneratorBtn" Click="GraphGenerator_Click" ToolTip="Включить режим генерации графов" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="graphGeneratorBtn" Click="GraphGenerator_Click" Visibility="Hidden" ToolTip="Включить режим генерации графов" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image x:Name="freeModeImage2" Source="Resources/graph_generator.png"/>
                             <TextBlock x:Name="freeModeTextBlock2" TextWrapping="NoWrap" Text="Генерация графов" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="algorithmsBtn" Click="Algorithms_Click" Visibility="Hidden" ToolTip="Включить режим алгоритмов" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="algorithmsBtn" Click="Algorithms_Click" Visibility="Visible" ToolTip="Включить режим алгоритмов" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image x:Name="freeModeImage1" Source="Resources/algorithm.png"/>
                             <TextBlock x:Name="freeModeTextBlock1" TextWrapping="NoWrap" Text="Алгоритмы" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
 
+
                     <TextBlock x:Name="currentGraphMode" Text="Текущий режим: Перемещение" Canvas.Left="10" Canvas.Top="2" Width="321" Foreground="White" Height="16" Padding="1" FontSize="10" TextAlignment="Center" FontWeight="Medium"/>
                     <!--Генерация графов-->
-                    <Button x:Name="randomTreeButton" Click="randomTreeButton_Click" Visibility="Visible" ToolTip="Включить генерацию случайного дерева" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="randomTreeButton" Click="randomTreeButton_Click" Visibility="Hidden" ToolTip="Включить генерацию случайного дерева" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/tree.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Случайное дерево" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="randomConnectedGraphButton" Click="randomConnectedGraphButton_Click" Visibility="Visible" ToolTip="Включить генерацию случайного связного графа" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="randomConnectedGraphButton" Click="randomConnectedGraphButton_Click" Visibility="Hidden" ToolTip="Включить генерацию случайного связного графа" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/connected_graph.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Случ. связный граф" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <TextBox x:Name="vertexAmountTextBox" Visibility="Visible" TextChanged="vertexAmountTextBox_TextChanged" PreviewTextInput="NumberValidationTextBox" materialDesign:HintAssist.Hint="Кол-во вершин" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False" Height="30" BorderThickness="0,0,0,1" ClipToBounds="True" Foreground="White" MaxLines="1" MaxLength="3" HorizontalAlignment="Left" VerticalAlignment="Top" CaretBrush="White" Padding="0" FontSize="14"/>
-                    <TextBox x:Name="edgesAmountTextBox" Visibility="Visible" TextChanged="edgesAmountTextBox_TextChanged" PreviewTextInput="NumberValidationTextBox" materialDesign:HintAssist.Hint="Кол-во рёбер" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False" Height="30" BorderThickness="0,0,0,1" ClipToBounds="True" Foreground="White" MaxLines="1" MaxLength="3" HorizontalAlignment="Left" VerticalAlignment="Top" CaretBrush="White" Padding="0" FontSize="14"/>
-                    <Button x:Name="downloadGraphButton" Click="downloadGraphButton_Click" Visibility="Visible" ToolTip="Загрузить граф из файла" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <TextBox x:Name="vertexAmountTextBox" Visibility="Hidden" TextChanged="vertexAmountTextBox_TextChanged" PreviewTextInput="NumberValidationTextBox" materialDesign:HintAssist.Hint="Кол-во вершин" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False" Height="30" BorderThickness="0,0,0,1" ClipToBounds="True" Foreground="White" MaxLines="1" MaxLength="3" HorizontalAlignment="Left" VerticalAlignment="Top" CaretBrush="White" Padding="0" FontSize="14"/>
+                    <TextBox x:Name="edgesAmountTextBox" Visibility="Hidden" TextChanged="edgesAmountTextBox_TextChanged" PreviewTextInput="NumberValidationTextBox" materialDesign:HintAssist.Hint="Кол-во рёбер" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False" Height="30" BorderThickness="0,0,0,1" ClipToBounds="True" Foreground="White" MaxLines="1" MaxLength="3" HorizontalAlignment="Left" VerticalAlignment="Top" CaretBrush="White" Padding="0" FontSize="14"/>
+                    <Button x:Name="downloadGraphButton" Click="downloadGraphButton_Click" Visibility="Hidden" ToolTip="Загрузить граф из файла" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/download.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Загрузить граф" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
@@ -187,6 +214,27 @@
                             <TextBlock TextWrapping="NoWrap" Text="Создать граф" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
+                    <Button x:Name="animationSpeed" Click="animationSpeed_Click" Visibility="Visible" ToolTip="Изменить скорость анимации" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                        <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
+                            <Image Source="Resources/brush.png"/>
+                            <TextBlock TextWrapping="NoWrap" Text="Скорость анимации" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="showAnimaton" Click="showAlgorithm_Click" Visibility="Visible" ToolTip="Отрисовать алгоритм" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                        <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
+                            <Image Source="Resources/brush.png"/>
+                            <TextBlock TextWrapping="NoWrap" Text="Отрисовать" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                        </StackPanel>
+                    </Button>
+                    <ComboBox x:Name="algorithmsComboBox" Text="Выберите алгоритм" IsEditable="True" StaysOpenOnEdit="True" Canvas.Left="10" Canvas.Top="23" Width="150" Height="30" Foreground="White" BorderBrush="White" Background="{x:Null}" SelectionChanged="algorithmsComboBox_SelectionChanged" IsReadOnly="True" controls:ControlsHelper.FocusBorderBrush="White" controls:ControlsHelper.MouseOverBorderBrush="White" controls:TextBoxHelper.HasText="True">
+                        <ComboBoxItem Name="Item1" Foreground="White" Background="#FF0E0E19" BorderBrush="#FF0E0E19" FontWeight="SemiBold">Item1</ComboBoxItem>
+                        <ComboBoxItem Name="Item2" Foreground="White" Background="#FF0E0E19" BorderBrush="#FF0E0E19" FontWeight="SemiBold">Item2</ComboBoxItem>
+                        <ComboBoxItem Name="Item3" Foreground="White" Background="#FF0E0E19" BorderBrush="#FF0E0E19" FontWeight="SemiBold">Item3</ComboBoxItem>
+                        <ComboBoxItem Name="Item4" Foreground="White" Background="#FF0E0E19" BorderBrush="#FF0E0E19" FontWeight="SemiBold">Item4</ComboBoxItem>
+                        <ComboBoxItem Name="Item5" Foreground="White" Background="#FF0E0E19" BorderBrush="#FF0E0E19" FontWeight="SemiBold">Item5</ComboBoxItem>
+                        <ComboBoxItem Name="Item6" Foreground="White" Background="#FF0E0E19" BorderBrush="#FF0E0E19" FontWeight="SemiBold">Item6</ComboBoxItem>
+                    </ComboBox>
+                    
                 </Canvas>
                 <Button x:Name="GraphModeChangerButton" Visibility="Hidden" Content="Графы" Click="FreeMode_Click" ToolTip="Переключить на свободный режим" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" BorderBrush="White" Canvas.Left="456" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" ClipToBounds="True" Margin="0,7.5,10,0"/>
                 <!--Панель для работы с рисовалкой-->
@@ -198,13 +246,13 @@
                             <TextBlock TextWrapping="NoWrap" Text="Кисть" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="EraserButton" Click="EraserButton_Click" ToolTip="Включить Ластик" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="180" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="EraserButton" Click="EraserButton_Click" ToolTip="Включить Ластик" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/eraser.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Ластик" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="Eraser_SmartButton" Click="Eraser_SmartButton_Click" ToolTip="Включить Умный Ластик" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="180" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="Eraser_SmartButton" Click="Eraser_SmartButton_Click" ToolTip="Включить Умный Ластик" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/eraser_smart.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Умный Ластик" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
@@ -222,7 +270,7 @@
                             <TextBlock TextWrapping="NoWrap" Text="Отчистить поле" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="SaveToFileButton" Visibility="Visible" Click="SaveToFileButton_Click" ToolTip="Сохранить в файл (.jpg)" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="180" Canvas.Top="108" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="SaveToFileButton" Visibility="Visible" Click="SaveToFileButton_Click" ToolTip="Сохранить в файл (.jpg)" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="108" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/save.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Сохранить в файл" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>

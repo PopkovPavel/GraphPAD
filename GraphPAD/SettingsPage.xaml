@@ -34,7 +34,7 @@
             <TextBlock HorizontalAlignment="Left" TextAlignment="Center" TextWrapping="Wrap" Text="Настройки пользователя" VerticalAlignment="Top" Height="20" Width="120" Foreground="White" FontSize="10" Padding="3,3,2,0"/>
             <TextBlock HorizontalAlignment="Left" TextAlignment="Center" TextWrapping="Wrap" Text="Настройки приложения" VerticalAlignment="Top" Height="20" Width="120" Foreground="White" FontSize="10" Padding="3,3,2,0" Grid.Row="2"/>
             <Button x:Name="AccountButton" Click="AccountButton_Click" Content="Мой аккаунт" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False"/>
-            <Button x:Name="VoiceButton" Click="VoiceButton_Click" Content="Голос" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False"/>
+            <Button x:Name="VoiceButton" Click="VoiceButton_Click" Content="Голос и звук" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False"/>
             <Button x:Name="InterfaceButton" Click="InterfaceButton_Click" Content="Интерфейс" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" Margin="0,30,0,0" IsTabStop="False"/>
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ссылки:" VerticalAlignment="Bottom" Height="60" Width="120" Foreground="White" Padding="3,0,0,0" Grid.Row="5" FontSize="10"/>
             <!--Links Buttons-->

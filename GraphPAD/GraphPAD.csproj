@@ -297,7 +297,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\avatar_default.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\reorder.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="GraphData\Examples\11.txt" />
   </ItemGroup>

@@ -508,10 +508,14 @@ namespace GraphPAD
             orientedCheckbox.IsEnabled = true;
             graphGeneratorBtn.IsEnabled = true;
             algorithmsBtn.IsEnabled = true;
+            reorderGraph.IsEnabled = true;
+            clearGraph.IsEnabled = true;
             randomTreeButton.IsEnabled = true;
             randomConnectedGraphButton.IsEnabled = true;
             addVertexBtn.Visibility = Visibility.Visible;
             deleteVertexBtn.Visibility = Visibility.Visible;
+            clearGraph.Visibility = Visibility.Visible;
+            reorderGraph.Visibility = Visibility.Visible;
             edgesWeightTextBox.Visibility = Visibility.Hidden;
             orientedCheckbox.Visibility = Visibility.Hidden;
             orientedCheckbox.IsChecked = false;
@@ -523,6 +527,9 @@ namespace GraphPAD
             edgesAmountTextBox.Visibility = Visibility.Hidden;
             downloadGraphButton.Visibility = Visibility.Hidden;
             createGraphButton.Visibility = Visibility.Hidden;
+            animationSpeed.Visibility = Visibility.Hidden;
+            showAnimaton.Visibility = Visibility.Hidden;
+            algorithmsComboBox.Visibility = Visibility.Hidden;
             currentGraphMode.Text = "Текущий режим: Перемещение";
             //PaintButtons Fix
             isBrushModeOn = false;
@@ -1003,6 +1010,8 @@ namespace GraphPAD
                 }
                 catch { }
             }
+            ButtonsFix();
+            GraphArea.ClearLayout();
 
         }
         #endregion
@@ -1050,6 +1059,7 @@ namespace GraphPAD
             ConferensionIDTextBox.Visibility = Visibility.Hidden;
             NewConferensionNameTextBox.BorderBrush = Brushes.Transparent;
             NewConferensionNameTextBox.Visibility = Visibility.Hidden;
+            ButtonsFix();
         }
         #endregion
         #region Text, Video, Chat buttons
@@ -1230,7 +1240,7 @@ namespace GraphPAD
             if (!isFreeModeOn)
             {
                 isFreeModeOn = true;
-
+                PaintCanvasScroll.ZoomToFill();
                 GraphControlCanvas.Visibility = Visibility.Hidden;
                 GraphModeChangerButton.Visibility = Visibility.Hidden;
                 PaintControlCanvas.Visibility = Visibility.Visible;
@@ -1262,6 +1272,8 @@ namespace GraphPAD
                 deleteVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
+                clearGraph.Visibility = Visibility.Hidden;
+                reorderGraph.Visibility = Visibility.Hidden;
                 edgesWeightTextBox.Visibility = Visibility.Visible;
                 orientedCheckbox.Visibility = Visibility.Visible;
                 currentGraphMode.Text = "Текущий режим: Создание";
@@ -1278,6 +1290,8 @@ namespace GraphPAD
                 deleteVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
+                clearGraph.Visibility = Visibility.Visible;
+                reorderGraph.Visibility = Visibility.Visible;
                 edgesWeightTextBox.Visibility = Visibility.Hidden;
                 orientedCheckbox.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
@@ -1296,10 +1310,8 @@ namespace GraphPAD
         {
             if (!isRemoveVertexOn)
             {
-
-                CalculateDjkstra();
-               // GraphArea.RelayoutGraph();
-                //function = DeleteVertex;
+                reorderGraph.IsEnabled = false;
+                clearGraph.IsEnabled = false;
                 addVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
@@ -1314,8 +1326,8 @@ namespace GraphPAD
             }
             else
             {
-
-                //function = null;
+                reorderGraph.IsEnabled = true;
+                clearGraph.IsEnabled = true;
                 addVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
@@ -1337,6 +1349,8 @@ namespace GraphPAD
                 addVertexBtn.Visibility = Visibility.Hidden;
                 deleteVertexBtn.Visibility = Visibility.Hidden;
                 algorithmsBtn.Visibility = Visibility.Hidden;
+                clearGraph.Visibility = Visibility.Hidden;
+                reorderGraph.Visibility = Visibility.Hidden;
                 randomTreeButton.Visibility = Visibility.Visible;
                 randomConnectedGraphButton.Visibility = Visibility.Visible;
                 downloadGraphButton.Visibility = Visibility.Visible;
@@ -1350,6 +1364,8 @@ namespace GraphPAD
                 addVertexBtn.Visibility = Visibility.Visible;
                 deleteVertexBtn.Visibility = Visibility.Visible;
                 algorithmsBtn.Visibility = Visibility.Visible;
+                clearGraph.Visibility = Visibility.Visible;
+                reorderGraph.Visibility = Visibility.Visible;
                 randomTreeButton.Visibility = Visibility.Hidden;
                 randomConnectedGraphButton.Visibility = Visibility.Hidden;
                 downloadGraphButton.Visibility = Visibility.Hidden;
@@ -1369,6 +1385,11 @@ namespace GraphPAD
                 addVertexBtn.Visibility = Visibility.Hidden;
                 deleteVertexBtn.Visibility = Visibility.Hidden;
                 graphGeneratorBtn.Visibility = Visibility.Hidden;
+                clearGraph.Visibility = Visibility.Hidden;
+                reorderGraph.Visibility = Visibility.Hidden;
+                animationSpeed.Visibility = Visibility.Visible;
+                showAnimaton.Visibility = Visibility.Visible;
+                algorithmsComboBox.Visibility = Visibility.Visible;
                 currentGraphMode.Text = "Текущий режим: Алгоритмы";
                 isAlgorithmsOn = true;
                 algorithmsBtn.ToolTip = "Выключить режим алгоритмов";
@@ -1383,6 +1404,11 @@ namespace GraphPAD
                 addVertexBtn.Visibility = Visibility.Visible;
                 deleteVertexBtn.Visibility = Visibility.Visible;
                 graphGeneratorBtn.Visibility = Visibility.Visible;
+                clearGraph.Visibility = Visibility.Visible;
+                reorderGraph.Visibility = Visibility.Visible;
+                animationSpeed.Visibility = Visibility.Hidden;
+                showAnimaton.Visibility = Visibility.Hidden;
+                algorithmsComboBox.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
                 isAlgorithmsOn = false;
                 algorithmsBtn.ToolTip = "Включить режим алгоритмов";
@@ -2081,6 +2107,38 @@ namespace GraphPAD
                 if(!(PaintCanvas.Strokes.Count == 0))
                 SocketConnector.SendStroke(PaintCanvas.Strokes.Last());
             }
+        }
+        private void ClearGraphs_Click(object sender, RoutedEventArgs e)
+        {
+            GraphArea.ClearLayout();
+        }
+
+        private void ReorderGraph_Click(object sender, RoutedEventArgs e)
+        {
+            GraphArea.RelayoutGraph();
+        }
+
+        private void SaveGraph_Click(object sender, RoutedEventArgs e)
+        {
+            //save to JSON
+        }
+
+        private void animationSpeed_Click(object sender, RoutedEventArgs e)
+        {
+            //Switch case chi sho?
+            //case 1
+            //case 2
+            //case 3
+        }
+        private void showAlgorithm_Click(object sender, RoutedEventArgs e)
+        {
+            //Animation
+        }
+        private void algorithmsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //ComboBox comboBox = (ComboBox)sender;
+            //ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
+            //MessageBox.Show(selectedItem.Content.ToString());
         }
     }
 }
