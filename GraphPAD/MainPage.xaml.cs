@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -34,11 +35,17 @@ namespace GraphPAD
     public partial class MainPage : Window
     {
         #region Global Variables
+        private string algorithmResult;
+        /// <summary>
+        /// Список ребер, которые необходимо "покрасить"
+        /// </summary>
+        private List<DataEdge> algorithmEdgesList = new List<DataEdge>();
+        CancellationToken source = new CancellationToken();
         /// <summary>
         /// Фабрика
         /// </summary>
         private Painter _creator;
-
+        bool flagNegr = true;
         /// <summary>
         /// Строитель
         /// </summary>
@@ -51,7 +58,8 @@ namespace GraphPAD
         {
             Select = 0,
             Edit,
-            Delete
+            Delete,
+            Algorithm
         }
 
         /// <summary>
@@ -88,6 +96,9 @@ namespace GraphPAD
         public int lobbyButtonsMargin = -70;
         public int chatCount;
         public int chatTextblockMargin;
+        /// <summary>
+        /// Имя конференции
+        /// </summary>
         private string ConferensionName;
         public delegate void Method();
         private static Method close;
@@ -115,6 +126,8 @@ namespace GraphPAD
             GraphArea.EdgeLabelFactory = new DefaultEdgelabelFactory();
             GraphArea.ShowAllEdgesLabels(true);
             GraphArea.ShowAllEdgesArrows(true);
+            GraphArea.SetEdgesHighlight(true, GraphControlType.VertexAndEdge);
+            GraphArea.SetVerticesHighlight(true, GraphControlType.VertexAndEdge, EdgesType.All);
             dgLogic.EdgeCurvingEnabled = true;
             //dgLogic.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.Custom;
             //dgLogic.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.None;
@@ -131,6 +144,7 @@ namespace GraphPAD
             ZoomControl.SetViewFinderVisibility(ZoomCtrl, Visibility.Visible);
             ZoomCtrl.IsAnimationEnabled = true;
             ZoomCtrl.MouseDown += ZoomCtrl_MouseDown;
+            ZoomCtrl.MouseUp += ZoomCtrl_MouseUp;
             ZoomCtrl.Cursor = Cursors.Hand;
 
             ZoomControl.SetViewFinderVisibility(PaintCanvasScroll, Visibility.Visible);
@@ -244,6 +258,10 @@ namespace GraphPAD
 
         #endregion
         #region GraphArea Functions
+        private void ZoomCtrl_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ClearEditMode();
+        }
         private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e)
         {
 
@@ -261,7 +279,7 @@ namespace GraphPAD
                 else if (_opMode == EditorOperationMode.Select)
                 {
                     ClearSelectMode(true);
-                }
+                } 
             }
         }
         /// <summary>
@@ -328,10 +346,26 @@ namespace GraphPAD
                 HighlightBehaviour.SetHighlighted(_ecFrom, true);
                 return;
             }
+             
             if (_ecFrom == vc) return;
             var weightText = edgesWeightTextBox.Text != "";
             int weight = weightText ? int.Parse(edgesWeightTextBox.Text) : 1;
             Brush color;
+            List<DataEdge> edgesToDelete = new List<DataEdge>();
+            foreach(var edge in GraphArea.EdgesList)
+            {
+                if (edge.Key.Source == vc.Vertex && _ecFrom.Vertex == edge.Key.Target
+                    || edge.Key.Target == vc.Vertex && _ecFrom.Vertex == edge.Key.Source)
+                {
+                    edgesToDelete.Add(edge.Key);
+                }
+            }
+
+            foreach(var temp in edgesToDelete)
+            {
+                GraphArea.RemoveEdge(temp, true);
+            }               
+
             if (orientedCheckbox.IsChecked == false)
             {
                 color = Brushes.Transparent;
@@ -339,6 +373,7 @@ namespace GraphPAD
             else
             {
                 color = Brushes.Black;
+                
             }
             var data = new DataEdge((DataVertex)_ecFrom.Vertex, (DataVertex)vc.Vertex, weight, color);
             var ec = new EdgeControl(_ecFrom, vc, data);
@@ -363,13 +398,6 @@ namespace GraphPAD
             {
                 GraphArea.InsertEdgeAndData(data, ec, 0, true);
             }
-            var rand = new Random();
-            foreach (var item in GraphArea.EdgesList.ToList())
-            {
-                var random = Convert.ToBoolean(rand.Next(0, 2));
-                item.Value.SetCurrentValue(EdgeControl.ShowArrowsProperty, false);
-
-            }
 
             HighlightBehaviour.SetHighlighted(_ecFrom, false);
             _ecFrom = null;
@@ -392,17 +420,54 @@ namespace GraphPAD
                     case EditorOperationMode.Delete:
                         SafeRemoveVertex(args.VertexControl);
                         break;
+                    case EditorOperationMode.Algorithm:
+                        StartAlgorithm(args.VertexControl);
+                        break;
                     default:
                         if (_opMode == EditorOperationMode.Select && args.Modifiers == ModifierKeys.Control)
                             SelectVertex(args.VertexControl);
                         break;
                 }
+            }            
+        }
+
+        private void StartAlgorithm(VertexControl vc)
+        {
+            FixLabelsAndArrows();
+            if (isAlgorithmsOn)
+            {
+                string ChoosedAlgorithm = "test";
+                switch (ChoosedAlgorithm)
+                {
+                    case "test":
+                        CalculateDFS((DataVertex)vc.Vertex);
+                        break;
+                    default: break;
+                }
             }
         }
+
         void GraphArea_EdgeSelected(object sender, EdgeSelectedEventArgs args)
         {
             if (args.MouseArgs.LeftButton == MouseButtonState.Pressed && _opMode == EditorOperationMode.Delete)
-                GraphArea.RemoveEdge(args.EdgeControl.Edge as DataEdge, true);
+            {
+                List<DataEdge> edgesToDelete = new List<DataEdge>();
+                foreach (var edge in GraphArea.EdgesList)
+                {
+                    if (edge.Key.Source == (args.EdgeControl.Edge as DataEdge).Source 
+                        && (args.EdgeControl.Edge as DataEdge).Target == edge.Key.Target
+                        || edge.Key.Target == (args.EdgeControl.Edge as DataEdge).Source
+                        && (args.EdgeControl.Edge as DataEdge).Target == edge.Key.Source)
+                    {
+                        edgesToDelete.Add(edge.Key);
+                    }
+                }
+                foreach (var temp in edgesToDelete)
+                {
+                    GraphArea.RemoveEdge(temp, true);
+                }
+
+            }
         }
 
         #endregion
@@ -913,6 +978,7 @@ namespace GraphPAD
                     {
                         var text = JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
                         await Dispatcher.BeginInvoke((Action)(() => ChatBox.AppendText($"{text[0].UserId}: {text[0].Message}\n\n")));
+                        chatCount += 1;
                         Console.WriteLine($"{text[0].UserId}: {text[0].Message}");
                     });
                     SocketConnector.client.On("stroke-data", async response =>
@@ -1230,7 +1296,9 @@ namespace GraphPAD
         {
             if (!isRemoveVertexOn)
             {
-                GraphArea.RelayoutGraph();
+
+                CalculateDjkstra();
+               // GraphArea.RelayoutGraph();
                 //function = DeleteVertex;
                 addVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
@@ -1246,6 +1314,7 @@ namespace GraphPAD
             }
             else
             {
+
                 //function = null;
                 addVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
@@ -1303,15 +1372,22 @@ namespace GraphPAD
                 currentGraphMode.Text = "Текущий режим: Алгоритмы";
                 isAlgorithmsOn = true;
                 algorithmsBtn.ToolTip = "Выключить режим алгоритмов";
+                _opMode = EditorOperationMode.Algorithm;
+                GraphArea.SetVerticesDrag(false);
+                flagNegr = false;
+
             }
             else
             {
+                flagNegr = true;
                 addVertexBtn.Visibility = Visibility.Visible;
                 deleteVertexBtn.Visibility = Visibility.Visible;
                 graphGeneratorBtn.Visibility = Visibility.Visible;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
                 isAlgorithmsOn = false;
                 algorithmsBtn.ToolTip = "Включить режим алгоритмов";
+                //DrawAlgorithm();
+                GraphArea.SetVerticesDrag(true);
             }
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGray ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGray;
@@ -1631,12 +1707,16 @@ namespace GraphPAD
             {
                 if (edge.Weight == 1)
                 {
+                   
                 }
+                edge.ArrowBrush = Brushes.Black;
+                edge.EdgeBrush = Brushes.Black;
                 foreach (DataEdge edge2 in GraphArea.EdgesList.Keys)
                 {
-
+                    edge2.EdgeBrush = Brushes.Black;
                     if (edge.Source == edge2.Target && edge.Target == edge2.Source)
                     {
+
                         edge.ArrowBrush = Brushes.Transparent;
                         edge2.ArrowBrush = Brushes.Transparent;
                     }
@@ -2006,5 +2086,4 @@ namespace GraphPAD
 }
 
 //ToDo
-//1)Online paint
-//2)Online graphs
+//1)suck koke

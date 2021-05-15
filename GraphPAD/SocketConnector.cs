@@ -73,11 +73,9 @@ namespace GraphPAD
                 StrokeArray = stylusPoints,
                 Color = color,
                 Width = width
-                //Color = color.ToString(),
-                //Width = width.ToString()
+
             };
-                
-            //var strokeJSON = JsonConvert.SerializeObject(jSONstroke);
+
             client.EmitAsync("update-paint-canvas", jSONstroke);
         }
         public static void SendGraph(string graph)

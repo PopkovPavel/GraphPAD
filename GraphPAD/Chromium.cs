@@ -15,9 +15,10 @@ namespace GraphPAD
             try
             {
                 var tempUrl = BaseUrl + _roomId + "/view";
+                //var tempUrl = "google.com";
                 ChromiumWebBrowser browser = new ChromiumWebBrowser(tempUrl);
                 browser.MenuHandler = new CustomMenuHandler();
-
+                
                 return browser;
             }
             catch
