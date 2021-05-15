@@ -2,16 +2,25 @@
 using CefSharp.Wpf;
 using GraphPAD.Data.JSON;
 using GraphPAD.Data.User;
+using GraphPAD.GraphData.Model;
+using GraphPAD.GraphData.Pattern;
+using GraphX.Controls;
+using GraphX.Controls.Models;
+using GraphX.PCL.Common;
+using GraphX.PCL.Common.Enums;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -26,6 +35,40 @@ namespace GraphPAD
     public partial class MainPage : Window
     {
         #region Global Variables
+        private string algorithmResult;
+        /// <summary>
+        /// Список ребер, которые необходимо "покрасить"
+        /// </summary>
+        private List<DataEdge> algorithmEdgesList = new List<DataEdge>();
+        CancellationToken source = new CancellationToken();
+        /// <summary>
+        /// Фабрика
+        /// </summary>
+        private Painter _creator;
+        bool flagNegr = true;
+        /// <summary>
+        /// Строитель
+        /// </summary>
+        private Director _director;
+
+        private EditorOperationMode _opMode = EditorOperationMode.Select;
+        private VertexControl _ecFrom;
+        private readonly EditorObjectManager _editorManager;
+        public enum EditorOperationMode
+        {
+            Select = 0,
+            Edit,
+            Delete,
+            Algorithm
+        }
+
+        /// <summary>
+        /// Для управления командами
+        /// </summary>
+        private readonly List<Command> _commands = new List<Command>();
+
+        private Command _currentCommand;
+        private int _commandCounter = -1;
         //User Controls
         public bool isMicOn;
         public bool isHeadPhonesOn;
@@ -53,6 +96,9 @@ namespace GraphPAD
         public int lobbyButtonsMargin = -70;
         public int chatCount;
         public int chatTextblockMargin;
+        /// <summary>
+        /// Имя конференции
+        /// </summary>
         private string ConferensionName;
         public delegate void Method();
         private static Method close;
@@ -66,6 +112,48 @@ namespace GraphPAD
         public MainPage()
         {
             InitializeComponent();
+            #region grapharea + zoom ctrl
+            // ZoomCtrl.Visibility = Visibility.Visible;
+            //Элементы на поле отрисовки графа
+            var dgLogic = new GraphLogic();
+
+            GraphArea.LogicCore = dgLogic;
+            GraphArea.VertexSelected += GraphArea_VertexSelected;
+            GraphArea.EdgeSelected += GraphArea_EdgeSelected;
+            GraphArea.SetVerticesMathShape(VertexShape.Ellipse);
+
+            GraphArea.VertexLabelFactory = new DefaultVertexlabelFactory();
+            GraphArea.EdgeLabelFactory = new DefaultEdgelabelFactory();
+            GraphArea.ShowAllEdgesLabels(true);
+            GraphArea.ShowAllEdgesArrows(true);
+            GraphArea.SetEdgesHighlight(true, GraphControlType.VertexAndEdge);
+            GraphArea.SetVerticesHighlight(true, GraphControlType.VertexAndEdge, EdgesType.All);
+            dgLogic.EdgeCurvingEnabled = true;
+            //dgLogic.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.Custom;
+            //dgLogic.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.None;
+            //dgLogic.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.None;
+
+            _editorManager = new EditorObjectManager(GraphArea, ZoomCtrl);
+            Painter.GraphZone = GraphArea;
+            //  DeleteCliqueCommand.Sp = SpDeletedClicks;
+            _opMode = EditorOperationMode.Select;
+
+            GraphArea.SetVerticesDrag(true, true);
+            ClearEditMode();
+
+            ZoomControl.SetViewFinderVisibility(ZoomCtrl, Visibility.Visible);
+            ZoomCtrl.IsAnimationEnabled = true;
+            ZoomCtrl.MouseDown += ZoomCtrl_MouseDown;
+            ZoomCtrl.MouseUp += ZoomCtrl_MouseUp;
+            ZoomCtrl.Cursor = Cursors.Hand;
+
+            ZoomControl.SetViewFinderVisibility(PaintCanvasScroll, Visibility.Visible);
+            // PaintCanvasScroll.IsAnimationEnabled = true;
+            //  PaintCanvasScroll.MouseDown += ZoomCtrl_MouseDown;
+            PaintCanvas.EditingMode = InkCanvasEditingMode.Ink;
+
+
+            #endregion
             //Создание папки "Avatars", если она не существует
             if (!Directory.Exists(Path.GetFullPath(@"Avatars")))
             {
@@ -130,16 +218,16 @@ namespace GraphPAD
                 userRoleString.Text = "Гость";
             }
             conferenssionString.Text = "Конференция ...";
-            
+
             //debug
-            GraphCanvas.Visibility = Visibility.Hidden;
-            PaintCanvasScroll.Visibility = Visibility.Hidden;//PaintCanvas.Visibility = Visibility.Hidden;
+            ZoomCtrl.Visibility = Visibility.Hidden;
+            PaintCanvasScroll.Visibility = Visibility.Hidden;
             GraphControlCanvas.Visibility = Visibility.Hidden;
             GraphModeChangerButton.Visibility = Visibility.Hidden;
             PaintControlCanvas.Visibility = Visibility.Hidden;
             PaintModeChangerButton.Visibility = Visibility.Hidden;
             infoTextBlock.Visibility = Visibility.Visible;
-            leaveButton.Visibility = Visibility.Hidden;  
+            leaveButton.Visibility = Visibility.Hidden;
             chatGrid.Visibility = Visibility.Hidden;
             EraserTextBlock.Visibility = Visibility.Hidden;
             EraserSlider.Visibility = Visibility.Hidden;
@@ -150,10 +238,10 @@ namespace GraphPAD
             Cef.Initialize(Chromium.settings);
             leaveButton.Click += (s, ea) =>
             {
-                LobbyLeave_ClickAsync(s,ea);
+                LobbyLeave_ClickAsync(s, ea);
                 ChatBox.Clear();
                 chatTextBox.Clear();
-                foreach(UIElement temp in VideoChatCanvas.Children)
+                foreach (UIElement temp in VideoChatCanvas.Children)
                 {
                     try
                     {
@@ -166,6 +254,222 @@ namespace GraphPAD
             RefreshRooms();
             ButtonsFix();
         }
+
+
+        #endregion
+        #region GraphArea Functions
+        private void ZoomCtrl_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ClearEditMode();
+        }
+        private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+            //create vertices and edges only in Edit mode
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (_opMode == EditorOperationMode.Edit)
+                {
+                    var pos = ZoomCtrl.TranslatePoint(e.GetPosition(ZoomCtrl), GraphArea);
+                    pos.Offset(-22.5, -22.5);
+                    var vc = CreateVertexControl(pos);
+                    if (_ecFrom != null)
+                        CreateEdgeControl(vc);
+                }
+                else if (_opMode == EditorOperationMode.Select)
+                {
+                    ClearSelectMode(true);
+                } 
+            }
+        }
+        /// <summary>
+        /// Выбор вершины
+        /// </summary>
+        /// <param name="vc"></param>
+        private static void SelectVertex(DependencyObject vc)
+        {
+            if (DragBehaviour.GetIsTagged(vc))
+            {
+                HighlightBehaviour.SetHighlighted(vc, false);
+                DragBehaviour.SetIsTagged(vc, false);
+            }
+            else
+            {
+                HighlightBehaviour.SetHighlighted(vc, true);
+                DragBehaviour.SetIsTagged(vc, true);
+            }
+        }
+        /// <summary>
+        /// Сбросить режим перемещения вершин
+        /// </summary>
+        /// <param name="soft"></param>
+        private void ClearSelectMode(bool soft = false)
+        {
+            GraphArea.VertexList.Values
+                .Where(DragBehaviour.GetIsTagged)
+                .ToList()
+                .ForEach(a =>
+                {
+                    HighlightBehaviour.SetHighlighted(a, false);
+                    DragBehaviour.SetIsTagged(a, false);
+                });
+
+            if (!soft)
+                GraphArea.SetVerticesDrag(false);
+        }
+        private void ClearEditMode()
+        {
+            if (_ecFrom != null) HighlightBehaviour.SetHighlighted(_ecFrom, false);
+            _editorManager.DestroyVirtualEdge();
+            _ecFrom = null;
+        }
+        private VertexControl CreateVertexControl(Point position)
+        {
+            Random rnd = new Random();
+            byte c1 = (byte)rnd.Next(0, 160);
+            byte c2 = (byte)rnd.Next(0, 160);
+            byte c3 = (byte)rnd.Next(0, 160);
+
+            var vertexColor = new SolidColorBrush(Color.FromRgb(c1, c2, c3));
+            var data = new DataVertex((GraphArea.VertexList.Count + 1).ToString(), vertexColor) { };
+            var vc = new VertexControl(data);
+            vc.SetPosition(position);
+            GraphArea.AddVertexAndData(data, vc, true);
+            return vc;
+        }
+        private void CreateEdgeControl(VertexControl vc)
+        {
+            if (_ecFrom == null)
+            {
+                _editorManager.CreateVirtualEdge(vc, vc.GetPosition());
+                _ecFrom = vc;
+                HighlightBehaviour.SetHighlighted(_ecFrom, true);
+                return;
+            }
+             
+            if (_ecFrom == vc) return;
+            var weightText = edgesWeightTextBox.Text != "";
+            int weight = weightText ? int.Parse(edgesWeightTextBox.Text) : 1;
+            Brush color;
+            List<DataEdge> edgesToDelete = new List<DataEdge>();
+            foreach(var edge in GraphArea.EdgesList)
+            {
+                if (edge.Key.Source == vc.Vertex && _ecFrom.Vertex == edge.Key.Target
+                    || edge.Key.Target == vc.Vertex && _ecFrom.Vertex == edge.Key.Source)
+                {
+                    edgesToDelete.Add(edge.Key);
+                }
+            }
+
+            foreach(var temp in edgesToDelete)
+            {
+                GraphArea.RemoveEdge(temp, true);
+            }               
+
+            if (orientedCheckbox.IsChecked == false)
+            {
+                color = Brushes.Transparent;
+            }
+            else
+            {
+                color = Brushes.Black;
+                
+            }
+            var data = new DataEdge((DataVertex)_ecFrom.Vertex, (DataVertex)vc.Vertex, weight, color);
+            var ec = new EdgeControl(_ecFrom, vc, data);
+            if (orientedCheckbox.IsChecked == false)
+            {
+                var data2 = new DataEdge((DataVertex)vc.Vertex, (DataVertex)_ecFrom.Vertex, weight, Brushes.Transparent);
+                var ec2 = new EdgeControl(vc, _ecFrom, data2);
+                if (weight == 1)
+                {
+                    GraphArea.InsertEdgeAndData(data2, ec2, 0, false);
+                }
+                else
+                {
+                    GraphArea.InsertEdgeAndData(data2, ec2, 0, true);
+                }
+            }
+            if (weight == 1)
+            {
+                GraphArea.InsertEdgeAndData(data, ec, 0, false);
+            }
+            else
+            {
+                GraphArea.InsertEdgeAndData(data, ec, 0, true);
+            }
+
+            HighlightBehaviour.SetHighlighted(_ecFrom, false);
+            _ecFrom = null;
+            _editorManager.DestroyVirtualEdge();
+        }
+        private void SafeRemoveVertex(VertexControl vc)
+        {
+            //remove vertex and all adjacent edges from layout and data graph
+            GraphArea.RemoveVertexAndEdges(vc.Vertex as DataVertex);
+        }
+        void GraphArea_VertexSelected(object sender, VertexSelectedEventArgs args)
+        {
+            if (args.MouseArgs.LeftButton == MouseButtonState.Pressed)
+            {
+                switch (_opMode)
+                {
+                    case EditorOperationMode.Edit:
+                        CreateEdgeControl(args.VertexControl);
+                        break;
+                    case EditorOperationMode.Delete:
+                        SafeRemoveVertex(args.VertexControl);
+                        break;
+                    case EditorOperationMode.Algorithm:
+                        StartAlgorithm(args.VertexControl);
+                        break;
+                    default:
+                        if (_opMode == EditorOperationMode.Select && args.Modifiers == ModifierKeys.Control)
+                            SelectVertex(args.VertexControl);
+                        break;
+                }
+            }            
+        }
+
+        private void StartAlgorithm(VertexControl vc)
+        {
+            FixLabelsAndArrows();
+            if (isAlgorithmsOn)
+            {
+                string ChoosedAlgorithm = "test";
+                switch (ChoosedAlgorithm)
+                {
+                    case "test":
+                        CalculateDFS((DataVertex)vc.Vertex);
+                        break;
+                    default: break;
+                }
+            }
+        }
+
+        void GraphArea_EdgeSelected(object sender, EdgeSelectedEventArgs args)
+        {
+            if (args.MouseArgs.LeftButton == MouseButtonState.Pressed && _opMode == EditorOperationMode.Delete)
+            {
+                List<DataEdge> edgesToDelete = new List<DataEdge>();
+                foreach (var edge in GraphArea.EdgesList)
+                {
+                    if (edge.Key.Source == (args.EdgeControl.Edge as DataEdge).Source 
+                        && (args.EdgeControl.Edge as DataEdge).Target == edge.Key.Target
+                        || edge.Key.Target == (args.EdgeControl.Edge as DataEdge).Source
+                        && (args.EdgeControl.Edge as DataEdge).Target == edge.Key.Source)
+                    {
+                        edgesToDelete.Add(edge.Key);
+                    }
+                }
+                foreach (var temp in edgesToDelete)
+                {
+                    GraphArea.RemoveEdge(temp, true);
+                }
+
+            }
+        }
+
         #endregion
         #region Functions
         public static ImageSource NonBlockingLoad(string path)
@@ -193,7 +497,7 @@ namespace GraphPAD
             addVertexBtn.Background = Brushes.Transparent;
             deleteVertexBtn.Background = Brushes.Transparent;
             edgesWeightTextBox.Background = Brushes.Transparent;
-            
+
             graphGeneratorBtn.Background = Brushes.Transparent;
             algorithmsBtn.Background = Brushes.Transparent;
             randomTreeButton.Background = Brushes.Transparent;
@@ -376,7 +680,7 @@ namespace GraphPAD
 
                         ConfButton.Click += (senda, ev) =>
                         {
-                            LobbyEnter_ClickAsync($"{room.RoomID}",$"{room.RoomName}");
+                            LobbyEnter_ClickAsync($"{room.RoomID}", $"{room.RoomName}");
                             isAddVetexOn = false;
                             isRemoveVertexOn = false;
                             isConnectVertexOn = false;
@@ -394,7 +698,7 @@ namespace GraphPAD
                         Uri resourceUri = new Uri(path, UriKind.Relative);
                         StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
                         BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-                        ConfButton.Background = new ImageBrush(temp);                        
+                        ConfButton.Background = new ImageBrush(temp);
                         LobbysCanvas.Children.Add(ConfButton);
                     }
                 }
@@ -524,7 +828,7 @@ namespace GraphPAD
                     IRestResponse response = client.Execute(request);
                     if (response.IsSuccessful)
                     {
-                        MessageBox.Show("Вы успешно вошли в конференцию.\nЕё ID: " + _conferensionID + "\nЧтобы подкючиться к конференции выберите её в списке слева.", "Сообщение"); 
+                        MessageBox.Show("Вы успешно вошли в конференцию.\nЕё ID: " + _conferensionID + "\nЧтобы подкючиться к конференции выберите её в списке слева.", "Сообщение");
                         ConferensionIDTextBox.Text = "";
                         ConferensionIDTextBox.BorderBrush = Brushes.Transparent;
                         ConferensionIDTextBox.ToolTip = null;
@@ -627,10 +931,10 @@ namespace GraphPAD
             //Список конференций в левой части окна
             LobbysCanvas.Visibility = Visibility.Hidden;
             //Нижнее поле управления
-            GraphCanvas.Visibility = Visibility.Visible;
+            ZoomCtrl.Visibility = Visibility.Visible;
             GraphControlCanvas.Visibility = Visibility.Visible;
             GraphModeChangerButton.Visibility = Visibility.Visible;
-            PaintCanvasScroll.Visibility = Visibility.Hidden;//PaintCanvas.Visibility = Visibility.Hidden;
+            PaintCanvasScroll.Visibility = Visibility.Hidden;
             PaintControlCanvas.Visibility = Visibility.Hidden;
             PaintModeChangerButton.Visibility = Visibility.Hidden;
             infoTextBlock.Visibility = Visibility.Hidden;
@@ -674,7 +978,26 @@ namespace GraphPAD
                     {
                         var text = JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
                         await Dispatcher.BeginInvoke((Action)(() => ChatBox.AppendText($"{text[0].UserId}: {text[0].Message}\n\n")));
+                        chatCount += 1;
                         Console.WriteLine($"{text[0].UserId}: {text[0].Message}");
+                    });
+                    SocketConnector.client.On("stroke-data", async response =>
+                    {
+
+                        //StylusPointCollection
+                        var stroke2 = JsonConvert.DeserializeObject<JSONstroke[]>(response.ToString());
+                        var drawingAttributes = new DrawingAttributes()
+                        {
+                            Width = stroke2[0].Width,
+                            Color = stroke2[0].Color,
+                            FitToCurve = true
+                        };
+                        //MessageBox.Show(stroke2[0].Color.ToString() +"jopa", "");
+                        //MessageBox.Show(stroke2[0].Width.ToString(), "");
+                        //MessageBox.Show(stroke2[0].StrokeArray.ToString(), "");
+                        var stroke = new Stroke(stroke2[0].StrokeArray, drawingAttributes);
+
+                        await Dispatcher.BeginInvoke((Action)(() => PaintCanvas.Strokes.Add(stroke))); 
                     });
                     chatTextBox.IsReadOnly = (SocketConnector.IsConnected) ? false : true;
                 }
@@ -685,7 +1008,7 @@ namespace GraphPAD
         #endregion
         #region Lobby Leave
         private async System.Threading.Tasks.Task LobbyLeave_ClickAsync(object sender, RoutedEventArgs e)
-        {          
+        {
             await SocketConnector.Disconnect();
             chatTextBox.IsReadOnly = !SocketConnector.IsConnected;
             //Изменения интерфейса до состояния в момент запуска
@@ -693,9 +1016,9 @@ namespace GraphPAD
             //Список конференций в левой части окна
             LobbysCanvas.Visibility = Visibility.Visible;
             //Главные поля и панели для работы
-            GraphCanvas.Visibility = Visibility.Hidden;
+            ZoomCtrl.Visibility = Visibility.Hidden;
             GraphControlCanvas.Visibility = Visibility.Hidden;
-            PaintCanvasScroll.Visibility = Visibility.Hidden;//PaintCanvas.Visibility = Visibility.Hidden;
+            PaintCanvasScroll.Visibility = Visibility.Hidden;
             PaintCanvas.Strokes.Clear();
             PaintControlCanvas.Visibility = Visibility.Hidden;
             infoTextBlock.Visibility = Visibility.Visible;
@@ -867,7 +1190,7 @@ namespace GraphPAD
         {
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGreen ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGreen;
-            
+
             if (isVideoOn)
             {
                 //Веб-камера выключена
@@ -912,8 +1235,8 @@ namespace GraphPAD
                 GraphModeChangerButton.Visibility = Visibility.Hidden;
                 PaintControlCanvas.Visibility = Visibility.Visible;
                 PaintModeChangerButton.Visibility = Visibility.Visible;
-                GraphCanvas.Visibility = Visibility.Hidden;
-                PaintCanvasScroll.Visibility = Visibility.Visible;//PaintCanvas.Visibility = Visibility.Hidden;
+                ZoomCtrl.Visibility = Visibility.Hidden;
+                PaintCanvasScroll.Visibility = Visibility.Visible;
                 BGgrid.Background = Brushes.DarkSlateGray;
             }
             else
@@ -923,8 +1246,8 @@ namespace GraphPAD
                 GraphModeChangerButton.Visibility = Visibility.Visible;
                 PaintControlCanvas.Visibility = Visibility.Hidden;
                 PaintModeChangerButton.Visibility = Visibility.Hidden;
-                GraphCanvas.Visibility = Visibility.Visible;
-                PaintCanvasScroll.Visibility = Visibility.Hidden;//PaintCanvas.Visibility = Visibility.Hidden;
+                ZoomCtrl.Visibility = Visibility.Visible;
+                PaintCanvasScroll.Visibility = Visibility.Hidden;
                 BGgrid.Background = Brushes.DarkGray;
                 ButtonsFix();
             }
@@ -943,7 +1266,11 @@ namespace GraphPAD
                 orientedCheckbox.Visibility = Visibility.Visible;
                 currentGraphMode.Text = "Текущий режим: Создание";
                 isAddVetexOn = true;
-                addVertexBtn.ToolTip = "Выключить режим создания";
+                addVertexBtn.ToolTip = "Выключить режим добавления вершин";
+
+                ZoomCtrl.Cursor = Cursors.Pen;
+                _opMode = EditorOperationMode.Edit;
+                ClearSelectMode();
             }
             else
             {
@@ -955,7 +1282,12 @@ namespace GraphPAD
                 orientedCheckbox.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
                 isAddVetexOn = false;
-                addVertexBtn.ToolTip = "Включить режим создания";
+                addVertexBtn.ToolTip = "Включить режим добавления вершин";
+
+                ZoomCtrl.Cursor = Cursors.Hand;
+                _opMode = EditorOperationMode.Select;
+                GraphArea.SetVerticesDrag(true, true);
+                ClearEditMode();
             }
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGreen ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGreen;
@@ -964,23 +1296,36 @@ namespace GraphPAD
         {
             if (!isRemoveVertexOn)
             {
+
+                CalculateDjkstra();
+               // GraphArea.RelayoutGraph();
                 //function = DeleteVertex;
                 addVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
                 currentGraphMode.Text = "Текущий режим: Удаление";
                 isRemoveVertexOn = true;
-                deleteVertexBtn.ToolTip = "Выключить режим удаления";
+                deleteVertexBtn.ToolTip = "Выключить режим удаления вершин";
+
+                ZoomCtrl.Cursor = Cursors.Help;
+                _opMode = EditorOperationMode.Delete;
+                ClearEditMode();
+                ClearSelectMode();
             }
             else
             {
+
                 //function = null;
                 addVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
                 isRemoveVertexOn = false;
-                deleteVertexBtn.ToolTip = "Включить режим удаления";
+                deleteVertexBtn.ToolTip = "Включить режим удаления вершин";
+                ZoomCtrl.Cursor = Cursors.Hand;
+                _opMode = EditorOperationMode.Select;
+                GraphArea.SetVerticesDrag(true, true);
+                ClearEditMode();
             }
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkRed ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkRed;
@@ -996,7 +1341,7 @@ namespace GraphPAD
                 randomConnectedGraphButton.Visibility = Visibility.Visible;
                 downloadGraphButton.Visibility = Visibility.Visible;
                 createGraphButton.Visibility = Visibility.Hidden;
-                currentGraphMode.Text = "Текущий режим: Генерация графов";                
+                currentGraphMode.Text = "Текущий режим: Генерация графов";
                 isGraphGeneratorOn = true;
                 graphGeneratorBtn.ToolTip = "Вылючить режим генерации графов";
             }
@@ -1027,15 +1372,22 @@ namespace GraphPAD
                 currentGraphMode.Text = "Текущий режим: Алгоритмы";
                 isAlgorithmsOn = true;
                 algorithmsBtn.ToolTip = "Выключить режим алгоритмов";
+                _opMode = EditorOperationMode.Algorithm;
+                GraphArea.SetVerticesDrag(false);
+                flagNegr = false;
+
             }
             else
             {
+                flagNegr = true;
                 addVertexBtn.Visibility = Visibility.Visible;
                 deleteVertexBtn.Visibility = Visibility.Visible;
                 graphGeneratorBtn.Visibility = Visibility.Visible;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
                 isAlgorithmsOn = false;
                 algorithmsBtn.ToolTip = "Включить режим алгоритмов";
+                //DrawAlgorithm();
+                GraphArea.SetVerticesDrag(true);
             }
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGray ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGray;
@@ -1108,9 +1460,83 @@ namespace GraphPAD
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
+        /// <summary>
+        /// Путь к файлу с графом
+        /// </summary>
+        /// <returns></returns>
+        public string GetNameOfFileWithGraph()
+        {
+            string filename = null;
+            var dlg = new OpenFileDialog()
+            {
+                Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*"
+            };
+            bool? result = dlg.ShowDialog();
+            if (result == true && result != null)
+            {
+                filename = dlg.FileName;
+            }
+
+
+            return filename;
+        }
+        /// <summary>
+        /// Сконструировать таблицу связзности загруженного графа
+        /// </summary>
+        /// <param name="filename"></param>
+        public int[,] ReadGraphFromFile(string filename)
+        {
+            List<string> input = File.ReadAllText(filename).Replace("\r\n", "\n").Replace(" \n", "\n").Split('\n').ToList();
+            int size = Convert.ToInt32(input[0]);
+            input.RemoveAt(0);
+            int i = 0, j = 0;
+
+            int[,] result = new int[size, size];
+            foreach (var row in input)
+            {
+                j = 0;
+                foreach (var col in row.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    result[i, j] = int.Parse(col.Trim());
+                    j++;
+                }
+                i++;
+            }
+            return (int[,])result.Clone();
+        }
+
         private void downloadGraphButton_Click(object sender, RoutedEventArgs e)
         {
+            int[,] Data2D = new int[,] { };
+            try
+            {
+                var filename = GetNameOfFileWithGraph();
 
+                if (filename != "")
+                {
+                    Data2D = (int[,])(ReadGraphFromFile(filename)).Clone();
+                }
+                else
+                    throw new Exception("Не выбран файл для загрузки графа!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка!");
+            }
+            if (Data2D.Length > 1)
+            {
+                _commands.Clear();
+                _commandCounter = -1;
+                //сборка графа из таблицы связности
+                Builder builder = new GraphBuilder();
+                _director = new Director(builder);
+                _director.Construct(Data2D);
+                Command.Graph = builder.GetResult();
+
+                //отрисовка графа
+                _creator = new GraphPainter(Command.Graph);
+                _creator.Draw();
+            }
         }
         private void vertexAmountTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -1122,9 +1548,180 @@ namespace GraphPAD
             edgesAmountTextBox.Text = edgesAmountTextBox.Text.Replace(" ", "");
             edgesAmountTextBox.SelectionStart = edgesAmountTextBox.Text.Length;
         }
+        #endregion
+        #region random graph
         private void createGraphButton_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                Random rnd = new Random();
+                var condEdges = edgesAmountTextBox.Text != "";
+                var condVertices = vertexAmountTextBox.Text != "";
+                int vertices = condVertices ? int.Parse(vertexAmountTextBox.Text) : 0;
+                int edges = condEdges ? int.Parse(edgesAmountTextBox.Text) : 0;
+                int[,] Data2D = new int[vertices, vertices];
+                var flag = false;
+                switch (isRandomConnectedGraphOn)
+                {
+                    case true:
+                        {
+                            if (!(vertices < 1 || vertices > 997 || edges < vertices - 1 || edges > vertices * (vertices - 1)))
+                            {
+                                flag = true;
+                                for (int i = vertices - 1; i > 0; i--)
+                                {
 
+                                    //если нажата кнопка "без веса"
+                                    if (true)
+                                    {
+                                        Data2D[rnd.Next(0, i), i] = 1;
+
+                                    }
+                                    else
+                                    {
+                                        Data2D[rnd.Next(0, i), i] = rnd.Next(0, 30);
+                                    }
+                                }
+                                int temp = 0;
+                                int count = edges - vertices + 1;
+                                while (count != 0) {
+                                    int i = rnd.Next(0, vertices);
+                                    int j = rnd.Next(0, vertices);
+                                    if (Data2D[i, j] == 0 && (i != j))
+                                    {
+                                        //если нажата кнопка "без веса"
+                                        if (true)
+                                        {
+                                            Data2D[i, j] = 1;
+
+                                        }
+                                        else
+                                        {
+                                            Data2D[i, j] = rnd.Next(0, 30);
+                                        }
+                                        count--;
+                                    } else
+                                    {
+                                        if (temp == 3)
+                                        {
+                                            bool cringeFlag = false;
+                                            for (int ik = 0; ik < vertices - 1; ik++)
+                                            {
+                                                if (cringeFlag)
+                                                {
+                                                    break;
+                                                }
+                                                for (int jk = 0; jk < vertices - 1; jk++)
+                                                {
+                                                    if (Data2D[ik, jk] == 0 && (ik != jk))
+                                                    {
+
+                                                        if (true)
+                                                        {
+                                                            Data2D[i, j] = 1;
+                                                        }
+                                                        else
+                                                        {
+                                                            Data2D[i, j] = rnd.Next(0, 30);
+                                                        }
+                                                        cringeFlag = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        } else
+                                        {
+                                            temp += 1;
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                
+                                MessageBox.Show("Количество ребер не должно быть меньше N-1, количество ребер не должно быть больше N(N-1)/2", "Введено некорректное количество вершин или ребер");
+                            }
+                            break;
+                        }
+                    case false:
+                        {
+                            if (!(vertices < 1 || vertices > 999))
+                            {
+                                flag = true;
+                                for (int i = vertices - 1; i > 0; i--)
+                                {
+                                    /**
+                                     * (rand() % i) - случайное число в множестве [0, i)
+                                     * i-тый столбец
+                                     */
+                                    rnd.Next(1, i);
+                                    //если нажата кнопка "без веса"
+                                    if (true)
+                                    {
+                                        Data2D[rnd.Next(0, i), i] = 1;
+                                    }
+                                    else
+                                    {
+                                        Data2D[rnd.Next(0, i), i] = rnd.Next(0, 30);
+                                    }
+                                }
+
+                            } else
+                            {
+                                MessageBox.Show("Введено некорректное количество вершин", "");
+                            }
+                            break;
+                        }
+                };
+                if (flag)
+                {
+                    _commands.Clear();
+                    _commandCounter = -1;
+
+                    //сборка графа из таблицы связности
+                    Builder builder = new GraphBuilder();
+                    _director = new Director(builder);
+                    _director.Construct(Data2D);
+                    Command.Graph = builder.GetResult();
+
+                    //отрисовка графа
+                    _creator = new GraphPainter(Command.Graph);
+
+                    _creator.Draw();
+                    FixLabelsAndArrows();
+
+                }
+                ZoomCtrl.ZoomToFill();
+
+            } catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "");
+            }
+        }
+      
+
+        
+        public void FixLabelsAndArrows()
+        {
+            foreach (DataEdge edge in GraphArea.EdgesList.Keys)
+            {
+                if (edge.Weight == 1)
+                {
+                   
+                }
+                edge.ArrowBrush = Brushes.Black;
+                edge.EdgeBrush = Brushes.Black;
+                foreach (DataEdge edge2 in GraphArea.EdgesList.Keys)
+                {
+                    edge2.EdgeBrush = Brushes.Black;
+                    if (edge.Source == edge2.Target && edge.Target == edge2.Source)
+                    {
+
+                        edge.ArrowBrush = Brushes.Transparent;
+                        edge2.ArrowBrush = Brushes.Transparent;
+                    }
+                }
+            }
         }
         #endregion
         #region Paint panel
@@ -1137,7 +1734,6 @@ namespace GraphPAD
                 Eraser_SmartButton.IsEnabled = false;
                 SelectionButton.IsEnabled = false;
                 ClearCanvasButton.IsEnabled = false;
-
                 SaveToFileButton.IsEnabled = false;
                 if (MainWindow.ActualWidth >= 1400)
                 {
@@ -1288,15 +1884,17 @@ namespace GraphPAD
             }
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkOrange ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkOrange;
-        }
+        } 
         private void ClearCanvasButton_Click(object sender, RoutedEventArgs e)
         {
+          //  MessageBox.Show(PaintCanvas.Strokes[0].StylusPoints.ToString(), "");
             PaintCanvas.Strokes.Clear();
         }
         private void SaveToFileButton_Click(object sender, RoutedEventArgs e)
         {
-            PaintCanvasScroll.ScrollToTop();
-            PaintCanvasScroll.ScrollToLeftEnd();
+            //   PaintCanvasScroll.ScrollToTop();
+            //   PaintCanvasScroll.ScrollToLeftEnd();
+            
             SaveFileDialog dlg = new SaveFileDialog();
             dlg.FileName = "untitled"; // Default file name
             dlg.DefaultExt = "jpg"; // Default file extension
@@ -1437,8 +2035,6 @@ namespace GraphPAD
             }
             charCounterTextBlock.Text = "Символов " + userInput.Length.ToString() + "/200";
         }
-        #endregion
-        #region Etc.
         private void Ez_Click(object sender, RoutedEventArgs e)
         {
         }
@@ -1471,9 +2067,23 @@ namespace GraphPAD
             PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
             PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
         }
+        
+        private void PaintCanvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            //var strokeJSON = JsonConvert.SerializeObject(PaintCanvas.Strokes.Last().StylusPoints.ToList());
+            //var stroke2 = JsonConvert.DeserializeObject<StylusPointCollection>(strokeJSON);
+            //var drawingAttributes = new DrawingAttributes() { Color = Colors.Red,
+            //FitToCurve = true};
+            //var stroke = new Stroke(stroke2,drawingAttributes);
+            //PaintCanvas.Strokes.Add(stroke);
+            if (PaintCanvas.EditingMode == InkCanvasEditingMode.Ink)
+            {
+                if(!(PaintCanvas.Strokes.Count == 0))
+                SocketConnector.SendStroke(PaintCanvas.Strokes.Last());
+            }
+        }
     }
 }
 
 //ToDo
-//1)Online paint
-//2)Online graphs
+//1)suck koke

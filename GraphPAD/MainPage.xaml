@@ -4,6 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GraphPAD"
+        xmlns:graphx="http://schemas.panthernet.ru/graphx/"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:model="clr-namespace:GraphPAD.GraphData.Model"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         x:Name="MainWindow"
@@ -61,6 +64,13 @@
 
             <Grid Grid.Row="0">
                 <!--Главное меню-->
+                <Grid.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.MergedDictionaries>
+                            <ResourceDictionary Source="GraphData/Templates/GraphXTemplates.xaml"/>
+                        </ResourceDictionary.MergedDictionaries>
+                    </ResourceDictionary>
+                </Grid.Resources>
                 <Canvas x:Name="menuCanvas" HorizontalAlignment="Center" Height="185" Margin="0,150,0,0" VerticalAlignment="Center" Width="350">
                     <Button x:Name="EnterLobbyButton" Click="EnterLobby_Click" Content="Войти в конференцию" Width="350" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False"/>
                     <Button x:Name="CancelCreateLobbyButton" Visibility="Hidden" Click="CancelCreateLobby_Click" Content="Назад" Width="150" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Canvas.Top="145"/>
@@ -72,10 +82,15 @@
                     <TextBox x:Name="NewConferensionNameTextBox" Visibility="Hidden" HorizontalAlignment="Left" Height="33" TextWrapping="Wrap" materialDesign:HintAssist.Hint="Название конференции..." Width="350" Foreground="White" FontSize="18" MaxLines="1" MaxLength="35" Background="Black" IsTabStop="False" HorizontalContentAlignment="Stretch" Padding="0" VerticalContentAlignment="Stretch" Canvas.Top="101"/>
                 </Canvas>
                 <!--Поля для графов и рисовалки-->
-                <Canvas x:Name="GraphCanvas" Visibility="Hidden" Background="White" Margin="0,0,0,10"/>
-                <ScrollViewer x:Name="PaintCanvasScroll" Visibility="Hidden" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <InkCanvas x:Name="PaintCanvas" Visibility="Visible" Background="White" Margin="0,0,0,0" EditingMode="{Binding EditingMode}" ClipToBounds="True" DefaultDrawingAttributes="{Binding DrawingAttributes}" MouseMove="PaintCanvas_MouseMove"/>
-                </ScrollViewer>
+                <graphx:ZoomControl x:Name="ZoomCtrl" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1" Background="White" VerticalContentAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" >
+                    <model:GraphZone x:Name="GraphArea"/>
+                </graphx:ZoomControl>
+                <graphx:ZoomControl x:Name="PaintCanvasScroll" Grid.Column="1" BorderBrush="Transparent" BorderThickness="1" Background="Transparent" VerticalContentAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" >
+                    <InkCanvas x:Name="PaintCanvas"  Background="White"  EditingMode="{Binding EditingMode}" ClipToBounds="True" DefaultDrawingAttributes="{Binding DrawingAttributes}" MouseMove="PaintCanvas_MouseMove" MouseUp="PaintCanvas_MouseUp"/>
+                </graphx:ZoomControl>
+                <!--<ScrollViewer x:Name="PaintCanvasScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Visibility="Hidden">
+                    <InkCanvas x:Name="PaintCanvas"  Background="White" Margin="0,0,0,0" EditingMode="{Binding EditingMode}" ClipToBounds="True" DefaultDrawingAttributes="{Binding DrawingAttributes}" MouseMove="PaintCanvas_MouseMove" MouseUp="PaintCanvas_MouseUp"/>
+                </ScrollViewer>-->
             </Grid>
             <Grid Grid.Row="1" Background="#22223d">
                 <!--Нижняя часть интерфейса-->
