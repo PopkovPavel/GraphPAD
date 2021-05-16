@@ -38,7 +38,7 @@
             <Setter Property="Foreground" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
         </Style>
-        
+
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -214,27 +214,28 @@
                             <TextBlock TextWrapping="NoWrap" Text="Создать граф" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="animationSpeed" Click="animationSpeed_Click" Visibility="Visible" ToolTip="Изменить скорость анимации" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="animationSpeedButton" Tag="1" Click="animationSpeed_Click" Visibility="Visible" ToolTip="Текущая скорость анимации - 1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
-                            <Image Source="Resources/brush.png"/>
+                            <Image x:Name="animationSpeedImage" Source="Resources/speed-1.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Скорость анимации" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="showAnimaton" Click="showAlgorithm_Click" Visibility="Visible" ToolTip="Отрисовать алгоритм" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="showAnimatonButton" Click="showAlgorithm_Click" Visibility="Visible" ToolTip="Отрисовать алгоритм" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/brush.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="Отрисовать" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <ComboBox x:Name="algorithmsComboBox" Text="Выберите алгоритм" IsEditable="True" StaysOpenOnEdit="True" Canvas.Left="10" Canvas.Top="23" Width="150" Height="30" Foreground="White" BorderBrush="White" Background="{x:Null}" SelectionChanged="algorithmsComboBox_SelectionChanged" IsReadOnly="True" controls:ControlsHelper.FocusBorderBrush="White" controls:ControlsHelper.MouseOverBorderBrush="White" controls:TextBoxHelper.HasText="True">
-                        <ComboBoxItem Name="Item1" Foreground="White" Background="#FF0E0E19" BorderBrush="#FF0E0E19" FontWeight="SemiBold">Item1</ComboBoxItem>
-                        <ComboBoxItem Name="Item2" Foreground="White" Background="#FF0E0E19" BorderBrush="#FF0E0E19" FontWeight="SemiBold">Item2</ComboBoxItem>
-                        <ComboBoxItem Name="Item3" Foreground="White" Background="#FF0E0E19" BorderBrush="#FF0E0E19" FontWeight="SemiBold">Item3</ComboBoxItem>
-                        <ComboBoxItem Name="Item4" Foreground="White" Background="#FF0E0E19" BorderBrush="#FF0E0E19" FontWeight="SemiBold">Item4</ComboBoxItem>
-                        <ComboBoxItem Name="Item5" Foreground="White" Background="#FF0E0E19" BorderBrush="#FF0E0E19" FontWeight="SemiBold">Item5</ComboBoxItem>
-                        <ComboBoxItem Name="Item6" Foreground="White" Background="#FF0E0E19" BorderBrush="#FF0E0E19" FontWeight="SemiBold">Item6</ComboBoxItem>
+                    <ComboBox x:Name="algorithmsComboBox" materialDesign:TextFieldAssist.HasClearButton="True" materialDesign:HintAssist.Hint="Выберите алгоритм" MinWidth="128" Canvas.Left="10" Canvas.Top="23" Foreground="White" BorderBrush="White" Background="#FF0E0E19" Width="150">
+                        <ComboBox.Resources>
+                            <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FF0E0E19"/>
+                        </ComboBox.Resources>
+                        <ComboBoxItem Content="item1"/>
+                        <ComboBoxItem Content="item2"/>
+                        <ComboBoxItem Content="item3"/>
+                        <ComboBoxItem Content="item4"/>
                     </ComboBox>
-                    
+
                 </Canvas>
                 <Button x:Name="GraphModeChangerButton" Visibility="Hidden" Content="Графы" Click="FreeMode_Click" ToolTip="Переключить на свободный режим" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" BorderBrush="White" Canvas.Left="456" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" ClipToBounds="True" Margin="0,7.5,10,0"/>
                 <!--Панель для работы с рисовалкой-->

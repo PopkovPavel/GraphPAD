@@ -18,7 +18,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
@@ -482,6 +484,15 @@ namespace GraphPAD
             image.Freeze();
             return image;
         }
+        public ImageSource ImageSourceFromBitmap(System.Drawing.Bitmap bmp)
+        {
+            var handle = bmp.GetHbitmap();
+            try
+            {
+                return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            }
+            catch { return null; }
+        }
         public void ButtonsFix()
         {
             //GraphButtons fix
@@ -527,8 +538,8 @@ namespace GraphPAD
             edgesAmountTextBox.Visibility = Visibility.Hidden;
             downloadGraphButton.Visibility = Visibility.Hidden;
             createGraphButton.Visibility = Visibility.Hidden;
-            animationSpeed.Visibility = Visibility.Hidden;
-            showAnimaton.Visibility = Visibility.Hidden;
+            animationSpeedButton.Visibility = Visibility.Hidden;
+            showAnimatonButton.Visibility = Visibility.Hidden;
             algorithmsComboBox.Visibility = Visibility.Hidden;
             currentGraphMode.Text = "Текущий режим: Перемещение";
             //PaintButtons Fix
@@ -1387,8 +1398,8 @@ namespace GraphPAD
                 graphGeneratorBtn.Visibility = Visibility.Hidden;
                 clearGraph.Visibility = Visibility.Hidden;
                 reorderGraph.Visibility = Visibility.Hidden;
-                animationSpeed.Visibility = Visibility.Visible;
-                showAnimaton.Visibility = Visibility.Visible;
+                animationSpeedButton.Visibility = Visibility.Visible;
+                showAnimatonButton.Visibility = Visibility.Visible;
                 algorithmsComboBox.Visibility = Visibility.Visible;
                 currentGraphMode.Text = "Текущий режим: Алгоритмы";
                 isAlgorithmsOn = true;
@@ -1406,8 +1417,8 @@ namespace GraphPAD
                 graphGeneratorBtn.Visibility = Visibility.Visible;
                 clearGraph.Visibility = Visibility.Visible;
                 reorderGraph.Visibility = Visibility.Visible;
-                animationSpeed.Visibility = Visibility.Hidden;
-                showAnimaton.Visibility = Visibility.Hidden;
+                animationSpeedButton.Visibility = Visibility.Hidden;
+                showAnimatonButton.Visibility = Visibility.Hidden;
                 algorithmsComboBox.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
                 isAlgorithmsOn = false;
@@ -1664,8 +1675,7 @@ namespace GraphPAD
                             }
                             else
                             {
-                                
-                                MessageBox.Show("Количество ребер не должно быть меньше N-1, количество ребер не должно быть больше N(N-1)/2", "Введено некорректное количество вершин или ребер");
+                                MessageBox.Show("Количество ребер не должно быть меньше N-1, количество ребер не должно быть больше N(N-1)/2", "Сообщение");
                             }
                             break;
                         }
@@ -1694,7 +1704,7 @@ namespace GraphPAD
 
                             } else
                             {
-                                MessageBox.Show("Введено некорректное количество вершин", "");
+                                MessageBox.Show("Введено некорректное количество вершин", "Сообщение");
                             }
                             break;
                         }
@@ -1724,9 +1734,6 @@ namespace GraphPAD
                 MessageBox.Show(ex.ToString(), "");
             }
         }
-      
-
-        
         public void FixLabelsAndArrows()
         {
             foreach (DataEdge edge in GraphArea.EdgesList.Keys)
@@ -1748,6 +1755,88 @@ namespace GraphPAD
                     }
                 }
             }
+        }
+        private void BrushSlider_LayoutUpdated(object sender, EventArgs e)
+        {
+            var brushSize = BrushSlider.Value;
+            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
+            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
+            BrushTextBlock.Text = "Размер Кисти: " + (brushSize).ToString();
+        }
+        private void BrushSlider_MouseEnter(object sender, MouseEventArgs e)
+        {
+            var brushSize = BrushSlider.Value;
+            PaintCanvas.EditingMode = InkCanvasEditingMode.None;
+            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
+            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
+        }
+        private void BrushSlider_MouseLeave(object sender, MouseEventArgs e)
+        {
+            var brushSize = BrushSlider.Value;
+            PaintCanvas.EditingMode = InkCanvasEditingMode.Ink;
+            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
+            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
+        }
+        private void PaintCanvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            //var strokeJSON = JsonConvert.SerializeObject(PaintCanvas.Strokes.Last().StylusPoints.ToList());
+            //var stroke2 = JsonConvert.DeserializeObject<StylusPointCollection>(strokeJSON);
+            //var drawingAttributes = new DrawingAttributes() { Color = Colors.Red,
+            //FitToCurve = true};
+            //var stroke = new Stroke(stroke2,drawingAttributes);
+            //PaintCanvas.Strokes.Add(stroke);
+            if (PaintCanvas.EditingMode == InkCanvasEditingMode.Ink)
+            {
+                if (!(PaintCanvas.Strokes.Count == 0))
+                    SocketConnector.SendStroke(PaintCanvas.Strokes.Last());
+            }
+        }
+        private void ClearGraphs_Click(object sender, RoutedEventArgs e)
+        {
+            GraphArea.ClearLayout();
+        }
+        private void ReorderGraph_Click(object sender, RoutedEventArgs e)
+        {
+            GraphArea.RelayoutGraph();
+        }
+        private void SaveGraph_Click(object sender, RoutedEventArgs e)
+        {
+            //save to JSON
+        }
+        private void animationSpeed_Click(object sender, RoutedEventArgs e)
+        {
+            var i = animationSpeedButton.Tag.ToString();
+            string path;
+            ImageSourceConverter c = new ImageSourceConverter();
+            switch (i)
+            {
+                case "1":
+                    animationSpeedButton.Tag = "2";
+                    animationSpeedButton.ToolTip = "Текущая скорость анимации - 2";
+                    animationSpeedImage.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.speed_2);
+                    break;
+                case "2":
+                    animationSpeedButton.Tag = "3";
+                    animationSpeedButton.ToolTip = "Текущая скорость анимации - 3";
+                    animationSpeedImage.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.speed_3);
+                    break;
+                case "3":
+                    animationSpeedButton.Tag = "1";
+                    animationSpeedButton.ToolTip = "Текущая скорость анимации - 1";
+                    animationSpeedImage.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.speed_1);
+                    break;
+            }
+        }
+        private void showAlgorithm_Click(object sender, RoutedEventArgs e)
+        {
+            //Animation
+            SystemSounds.Question.Play();
+        }
+        private void algorithmsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //ComboBox comboBox = (ComboBox)sender;
+            //ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
+            //MessageBox.Show(selectedItem.Content.ToString());
         }
         #endregion
         #region Paint panel
@@ -2069,79 +2158,9 @@ namespace GraphPAD
             RefreshRooms();
         }
         #endregion
-
-        private void BrushSlider_LayoutUpdated(object sender, EventArgs e)
-        {
-            var brushSize = BrushSlider.Value;
-            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
-            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
-            BrushTextBlock.Text = "Размер Кисти: " + (brushSize).ToString();
-        }
-
-        private void BrushSlider_MouseEnter(object sender, MouseEventArgs e)
-        {
-            var brushSize = BrushSlider.Value;
-            PaintCanvas.EditingMode = InkCanvasEditingMode.None;
-            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
-            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
-        }
-
-        private void BrushSlider_MouseLeave(object sender, MouseEventArgs e)
-        {
-            var brushSize = BrushSlider.Value;
-            PaintCanvas.EditingMode = InkCanvasEditingMode.Ink;
-            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
-            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
-        }
-        
-        private void PaintCanvas_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            //var strokeJSON = JsonConvert.SerializeObject(PaintCanvas.Strokes.Last().StylusPoints.ToList());
-            //var stroke2 = JsonConvert.DeserializeObject<StylusPointCollection>(strokeJSON);
-            //var drawingAttributes = new DrawingAttributes() { Color = Colors.Red,
-            //FitToCurve = true};
-            //var stroke = new Stroke(stroke2,drawingAttributes);
-            //PaintCanvas.Strokes.Add(stroke);
-            if (PaintCanvas.EditingMode == InkCanvasEditingMode.Ink)
-            {
-                if(!(PaintCanvas.Strokes.Count == 0))
-                SocketConnector.SendStroke(PaintCanvas.Strokes.Last());
-            }
-        }
-        private void ClearGraphs_Click(object sender, RoutedEventArgs e)
-        {
-            GraphArea.ClearLayout();
-        }
-
-        private void ReorderGraph_Click(object sender, RoutedEventArgs e)
-        {
-            GraphArea.RelayoutGraph();
-        }
-
-        private void SaveGraph_Click(object sender, RoutedEventArgs e)
-        {
-            //save to JSON
-        }
-
-        private void animationSpeed_Click(object sender, RoutedEventArgs e)
-        {
-            //Switch case chi sho?
-            //case 1
-            //case 2
-            //case 3
-        }
-        private void showAlgorithm_Click(object sender, RoutedEventArgs e)
-        {
-            //Animation
-        }
-        private void algorithmsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //ComboBox comboBox = (ComboBox)sender;
-            //ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
-            //MessageBox.Show(selectedItem.Content.ToString());
-        }
     }
 }
 
 //ToDo
 //1)suck koke
+//2)no u
