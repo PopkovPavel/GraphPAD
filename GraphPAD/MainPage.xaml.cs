@@ -18,7 +18,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
@@ -482,6 +484,15 @@ namespace GraphPAD
             image.Freeze();
             return image;
         }
+        public ImageSource ImageSourceFromBitmap(System.Drawing.Bitmap bmp)
+        {
+            var handle = bmp.GetHbitmap();
+            try
+            {
+                return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            }
+            catch { return null; }
+        }
         public void ButtonsFix()
         {
             //GraphButtons fix
@@ -508,10 +519,14 @@ namespace GraphPAD
             orientedCheckbox.IsEnabled = true;
             graphGeneratorBtn.IsEnabled = true;
             algorithmsBtn.IsEnabled = true;
+            reorderGraph.IsEnabled = true;
+            clearGraph.IsEnabled = true;
             randomTreeButton.IsEnabled = true;
             randomConnectedGraphButton.IsEnabled = true;
             addVertexBtn.Visibility = Visibility.Visible;
             deleteVertexBtn.Visibility = Visibility.Visible;
+            clearGraph.Visibility = Visibility.Visible;
+            reorderGraph.Visibility = Visibility.Visible;
             edgesWeightTextBox.Visibility = Visibility.Hidden;
             orientedCheckbox.Visibility = Visibility.Hidden;
             orientedCheckbox.IsChecked = false;
@@ -523,6 +538,9 @@ namespace GraphPAD
             edgesAmountTextBox.Visibility = Visibility.Hidden;
             downloadGraphButton.Visibility = Visibility.Hidden;
             createGraphButton.Visibility = Visibility.Hidden;
+            animationSpeedButton.Visibility = Visibility.Hidden;
+            showAnimatonButton.Visibility = Visibility.Hidden;
+            algorithmsComboBox.Visibility = Visibility.Hidden;
             currentGraphMode.Text = "Текущий режим: Перемещение";
             //PaintButtons Fix
             isBrushModeOn = false;
@@ -1003,6 +1021,8 @@ namespace GraphPAD
                 }
                 catch { }
             }
+            ButtonsFix();
+            GraphArea.ClearLayout();
 
         }
         #endregion
@@ -1050,6 +1070,7 @@ namespace GraphPAD
             ConferensionIDTextBox.Visibility = Visibility.Hidden;
             NewConferensionNameTextBox.BorderBrush = Brushes.Transparent;
             NewConferensionNameTextBox.Visibility = Visibility.Hidden;
+            ButtonsFix();
         }
         #endregion
         #region Text, Video, Chat buttons
@@ -1230,7 +1251,7 @@ namespace GraphPAD
             if (!isFreeModeOn)
             {
                 isFreeModeOn = true;
-
+                PaintCanvasScroll.ZoomToFill();
                 GraphControlCanvas.Visibility = Visibility.Hidden;
                 GraphModeChangerButton.Visibility = Visibility.Hidden;
                 PaintControlCanvas.Visibility = Visibility.Visible;
@@ -1262,6 +1283,8 @@ namespace GraphPAD
                 deleteVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
+                clearGraph.Visibility = Visibility.Hidden;
+                reorderGraph.Visibility = Visibility.Hidden;
                 edgesWeightTextBox.Visibility = Visibility.Visible;
                 orientedCheckbox.Visibility = Visibility.Visible;
                 currentGraphMode.Text = "Текущий режим: Создание";
@@ -1278,6 +1301,8 @@ namespace GraphPAD
                 deleteVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
+                clearGraph.Visibility = Visibility.Visible;
+                reorderGraph.Visibility = Visibility.Visible;
                 edgesWeightTextBox.Visibility = Visibility.Hidden;
                 orientedCheckbox.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
@@ -1296,10 +1321,8 @@ namespace GraphPAD
         {
             if (!isRemoveVertexOn)
             {
-
-                CalculateDjkstra();
-               // GraphArea.RelayoutGraph();
-                //function = DeleteVertex;
+                reorderGraph.IsEnabled = false;
+                clearGraph.IsEnabled = false;
                 addVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
@@ -1314,8 +1337,8 @@ namespace GraphPAD
             }
             else
             {
-
-                //function = null;
+                reorderGraph.IsEnabled = true;
+                clearGraph.IsEnabled = true;
                 addVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
@@ -1337,6 +1360,8 @@ namespace GraphPAD
                 addVertexBtn.Visibility = Visibility.Hidden;
                 deleteVertexBtn.Visibility = Visibility.Hidden;
                 algorithmsBtn.Visibility = Visibility.Hidden;
+                clearGraph.Visibility = Visibility.Hidden;
+                reorderGraph.Visibility = Visibility.Hidden;
                 randomTreeButton.Visibility = Visibility.Visible;
                 randomConnectedGraphButton.Visibility = Visibility.Visible;
                 downloadGraphButton.Visibility = Visibility.Visible;
@@ -1350,6 +1375,8 @@ namespace GraphPAD
                 addVertexBtn.Visibility = Visibility.Visible;
                 deleteVertexBtn.Visibility = Visibility.Visible;
                 algorithmsBtn.Visibility = Visibility.Visible;
+                clearGraph.Visibility = Visibility.Visible;
+                reorderGraph.Visibility = Visibility.Visible;
                 randomTreeButton.Visibility = Visibility.Hidden;
                 randomConnectedGraphButton.Visibility = Visibility.Hidden;
                 downloadGraphButton.Visibility = Visibility.Hidden;
@@ -1369,6 +1396,11 @@ namespace GraphPAD
                 addVertexBtn.Visibility = Visibility.Hidden;
                 deleteVertexBtn.Visibility = Visibility.Hidden;
                 graphGeneratorBtn.Visibility = Visibility.Hidden;
+                clearGraph.Visibility = Visibility.Hidden;
+                reorderGraph.Visibility = Visibility.Hidden;
+                animationSpeedButton.Visibility = Visibility.Visible;
+                showAnimatonButton.Visibility = Visibility.Visible;
+                algorithmsComboBox.Visibility = Visibility.Visible;
                 currentGraphMode.Text = "Текущий режим: Алгоритмы";
                 isAlgorithmsOn = true;
                 algorithmsBtn.ToolTip = "Выключить режим алгоритмов";
@@ -1383,6 +1415,11 @@ namespace GraphPAD
                 addVertexBtn.Visibility = Visibility.Visible;
                 deleteVertexBtn.Visibility = Visibility.Visible;
                 graphGeneratorBtn.Visibility = Visibility.Visible;
+                clearGraph.Visibility = Visibility.Visible;
+                reorderGraph.Visibility = Visibility.Visible;
+                animationSpeedButton.Visibility = Visibility.Hidden;
+                showAnimatonButton.Visibility = Visibility.Hidden;
+                algorithmsComboBox.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = "Текущий режим: Перемещение";
                 isAlgorithmsOn = false;
                 algorithmsBtn.ToolTip = "Включить режим алгоритмов";
@@ -1638,8 +1675,7 @@ namespace GraphPAD
                             }
                             else
                             {
-                                
-                                MessageBox.Show("Количество ребер не должно быть меньше N-1, количество ребер не должно быть больше N(N-1)/2", "Введено некорректное количество вершин или ребер");
+                                MessageBox.Show("Количество ребер не должно быть меньше N-1, количество ребер не должно быть больше N(N-1)/2", "Сообщение");
                             }
                             break;
                         }
@@ -1668,7 +1704,7 @@ namespace GraphPAD
 
                             } else
                             {
-                                MessageBox.Show("Введено некорректное количество вершин", "");
+                                MessageBox.Show("Введено некорректное количество вершин", "Сообщение");
                             }
                             break;
                         }
@@ -1698,9 +1734,6 @@ namespace GraphPAD
                 MessageBox.Show(ex.ToString(), "");
             }
         }
-      
-
-        
         public void FixLabelsAndArrows()
         {
             foreach (DataEdge edge in GraphArea.EdgesList.Keys)
@@ -1722,6 +1755,88 @@ namespace GraphPAD
                     }
                 }
             }
+        }
+        private void BrushSlider_LayoutUpdated(object sender, EventArgs e)
+        {
+            var brushSize = BrushSlider.Value;
+            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
+            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
+            BrushTextBlock.Text = "Размер Кисти: " + (brushSize).ToString();
+        }
+        private void BrushSlider_MouseEnter(object sender, MouseEventArgs e)
+        {
+            var brushSize = BrushSlider.Value;
+            PaintCanvas.EditingMode = InkCanvasEditingMode.None;
+            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
+            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
+        }
+        private void BrushSlider_MouseLeave(object sender, MouseEventArgs e)
+        {
+            var brushSize = BrushSlider.Value;
+            PaintCanvas.EditingMode = InkCanvasEditingMode.Ink;
+            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
+            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
+        }
+        private void PaintCanvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            //var strokeJSON = JsonConvert.SerializeObject(PaintCanvas.Strokes.Last().StylusPoints.ToList());
+            //var stroke2 = JsonConvert.DeserializeObject<StylusPointCollection>(strokeJSON);
+            //var drawingAttributes = new DrawingAttributes() { Color = Colors.Red,
+            //FitToCurve = true};
+            //var stroke = new Stroke(stroke2,drawingAttributes);
+            //PaintCanvas.Strokes.Add(stroke);
+            if (PaintCanvas.EditingMode == InkCanvasEditingMode.Ink)
+            {
+                if (!(PaintCanvas.Strokes.Count == 0))
+                    SocketConnector.SendStroke(PaintCanvas.Strokes.Last());
+            }
+        }
+        private void ClearGraphs_Click(object sender, RoutedEventArgs e)
+        {
+            GraphArea.ClearLayout();
+        }
+        private void ReorderGraph_Click(object sender, RoutedEventArgs e)
+        {
+            GraphArea.RelayoutGraph();
+        }
+        private void SaveGraph_Click(object sender, RoutedEventArgs e)
+        {
+            //save to JSON
+        }
+        private void animationSpeed_Click(object sender, RoutedEventArgs e)
+        {
+            var i = animationSpeedButton.Tag.ToString();
+            string path;
+            ImageSourceConverter c = new ImageSourceConverter();
+            switch (i)
+            {
+                case "1":
+                    animationSpeedButton.Tag = "2";
+                    animationSpeedButton.ToolTip = "Текущая скорость анимации - 2";
+                    animationSpeedImage.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.speed_2);
+                    break;
+                case "2":
+                    animationSpeedButton.Tag = "3";
+                    animationSpeedButton.ToolTip = "Текущая скорость анимации - 3";
+                    animationSpeedImage.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.speed_3);
+                    break;
+                case "3":
+                    animationSpeedButton.Tag = "1";
+                    animationSpeedButton.ToolTip = "Текущая скорость анимации - 1";
+                    animationSpeedImage.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.speed_1);
+                    break;
+            }
+        }
+        private void showAlgorithm_Click(object sender, RoutedEventArgs e)
+        {
+            //Animation
+            SystemSounds.Question.Play();
+        }
+        private void algorithmsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //ComboBox comboBox = (ComboBox)sender;
+            //ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
+            //MessageBox.Show(selectedItem.Content.ToString());
         }
         #endregion
         #region Paint panel
@@ -2043,47 +2158,9 @@ namespace GraphPAD
             RefreshRooms();
         }
         #endregion
-
-        private void BrushSlider_LayoutUpdated(object sender, EventArgs e)
-        {
-            var brushSize = BrushSlider.Value;
-            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
-            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
-            BrushTextBlock.Text = "Размер Кисти: " + (brushSize).ToString();
-        }
-
-        private void BrushSlider_MouseEnter(object sender, MouseEventArgs e)
-        {
-            var brushSize = BrushSlider.Value;
-            PaintCanvas.EditingMode = InkCanvasEditingMode.None;
-            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
-            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
-        }
-
-        private void BrushSlider_MouseLeave(object sender, MouseEventArgs e)
-        {
-            var brushSize = BrushSlider.Value;
-            PaintCanvas.EditingMode = InkCanvasEditingMode.Ink;
-            PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
-            PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
-        }
-        
-        private void PaintCanvas_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            //var strokeJSON = JsonConvert.SerializeObject(PaintCanvas.Strokes.Last().StylusPoints.ToList());
-            //var stroke2 = JsonConvert.DeserializeObject<StylusPointCollection>(strokeJSON);
-            //var drawingAttributes = new DrawingAttributes() { Color = Colors.Red,
-            //FitToCurve = true};
-            //var stroke = new Stroke(stroke2,drawingAttributes);
-            //PaintCanvas.Strokes.Add(stroke);
-            if (PaintCanvas.EditingMode == InkCanvasEditingMode.Ink)
-            {
-                if(!(PaintCanvas.Strokes.Count == 0))
-                SocketConnector.SendStroke(PaintCanvas.Strokes.Last());
-            }
-        }
     }
 }
 
 //ToDo
 //1)suck koke
+//2)no u

@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -19,11 +20,16 @@ namespace GraphPAD
         #region Global Variables
         string avatarsFolder = Path.GetFullPath(@"Avatars\Avatar.png");
         string newAvatar;
+        public ComboBoxItem selectedItem;
         #endregion
         #region Initialize
         public SettingsPage()
         {
             InitializeComponent();
+            
+            AccountCanvasScrollView.Visibility = Visibility.Visible;
+            VoiceCanvas.Visibility = Visibility.Hidden;
+            InterfaceCanvas.Visibility = Visibility.Hidden;
             SettingsAvatar.Source = NonBlockingLoad(UserInfo.Avatar);
             userNameTextBlock.Text = UserInfo.Name;
             userRoleTextBlock.Text = "Пользователь";
@@ -149,6 +155,35 @@ namespace GraphPAD
             }
         }
         #endregion
+        #region Mic & Voice Settings
+        //aeee
+        #endregion
+        #region Interface Settings
+        private void languagesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            selectedItem = (ComboBoxItem)comboBox.SelectedItem;
+        }
+
+        private void ChangeLanguageButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedItem != null)
+            {
+                if (selectedItem.Tag.ToString() == "ru")
+                {
+                    countryFlag.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.russia);
+                }
+                else
+                {
+                    countryFlag.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.england);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Выберите язык", "Ошибка", MessageBoxButton.OK);
+            }
+        }
+        #endregion
         #region Avatar Changer
         private void AvatarButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
@@ -197,6 +232,15 @@ namespace GraphPAD
         }
         #endregion
         #region Etc.
+        public ImageSource ImageSourceFromBitmap(System.Drawing.Bitmap bmp)
+        {
+            var handle = bmp.GetHbitmap();
+            try
+            {
+                return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            }
+            catch { return null; }
+        }
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
 

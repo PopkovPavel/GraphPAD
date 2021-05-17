@@ -34,7 +34,7 @@
             <TextBlock HorizontalAlignment="Left" TextAlignment="Center" TextWrapping="Wrap" Text="Настройки пользователя" VerticalAlignment="Top" Height="20" Width="120" Foreground="White" FontSize="10" Padding="3,3,2,0"/>
             <TextBlock HorizontalAlignment="Left" TextAlignment="Center" TextWrapping="Wrap" Text="Настройки приложения" VerticalAlignment="Top" Height="20" Width="120" Foreground="White" FontSize="10" Padding="3,3,2,0" Grid.Row="2"/>
             <Button x:Name="AccountButton" Click="AccountButton_Click" Content="Мой аккаунт" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False"/>
-            <Button x:Name="VoiceButton" Click="VoiceButton_Click" Content="Голос" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False"/>
+            <Button x:Name="VoiceButton" Click="VoiceButton_Click" Content="Голос и звук" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False"/>
             <Button x:Name="InterfaceButton" Click="InterfaceButton_Click" Content="Интерфейс" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" Margin="0,30,0,0" IsTabStop="False"/>
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ссылки:" VerticalAlignment="Bottom" Height="60" Width="120" Foreground="White" Padding="3,0,0,0" Grid.Row="5" FontSize="10"/>
             <!--Links Buttons-->
@@ -56,7 +56,7 @@
         </Grid>
         <Grid Grid.Column="1" Background="#22223d">
             <!--Account Canvas-->
-            <ScrollViewer x:Name="AccountCanvasScrollView" Visibility="Visible" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0" Height="391" Width="563" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <ScrollViewer x:Name="AccountCanvasScrollView" Visibility="Hidden" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0" Height="391" Width="563" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Canvas x:Name="AccountCanvas" Visibility="Visible" HorizontalAlignment="Left" Height="390" VerticalAlignment="Top" Width="563">
                     <TextBlock Text="Мой аккаунт" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" FontWeight="Bold" Height="30" Padding="5,1,0,0" FontSize="20" TextDecorations="{x:Null}" Canvas.Left="40" Canvas.Top="15"/>
                     <Button x:Name="DisconnectButton" Click="DisconnectButton_Click" Content="Выйти из Аккаунта" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="120" BorderBrush="#FF510202" Background="#FF510202" Height="30" FontSize="12" FontWeight="SemiBold" Padding="0" Canvas.Left="400" Canvas.Top="350" IsTabStop="False"/>
@@ -84,12 +84,27 @@
 
             <!--Voice Canvas-->
             <Canvas x:Name="VoiceCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="371" VerticalAlignment="Top" Width="474">
-                <TextBlock Text="Voice Canvas" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="474" FontWeight="Medium" TextAlignment="Center" Background="#FF141424" Height="20" Padding="0,1,0,0"/>
+                <TextBlock Text="Голос и звук" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" FontWeight="Bold" Height="30" Padding="5,1,0,0" FontSize="20" TextDecorations="{x:Null}" Margin="40,15,294,356"/>
             </Canvas>
             <!--Interface Canvas-->
-            <Canvas x:Name="InterfaceCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="371" VerticalAlignment="Top" Width="474">
-                <TextBlock Text="Interface Canvas" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="474" FontWeight="Medium" TextAlignment="Center" Background="#FF141424" Height="20" Padding="0,1,0,0"/>
+            <Canvas x:Name="InterfaceCanvas" Visibility="Visible" HorizontalAlignment="Left" Height="401" VerticalAlignment="Top" Width="574">
+                <Border CornerRadius="10" BorderThickness="1" HorizontalAlignment="Left" Height="240" VerticalAlignment="Top" Width="480" Canvas.Left="40" Canvas.Top="60" BorderBrush="#FF141424" Background="#FF141424"/>
+                <TextBlock Text="Интерфейс" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" FontWeight="Bold" Height="30" Padding="5,1,0,0" FontSize="20" TextDecorations="{x:Null}" Margin="40,15,294,356"/>
+                <TextBlock Text="Настройки языка" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30" Padding="0,4,0,0" FontSize="16" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="80" FontWeight="SemiBold"/>
+                <ComboBox x:Name="languagesComboBox" materialDesign:TextFieldAssist.HasClearButton="False" materialDesign:HintAssist.Hint="Выберите язык" MinWidth="128" Canvas.Left="60" Canvas.Top="120" Foreground="White" BorderBrush="White" Background="#FF0E0E19" Width="160" SelectionChanged="languagesComboBox_SelectionChanged">
+                    <ComboBox.Resources>
+                        <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FF0E0E19"/>
+                    </ComboBox.Resources>
+                    <ComboBoxItem Tag="ru" Content="Русский"/>
+                    <ComboBoxItem Tag="eu" Content="Английский"/>
+                </ComboBox>
+                <Button x:Name="changeLanguageButton" Content="Изменить" Click="ChangeLanguageButton_Click" ToolTip="Применить выбранный язык" Width="80" Height="20" Canvas.Left="240" Canvas.Top="128" FontSize="12" Padding="0"/>
+                <TextBlock x:Name="currentLanguageTextBlock" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" Height="30" Padding="5,0,0,0" FontSize="14" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="250" FontWeight="SemiBold"><Run Text="Текущий язык: Русский"/>
+                    <InlineUIContainer>
+                        <Image x:Name="countryFlag" Source="Resources/russia.png" Width="24" Height="24" Margin="0,0,0,-5"/>
+                    </InlineUIContainer></TextBlock>
             </Canvas>
+
         </Grid>
     </Grid>
 </Window>
