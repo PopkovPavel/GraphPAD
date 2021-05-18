@@ -55,7 +55,7 @@
                 <ScrollViewer x:Name="LobbysScrollView" VerticalScrollBarVisibility="Hidden">
                     <Canvas x:Name="LobbysCanvas" Height="0" VerticalAlignment="Top"/>
                 </ScrollViewer>
-                
+
             </Grid>
             <Grid Grid.Row="1" Background="#FF171720">
                 <Button Click="RefreshRoomsList" BorderThickness="2" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Center" Margin="22,35,23,15" VerticalAlignment="Center" Width="50" Height="50" BorderBrush="White" IsTabStop="False" ToolTip="Обновить список конференций">
@@ -236,6 +236,7 @@
                         <ComboBoxItem Content="item3"/>
                         <ComboBoxItem Content="item4"/>
                     </ComboBox>
+                    <ProgressBar x:Name="progressBar" Height="10" Canvas.Left="10" Canvas.Top="54" Width="150" Value="0"/>
 
                 </Canvas>
                 <Button x:Name="GraphModeChangerButton" Visibility="Hidden" Content="Графы" Click="FreeMode_Click" ToolTip="Переключить на свободный режим" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" BorderBrush="White" Canvas.Left="456" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" ClipToBounds="True" Margin="0,7.5,10,0"/>
@@ -285,7 +286,7 @@
                     <TextBlock x:Name="EraserTextBlock" Visibility="Hidden" Canvas.Left="181" TextWrapping="Wrap" Text="Размер Ластика: 30" Canvas.Top="108" Foreground="White" FontWeight="SemiBold" Width="150" FontSize="10" Height="14"/>
                     <TextBlock x:Name="BrushTextBlock" Visibility="Hidden" Canvas.Left="11" TextWrapping="Wrap" Text="Размер Кисти: 2" Canvas.Top="108" Foreground="White" FontWeight="SemiBold" Width="150" FontSize="10" Height="14"/>
                 </Canvas>
-                
+
                 <Button x:Name="PaintModeChangerButton" Visibility="Hidden" Content="Рисование" Click="FreeMode_Click" ToolTip="Переключить на режим графов" Width="100" BorderBrush="White" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,7.5,10,0"/>
             </Grid>
         </Grid>
@@ -312,7 +313,7 @@
                 <!--Чат со сообщениями-->
 
                 <ScrollViewer x:Name="ChatsScrollView" Visibility="Visible" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0" Grid.Row="2" Foreground="White">
-                    
+
                     <TextBox x:Name="ChatBox" Visibility="Visible" TextWrapping="Wrap" Text="" IsReadOnly="True" FontSize="20" TextAlignment="Left" IsTabStop="False" AllowDrop="False"/>
                 </ScrollViewer>
                 <!--Веб-камеры-->

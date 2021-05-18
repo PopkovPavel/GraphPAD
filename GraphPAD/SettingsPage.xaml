@@ -4,17 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GraphPAD"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="GraphPAD.SettingsPage"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        xmlns:resx="clr-namespace:GraphPAD.Properties"
+        x:Class="GraphPAD.SettingsPage"
+
         mc:Ignorable="d"
         x:Name="SettingsWindow"
-        Title="GraphPAD (Настройки)" Height="430" Width="700" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="Resources/icon.jpg">
+        Title="{x:Static resx:Language.SettingsTitle}" Height="430" Width="700" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="Resources/icon.jpg">
     <Window.Resources>
         <Style TargetType="ToolTip">
             <Setter Property="Background" Value="#22223d"></Setter>
             <Setter Property="Foreground" Value="White"></Setter>
-
+            
         </Style>
+        <BitmapImage x:Key="countryImage" UriSource="Resources/russia.png" />
     </Window.Resources>
+    
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>
@@ -31,12 +36,12 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!--Left menu buttons-->
-            <TextBlock HorizontalAlignment="Left" TextAlignment="Center" TextWrapping="Wrap" Text="Настройки пользователя" VerticalAlignment="Top" Height="20" Width="120" Foreground="White" FontSize="10" Padding="3,3,2,0"/>
-            <TextBlock HorizontalAlignment="Left" TextAlignment="Center" TextWrapping="Wrap" Text="Настройки приложения" VerticalAlignment="Top" Height="20" Width="120" Foreground="White" FontSize="10" Padding="3,3,2,0" Grid.Row="2"/>
-            <Button x:Name="AccountButton" Click="AccountButton_Click" Content="Мой аккаунт" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False"/>
-            <Button x:Name="VoiceButton" Click="VoiceButton_Click" Content="Голос и звук" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False"/>
-            <Button x:Name="InterfaceButton" Click="InterfaceButton_Click" Content="Интерфейс" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" Margin="0,30,0,0" IsTabStop="False"/>
-            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ссылки:" VerticalAlignment="Bottom" Height="60" Width="120" Foreground="White" Padding="3,0,0,0" Grid.Row="5" FontSize="10"/>
+            <TextBlock HorizontalAlignment="Left" TextAlignment="Center" TextWrapping="Wrap" Text="{x:Static resx:Language.ProfileSettings}" VerticalAlignment="Top" Height="20" Width="120" Foreground="White" FontSize="10" Padding="3,3,2,0"/>
+            <TextBlock HorizontalAlignment="Left" TextAlignment="Center" TextWrapping="Wrap" Text="{x:Static resx:Language.ApplicationSettings}" VerticalAlignment="Top" Height="20" Width="120" Foreground="White" FontSize="10" Padding="3,3,2,0" Grid.Row="2"/>
+            <Button x:Name="AccountButton" Click="AccountButton_Click" Content="{x:Static resx:Language.MyAccountBtn}" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False"/>
+            <Button x:Name="VoiceButton" Click="VoiceButton_Click" Content="{x:Static resx:Language.VoiceAndSoundBtn}" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False"/>
+            <Button x:Name="InterfaceButton" Click="InterfaceButton_Click" Content="{x:Static resx:Language.InterfaceBtn}" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" Margin="0,30,0,0" IsTabStop="False"/>
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{x:Static resx:Language.Links}" VerticalAlignment="Bottom" Height="60" Width="120" Foreground="White" Padding="3,0,0,0" Grid.Row="5" FontSize="10"/>
             <!--Links Buttons-->
             <Button x:Name="vkButton" Click="vkButton_Clicked" ToolTip="Наш ВК" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="76" Canvas.Top="107" IsTabStop="False" Margin="6,14,0,14">
                 <Button.Background>
@@ -89,8 +94,8 @@
             <!--Interface Canvas-->
             <Canvas x:Name="InterfaceCanvas" Visibility="Visible" HorizontalAlignment="Left" Height="401" VerticalAlignment="Top" Width="574">
                 <Border CornerRadius="10" BorderThickness="1" HorizontalAlignment="Left" Height="240" VerticalAlignment="Top" Width="480" Canvas.Left="40" Canvas.Top="60" BorderBrush="#FF141424" Background="#FF141424"/>
-                <TextBlock Text="Интерфейс" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" FontWeight="Bold" Height="30" Padding="5,1,0,0" FontSize="20" TextDecorations="{x:Null}" Margin="40,15,294,356"/>
-                <TextBlock Text="Настройки языка" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30" Padding="0,4,0,0" FontSize="16" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="80" FontWeight="SemiBold"/>
+                <TextBlock Text="{x:Static resx:Language.InterfaceBtn}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" FontWeight="Bold" Height="30" Padding="5,1,0,0" FontSize="20" TextDecorations="{x:Null}" Margin="40,15,294,356"/>
+                <TextBlock Text="настройки языка" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30" Padding="0,4,0,0" FontSize="16" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="80" FontWeight="SemiBold"/>
                 <ComboBox x:Name="languagesComboBox" materialDesign:TextFieldAssist.HasClearButton="False" materialDesign:HintAssist.Hint="Выберите язык" MinWidth="128" Canvas.Left="60" Canvas.Top="120" Foreground="White" BorderBrush="White" Background="#FF0E0E19" Width="160" SelectionChanged="languagesComboBox_SelectionChanged">
                     <ComboBox.Resources>
                         <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FF0E0E19"/>
@@ -98,10 +103,10 @@
                     <ComboBoxItem Tag="ru" Content="Русский"/>
                     <ComboBoxItem Tag="eu" Content="Английский"/>
                 </ComboBox>
-                <Button x:Name="changeLanguageButton" Content="Изменить" Click="ChangeLanguageButton_Click" ToolTip="Применить выбранный язык" Width="80" Height="20" Canvas.Left="240" Canvas.Top="128" FontSize="12" Padding="0"/>
+                <Button x:Name="changeLanguageButton" Content="{x:Static resx:Language.ChangeLangBtn}" Click="ChangeLanguageButton_Click" ToolTip="Применить выбранный язык" Width="80" Height="20" Canvas.Left="240" Canvas.Top="128" FontSize="12" Padding="0"/>
                 <TextBlock x:Name="currentLanguageTextBlock" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" Height="30" Padding="5,0,0,0" FontSize="14" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="250" FontWeight="SemiBold"><Run Text="Текущий язык: Русский"/>
                     <InlineUIContainer>
-                        <Image x:Name="countryFlag" Source="Resources/russia.png" Width="24" Height="24" Margin="0,0,0,-5"/>
+                        <Image x:Name="countryFlag" Source="{StaticResource countryImage}" Width="24" Height="24" Margin="0,0,0,-5"/>
                     </InlineUIContainer></TextBlock>
             </Canvas>
 

@@ -2,6 +2,7 @@
 using GraphPAD.GraphData.Model;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -10,14 +11,14 @@ namespace GraphPAD
 {
     public partial class MainPage : Window
     {
-        
 
-        private void DFSUtil(DataVertex vertex, List<MyTuple> visited)
+        public static int test;
+        void DFSUtil(DataVertex vertex, List<MyTuple> visited)
         {
            // if (visited.Find(item => item.Item1 == vertex && item.Item2 == true) != null) return;
             if (flagNegr == true) return;
-            
-
+            test += 1;
+            Dispatcher.Invoke(() => progressBar.Value = 100/(GraphArea.VertexList.Count-test+1));
             if (visited.Find(item => item.Vertex == vertex && item.Visited == false) == null) return; else visited.Find(item => item.Vertex == vertex && item.Visited == false).Visited = true;
             foreach(var vertex1 in GraphArea.EdgesList.Keys) 
             {
@@ -34,7 +35,8 @@ namespace GraphPAD
         }
         public void CalculateDFS(DataVertex start)
         {
-
+            test = 0;
+            algorithmEdgesList.Clear();
             try
             {
                 algorithmResult = $"Результат поиска в глубину из вершины \"{start.Text}\":";
@@ -46,11 +48,9 @@ namespace GraphPAD
                     i++;
                 }
 
-                DFSUtil(start, visitedList);
-                chatCount += 1;
-                ChatsScrollView.ScrollToBottom();
-                ChatBox.AppendText($"Вы: {algorithmResult}\n\n");
-                SocketConnector.SendMessage(algorithmResult);
+                Thread thread = new Thread(x=>DFSUtil(start, visitedList));
+                thread.Start();
+                
             }
             catch
             {

@@ -1,36 +1,19 @@
-﻿using CefSharp;
-using CefSharp.Wpf;
-using GraphPAD.Data.JSON;
+﻿using GraphPAD.Data.JSON;
 using GraphPAD.Data.User;
 using GraphPAD.GraphData.Model;
 using GraphPAD.GraphData.Pattern;
 using GraphX.Controls;
-using GraphX.Controls.Models;
-using GraphX.PCL.Common;
-using GraphX.PCL.Common.Enums;
 using MaterialDesignThemes.Wpf;
-using Microsoft.Win32;
-using Newtonsoft.Json;
-using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Media;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Resources;
+
+
 
 namespace GraphPAD
 {
@@ -42,12 +25,12 @@ namespace GraphPAD
         /// Список ребер, которые необходимо "покрасить"
         /// </summary>
         private List<DataEdge> algorithmEdgesList = new List<DataEdge>();
-        CancellationToken source = new CancellationToken();
+        System.Threading.CancellationToken source = new System.Threading.CancellationToken();
         /// <summary>
         /// Фабрика
         /// </summary>
         private Painter _creator;
-        bool flagNegr = true;
+        static bool flagNegr = true;
         /// <summary>
         /// Строитель
         /// </summary>
@@ -105,7 +88,7 @@ namespace GraphPAD
         public delegate void Method();
         private static Method close;
         //Путь к папке аватара
-        string avatarsFolder = Path.GetFullPath(@"Avatars\Avatar.png");
+        string avatarsFolder = System.IO.Path.GetFullPath(@"Avatars\Avatar.png");
         //Доп. Кастомные Цвета
         public SolidColorBrush greenbrush = new SolidColorBrush(Color.FromRgb(19, 199, 19));
         public SolidColorBrush lightpurple = new SolidColorBrush(Color.FromRgb(85, 85, 147));
@@ -113,6 +96,8 @@ namespace GraphPAD
         #region Initialize
         public MainPage()
         {
+            //GraphPAD.Properties.Language.Culture = new System.Globalization.CultureInfo("ru-RU");
+            //GraphPAD.Properties.Language.Culture = new System.Globalization.CultureInfo("en-US");
             InitializeComponent();
             #region grapharea + zoom ctrl
             // ZoomCtrl.Visibility = Visibility.Visible;
@@ -122,14 +107,14 @@ namespace GraphPAD
             GraphArea.LogicCore = dgLogic;
             GraphArea.VertexSelected += GraphArea_VertexSelected;
             GraphArea.EdgeSelected += GraphArea_EdgeSelected;
-            GraphArea.SetVerticesMathShape(VertexShape.Ellipse);
+            GraphArea.SetVerticesMathShape(GraphX.PCL.Common.Enums.VertexShape.Ellipse);
 
-            GraphArea.VertexLabelFactory = new DefaultVertexlabelFactory();
-            GraphArea.EdgeLabelFactory = new DefaultEdgelabelFactory();
+            GraphArea.VertexLabelFactory = new GraphX.Controls.Models.DefaultVertexlabelFactory();
+            GraphArea.EdgeLabelFactory = new GraphX.Controls.Models.DefaultEdgelabelFactory();
             GraphArea.ShowAllEdgesLabels(true);
             GraphArea.ShowAllEdgesArrows(true);
-            GraphArea.SetEdgesHighlight(true, GraphControlType.VertexAndEdge);
-            GraphArea.SetVerticesHighlight(true, GraphControlType.VertexAndEdge, EdgesType.All);
+            GraphArea.SetEdgesHighlight(true, GraphX.PCL.Common.Enums.GraphControlType.VertexAndEdge);
+            GraphArea.SetVerticesHighlight(true, GraphX.PCL.Common.Enums.GraphControlType.VertexAndEdge, GraphX.PCL.Common.Enums.EdgesType.All);
             dgLogic.EdgeCurvingEnabled = true;
             //dgLogic.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.Custom;
             //dgLogic.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.None;
@@ -157,17 +142,17 @@ namespace GraphPAD
 
             #endregion
             //Создание папки "Avatars", если она не существует
-            if (!Directory.Exists(Path.GetFullPath(@"Avatars")))
+            if (!System.IO.Directory.Exists(System.IO.Path.GetFullPath(@"Avatars")))
             {
-                Directory.CreateDirectory(Path.GetFullPath(@"Avatars"));
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetFullPath(@"Avatars"));
                 //MessageBox.Show(Path.GetFullPath("Avatars"));
             }
             //Создание файла "Avatar.png" в папке "Avatars", если его не существует
-            if (!File.Exists(Path.GetFullPath(@"Avatars/Avatar.png")))
+            if (!System.IO.File.Exists(System.IO.Path.GetFullPath(@"Avatars/Avatar.png")))
             {
-                using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream("GraphPAD.Resources.avatar_default.png"))
+                using (var resource = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("GraphPAD.Resources.avatar_default.png"))
                 {
-                    using (var file = new FileStream(Path.GetFullPath(@"Avatars/Avatar.png"), FileMode.Create, FileAccess.Write))
+                    using (var file = new System.IO.FileStream(System.IO.Path.GetFullPath(@"Avatars/Avatar.png"), System.IO.FileMode.Create, System.IO.FileAccess.Write))
                     {
                         resource.CopyTo(file);
                     }
@@ -237,7 +222,7 @@ namespace GraphPAD
             orientedCheckbox.Visibility = Visibility.Hidden;
 
             Chromium.settings.CefCommandLineArgs.Add("enable-media-stream", "1");
-            Cef.Initialize(Chromium.settings);
+            CefSharp.Cef.Initialize(Chromium.settings);
             leaveButton.Click += (s, ea) =>
             {
                 LobbyLeave_ClickAsync(s, ea);
@@ -247,7 +232,7 @@ namespace GraphPAD
                 {
                     try
                     {
-                        ((ChromiumWebBrowser)temp).Dispose();
+                        ((CefSharp.Wpf.ChromiumWebBrowser)temp).Dispose();
                     }
                     catch { }
 
@@ -410,7 +395,7 @@ namespace GraphPAD
             //remove vertex and all adjacent edges from layout and data graph
             GraphArea.RemoveVertexAndEdges(vc.Vertex as DataVertex);
         }
-        void GraphArea_VertexSelected(object sender, VertexSelectedEventArgs args)
+        void GraphArea_VertexSelected(object sender, GraphX.Controls.Models.VertexSelectedEventArgs args)
         {
             if (args.MouseArgs.LeftButton == MouseButtonState.Pressed)
             {
@@ -449,7 +434,7 @@ namespace GraphPAD
             }
         }
 
-        void GraphArea_EdgeSelected(object sender, EdgeSelectedEventArgs args)
+        void GraphArea_EdgeSelected(object sender, GraphX.Controls.Models.EdgeSelectedEventArgs args)
         {
             if (args.MouseArgs.LeftButton == MouseButtonState.Pressed && _opMode == EditorOperationMode.Delete)
             {
@@ -476,9 +461,9 @@ namespace GraphPAD
         #region Functions
         public static ImageSource NonBlockingLoad(string path)
         {
-            var image = new BitmapImage();
+            var image = new System.Windows.Media.Imaging.BitmapImage();
             image.BeginInit();
-            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
             image.UriSource = new Uri(path);
             image.EndInit();
             image.Freeze();
@@ -489,7 +474,7 @@ namespace GraphPAD
             var handle = bmp.GetHbitmap();
             try
             {
-                return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
             }
             catch { return null; }
         }
@@ -586,15 +571,15 @@ namespace GraphPAD
             {
                 lobbyCount = 0;
                 lobbyButtonsMargin = -60;
-                var client = new RestClient("https://testingwebrtc.herokuapp.com/room/myrooms");
+                var client = new RestSharp.RestClient("https://testingwebrtc.herokuapp.com/room/myrooms");
                 client.Timeout = -1;
-                var request = new RestRequest(RestSharp.Method.GET);
+                var request = new RestSharp.RestRequest(RestSharp.Method.GET);
                 request.AddHeader("x-access-token", UserInfo.Token);
-                IRestResponse response = client.Execute(request);
+                RestSharp.IRestResponse response = client.Execute(request);
                 if (response.IsSuccessful)
                 {
                     LobbysCanvas.Children.Clear();
-                    JSONrooms rooms = JsonConvert.DeserializeObject<JSONrooms>(response.Content.ToString());
+                    JSONrooms rooms = Newtonsoft.Json.JsonConvert.DeserializeObject<JSONrooms>(response.Content.ToString());
                     foreach (JSONroomData room in rooms.Data)
                     {
                         lobbyCount += 1;
@@ -714,8 +699,8 @@ namespace GraphPAD
 
                         var path = "Resources/conferension.png";
                         Uri resourceUri = new Uri(path, UriKind.Relative);
-                        StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-                        BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+                        System.Windows.Resources.StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+                        System.Windows.Media.Imaging.BitmapFrame temp = System.Windows.Media.Imaging.BitmapFrame.Create(streamInfo.Stream);
                         ConfButton.Background = new ImageBrush(temp);
                         LobbysCanvas.Children.Add(ConfButton);
                     }
@@ -735,11 +720,11 @@ namespace GraphPAD
         {
             try
             {
-                var client = new RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}/leave");
+                var client = new RestSharp.RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}/leave");
                 client.Timeout = -1;
-                var request = new RestRequest(RestSharp.Method.POST);
+                var request = new RestSharp.RestRequest(RestSharp.Method.POST);
                 request.AddHeader("x-access-token", UserInfo.Token);
-                IRestResponse response = client.Execute(request);
+                RestSharp.IRestResponse response = client.Execute(request);
                 if (response.IsSuccessful)
                 {
                     MessageBox.Show($"Вы покинули конференцию \"{roomName}\"", "Сообщение");
@@ -760,11 +745,11 @@ namespace GraphPAD
         {
             try
             {
-                var client = new RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}/delete");
+                var client = new RestSharp.RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}/delete");
                 client.Timeout = -1;
-                var request = new RestRequest(RestSharp.Method.DELETE);
+                var request = new RestSharp.RestRequest(RestSharp.Method.DELETE);
                 request.AddHeader("x-access-token", UserInfo.Token);
-                IRestResponse response = client.Execute(request);
+                RestSharp.IRestResponse response = client.Execute(request);
                 if (response.IsSuccessful)
                 {
                     MessageBox.Show($"Вы удалили конференцию \"{roomName}\"", "Сообщение");
@@ -783,14 +768,14 @@ namespace GraphPAD
         }
         public Tuple<JSONroomuser[], JSONroomuser> GetUsers(string roomId)
         {
-            var client = new RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}");
+            var client = new RestSharp.RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}");
             client.Timeout = -1;
-            var request = new RestRequest(RestSharp.Method.GET);
+            var request = new RestSharp.RestRequest(RestSharp.Method.GET);
             request.AddHeader("x-access-token", UserInfo.Token);
-            IRestResponse response = client.Execute(request);
+            RestSharp.IRestResponse response = client.Execute(request);
             if (response.IsSuccessful)
             {
-                JSONroom room = JsonConvert.DeserializeObject<JSONroom>(response.Content.ToString());
+                JSONroom room = Newtonsoft.Json.JsonConvert.DeserializeObject<JSONroom>(response.Content.ToString());
                 Console.WriteLine(room.Data.Users.ToString());
                 return Tuple.Create(room.Data.Users, room.Data.RoomOwner);
             }
@@ -799,8 +784,8 @@ namespace GraphPAD
         private void ChangeImage(string path, Button btn) //Функция для смены изображений в кнопке
         {
             Uri resourceUri = new Uri(path, UriKind.Relative);
-            StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-            BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+            System.Windows.Resources.StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+            System.Windows.Media.Imaging.BitmapFrame temp = System.Windows.Media.Imaging.BitmapFrame.Create(streamInfo.Stream);
             var brush = new ImageBrush();
             brush.ImageSource = temp;
             btn.Background = brush;
@@ -839,11 +824,11 @@ namespace GraphPAD
             {
                 try
                 {
-                    var client = new RestClient("https://testingwebrtc.herokuapp.com/room/" + _conferensionID + "/join");
+                    var client = new RestSharp.RestClient("https://testingwebrtc.herokuapp.com/room/" + _conferensionID + "/join");
                     client.Timeout = -1;
-                    var request = new RestRequest(RestSharp.Method.POST);
+                    var request = new RestSharp.RestRequest(RestSharp.Method.POST);
                     request.AddHeader("x-access-token", UserInfo.Token);
-                    IRestResponse response = client.Execute(request);
+                    RestSharp.IRestResponse response = client.Execute(request);
                     if (response.IsSuccessful)
                     {
                         MessageBox.Show("Вы успешно вошли в конференцию.\nЕё ID: " + _conferensionID + "\nЧтобы подкючиться к конференции выберите её в списке слева.", "Сообщение");
@@ -901,15 +886,15 @@ namespace GraphPAD
             {
                 try
                 {
-                    var client = new RestClient("https://testingwebrtc.herokuapp.com/room/create");
+                    var client = new RestSharp.RestClient("https://testingwebrtc.herokuapp.com/room/create");
                     client.Timeout = -1;
-                    var request = new RestRequest(RestSharp.Method.POST);
+                    var request = new RestSharp.RestRequest(RestSharp.Method.POST);
                     request.AddHeader("x-access-token", UserInfo.Token);
                     request.AddParameter("roomName", ConferensionName);
-                    IRestResponse response = client.Execute(request);
+                    RestSharp.IRestResponse response = client.Execute(request);
                     if (response.IsSuccessful)
                     {
-                        JSONroom room = JsonConvert.DeserializeObject<JSONroom>(response.Content.ToString());
+                        JSONroom room = Newtonsoft.Json.JsonConvert.DeserializeObject<JSONroom>(response.Content.ToString());
                         var newRoomID = room.Data.RoomID;
                         var newRoomName = room.Data.RoomName;
                         MessageBox.Show($"Вы успешно создали конференцию\nНазвание: {newRoomName}\nID: {newRoomID}", "Сообщение");
@@ -994,7 +979,7 @@ namespace GraphPAD
                     SocketConnector.SetSettings(roomId, UserInfo.Name);
                     SocketConnector.client.On("chat-message", async response =>
                     {
-                        var text = JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
+                        var text = Newtonsoft.Json.JsonConvert.DeserializeObject<JSONmessage[]>(response.ToString());
                         await Dispatcher.BeginInvoke((Action)(() => ChatBox.AppendText($"{text[0].UserId}: {text[0].Message}\n\n")));
                         chatCount += 1;
                         Console.WriteLine($"{text[0].UserId}: {text[0].Message}");
@@ -1003,8 +988,8 @@ namespace GraphPAD
                     {
 
                         //StylusPointCollection
-                        var stroke2 = JsonConvert.DeserializeObject<JSONstroke[]>(response.ToString());
-                        var drawingAttributes = new DrawingAttributes()
+                        var stroke2 = Newtonsoft.Json.JsonConvert.DeserializeObject<JSONstroke[]>(response.ToString());
+                        var drawingAttributes = new System.Windows.Ink.DrawingAttributes()
                         {
                             Width = stroke2[0].Width,
                             Color = stroke2[0].Color,
@@ -1013,7 +998,7 @@ namespace GraphPAD
                         //MessageBox.Show(stroke2[0].Color.ToString() +"jopa", "");
                         //MessageBox.Show(stroke2[0].Width.ToString(), "");
                         //MessageBox.Show(stroke2[0].StrokeArray.ToString(), "");
-                        var stroke = new Stroke(stroke2[0].StrokeArray, drawingAttributes);
+                        var stroke = new System.Windows.Ink.Stroke(stroke2[0].StrokeArray, drawingAttributes);
 
                         await Dispatcher.BeginInvoke((Action)(() => PaintCanvas.Strokes.Add(stroke))); 
                     });
@@ -1239,7 +1224,7 @@ namespace GraphPAD
         }
         private void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
-            File.Delete(@"Token.json");
+            System.IO.File.Delete(@"Token.json");
             AuthPage authPage = new AuthPage();
             this.Visibility = Visibility.Hidden; //Скрывает текущее окно
             authPage.Show();
@@ -1494,7 +1479,7 @@ namespace GraphPAD
         }
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
+            System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
         /// <summary>
@@ -1504,7 +1489,7 @@ namespace GraphPAD
         public string GetNameOfFileWithGraph()
         {
             string filename = null;
-            var dlg = new OpenFileDialog()
+            var dlg = new Microsoft.Win32.OpenFileDialog()
             {
                 Filter = "Text files(*.txt)|*.txt|All files(*.*)|*.*"
             };
@@ -1523,7 +1508,7 @@ namespace GraphPAD
         /// <param name="filename"></param>
         public int[,] ReadGraphFromFile(string filename)
         {
-            List<string> input = File.ReadAllText(filename).Replace("\r\n", "\n").Replace(" \n", "\n").Split('\n').ToList();
+            List<string> input = System.IO.File.ReadAllText(filename).Replace("\r\n", "\n").Replace(" \n", "\n").Split('\n').ToList();
             int size = Convert.ToInt32(input[0]);
             input.RemoveAt(0);
             int i = 0, j = 0;
@@ -1814,23 +1799,27 @@ namespace GraphPAD
                     animationSpeedButton.Tag = "2";
                     animationSpeedButton.ToolTip = "Текущая скорость анимации - 2";
                     animationSpeedImage.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.speed_2);
+                    GraphData.Algorithms.AlgorithmHelper.AlgorithmTime = 750;
                     break;
                 case "2":
                     animationSpeedButton.Tag = "3";
                     animationSpeedButton.ToolTip = "Текущая скорость анимации - 3";
                     animationSpeedImage.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.speed_3);
+                    GraphData.Algorithms.AlgorithmHelper.AlgorithmTime = 250;
                     break;
                 case "3":
                     animationSpeedButton.Tag = "1";
                     animationSpeedButton.ToolTip = "Текущая скорость анимации - 1";
                     animationSpeedImage.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.speed_1);
+                    GraphData.Algorithms.AlgorithmHelper.AlgorithmTime = 1500;
                     break;
             }
         }
         private void showAlgorithm_Click(object sender, RoutedEventArgs e)
         {
-            //Animation
-            SystemSounds.Question.Play();
+
+            DrawAlgorithm();
+            //System.Media.SystemSounds.Question.Play();
         }
         private void algorithmsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -2009,8 +1998,8 @@ namespace GraphPAD
         {
             //   PaintCanvasScroll.ScrollToTop();
             //   PaintCanvasScroll.ScrollToLeftEnd();
-            
-            SaveFileDialog dlg = new SaveFileDialog();
+
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
             dlg.FileName = "untitled"; // Default file name
             dlg.DefaultExt = "jpg"; // Default file extension
             dlg.AddExtension = true;
@@ -2024,15 +2013,15 @@ namespace GraphPAD
                 {
 
                     string filepath = dlg.FileName;
-                    RenderTargetBitmap rtb = new RenderTargetBitmap((int)PaintCanvas.ActualWidth, (int)PaintCanvas.ActualHeight, 96d, 96d, PixelFormats.Default);
+                    System.Windows.Media.Imaging.RenderTargetBitmap rtb = new System.Windows.Media.Imaging.RenderTargetBitmap((int)PaintCanvas.ActualWidth, (int)PaintCanvas.ActualHeight, 96d, 96d, PixelFormats.Default);
                     rtb.Render(PaintCanvas);
-                    JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create(rtb));
-                    FileStream fs = File.Open(filepath, FileMode.Create);
+                    System.Windows.Media.Imaging.JpegBitmapEncoder encoder = new System.Windows.Media.Imaging.JpegBitmapEncoder();
+                    encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(rtb));
+                    System.IO.FileStream fs = System.IO.File.Open(filepath, System.IO.FileMode.Create);
                     encoder.Save(fs);
                     fs.Close();
                 }
-                catch (IOException copyError)
+                catch (System.IO.IOException copyError)
                 {
                     Console.WriteLine(copyError.Message);
                     MessageBox.Show("Что-то пошло не так.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -2057,7 +2046,7 @@ namespace GraphPAD
         private void EraserSlider_LayoutUpdated(object sender, EventArgs e)
         {
             var eraserSize = EraserSlider.Value;
-            PaintCanvas.EraserShape = new EllipseStylusShape(eraserSize, eraserSize);
+            PaintCanvas.EraserShape = new System.Windows.Ink.EllipseStylusShape(eraserSize, eraserSize);
             EraserTextBlock.Text = "Размер Ластика: " + (eraserSize).ToString();
         }
         private void EraserSlider_MouseEnter(object sender, MouseEventArgs e)
@@ -2066,7 +2055,7 @@ namespace GraphPAD
             {
                 var eraserSize = EraserSlider.Value;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.None;
-                PaintCanvas.EraserShape = new EllipseStylusShape(eraserSize, eraserSize);
+                PaintCanvas.EraserShape = new System.Windows.Ink.EllipseStylusShape(eraserSize, eraserSize);
             }
         }
         private void EraserSlider_MouseLeave(object sender, MouseEventArgs e)
@@ -2075,7 +2064,7 @@ namespace GraphPAD
             {
                 var eraserSize = EraserSlider.Value;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
-                PaintCanvas.EraserShape = new EllipseStylusShape(eraserSize, eraserSize);
+                PaintCanvas.EraserShape = new System.Windows.Ink.EllipseStylusShape(eraserSize, eraserSize);
             }
         }
         private void BrushButton_LayoutUpdated(object sender, EventArgs e)
@@ -2113,7 +2102,7 @@ namespace GraphPAD
             }
             else
             {
-                Process.GetCurrentProcess().Kill();
+                System.Diagnostics.Process.GetCurrentProcess().Kill();
             }
         }
         public static void CloseForm()
@@ -2137,11 +2126,12 @@ namespace GraphPAD
         {
             if (e.Key == Key.Enter)
             {
-                this.sendButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                this.sendButton.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
             }
         }
         private void ChatTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+           
             string userInput = chatTextBox.Text;
             char charCount;
             if (userInput != "")
@@ -2158,9 +2148,10 @@ namespace GraphPAD
             RefreshRooms();
         }
         #endregion
+        public static void RestartApp()
+        {
+            System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+            Application.Current.Shutdown();
+        }
     }
 }
-
-//ToDo
-//1)suck koke
-//2)no u

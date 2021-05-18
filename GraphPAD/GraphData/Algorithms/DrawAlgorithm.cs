@@ -1,23 +1,35 @@
 ﻿using GraphPAD.GraphData.Algorithms;
-using GraphPAD.GraphData.Model;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
 namespace GraphPAD
 {
+    
     public partial class MainPage : Window
     {
+        
         public async void DrawAlgorithm()
         {
-            foreach(var item in algorithmEdgesList)
+            FixLabelsAndArrows();
+            try
             {
-                await Task.Delay(500, source);
-                item.EdgeBrush = Brushes.Red;
-                item.ArrowBrush = Brushes.Red;
 
+                foreach (var item in algorithmEdgesList)
+                {
+                    await Task.Delay(AlgorithmHelper.AlgorithmTime, source);
+                    item.EdgeBrush = Brushes.Red;
+                    item.ArrowBrush = Brushes.Red;
+
+                }
+                chatCount += 1;
+                ChatsScrollView.ScrollToBottom();
+                ChatBox.AppendText($"Вы: {algorithmResult}\n\n");
+                SocketConnector.SendMessage(algorithmResult);
+            }
+            catch
+            {
+                FixLabelsAndArrows();
             }
         }
     }
