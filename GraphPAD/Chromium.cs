@@ -1,7 +1,4 @@
-﻿using CefSharp;
-using CefSharp.Wpf;
-using System.Windows;
-
+﻿
 namespace GraphPAD
 {
 
@@ -9,21 +6,21 @@ namespace GraphPAD
     {
         private static string _roomId;
         private const string BaseUrl = "https://testingwebrtc.herokuapp.com/room/";
-        public static CefSettings settings= new CefSettings();
-        public static ChromiumWebBrowser Connect()
+        public static CefSharp.Wpf.CefSettings settings = new CefSharp.Wpf.CefSettings();
+        public static CefSharp.Wpf.ChromiumWebBrowser Connect()
         {
             try
             {
-                //var tempUrl = BaseUrl + _roomId + "/view";
-                var tempUrl = "google.com";
-                ChromiumWebBrowser browser = new ChromiumWebBrowser(tempUrl);
+                var tempUrl = BaseUrl + _roomId + "/view";
+                //var tempUrl = "google.com";
+                CefSharp.Wpf.ChromiumWebBrowser browser = new CefSharp.Wpf.ChromiumWebBrowser(tempUrl);
                 browser.MenuHandler = new CustomMenuHandler();
                 
                 return browser;
             }
             catch
             {
-                MessageBox.Show("something went wrong");
+                System.Windows.MessageBox.Show("something went wrong");
                 return null;
             }
         }

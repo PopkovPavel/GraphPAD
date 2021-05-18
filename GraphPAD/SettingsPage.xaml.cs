@@ -18,6 +18,7 @@ namespace GraphPAD
     public partial class SettingsPage : Window
     {
         #region Global Variables
+
         string avatarsFolder = Path.GetFullPath(@"Avatars\Avatar.png");
         string newAvatar;
         public ComboBoxItem selectedItem;
@@ -26,7 +27,7 @@ namespace GraphPAD
         public SettingsPage()
         {
             InitializeComponent();
-            
+            DataContext = this;
             AccountCanvasScrollView.Visibility = Visibility.Visible;
             VoiceCanvas.Visibility = Visibility.Hidden;
             InterfaceCanvas.Visibility = Visibility.Hidden;
@@ -167,14 +168,17 @@ namespace GraphPAD
 
         private void ChangeLanguageButton_Click(object sender, RoutedEventArgs e)
         {
+
             if (selectedItem != null)
             {
                 if (selectedItem.Tag.ToString() == "ru")
                 {
+                    GraphPAD.Properties.Language.Culture = new System.Globalization.CultureInfo("ru-RU");
                     countryFlag.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.russia);
                 }
                 else
                 {
+                    GraphPAD.Properties.Language.Culture = new System.Globalization.CultureInfo("en-US");
                     countryFlag.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.england);
                 }
             }
@@ -246,5 +250,11 @@ namespace GraphPAD
 
         }
         #endregion
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string name)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
+        }
     }
 }
