@@ -134,7 +134,6 @@
     <Compile Include="Data\JSON\JSONroomuser.cs" />
     <Compile Include="Data\JSON\JSONstroke.cs" />
     <Compile Include="Data\JSON\JSONuserInfo.cs" />
-    <Compile Include="Data\User\GuestInfo.cs" />
     <Compile Include="Data\User\UserInfo.cs" />
     <Compile Include="GraphData\Algorithms\AlgorithmHelper.cs" />
     <Compile Include="GraphData\Algorithms\MainPage.Algorithms.DepthFirstSearch.cs" />

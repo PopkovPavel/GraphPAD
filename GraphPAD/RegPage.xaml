@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GraphPAD"
+        xmlns:resx="clr-namespace:GraphPAD.Properties"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="GraphPAD (Регистрация)" Height="500" Width="450" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" KeyDown="RegWindow_KeyDown" Icon="Resources/icon.jpg">
+        Title="{x:Static resx:Language.RegPageTitile}" Height="500" Width="450" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" KeyDown="RegWindow_KeyDown" Icon="Resources/icon.jpg">
     <Grid Background="#303030">
         <Border MinWidth="300" MinHeight="300" Margin="15" Background="White" VerticalAlignment="Center" Padding="30" CornerRadius="20">
             <Border.Effect>
@@ -14,15 +15,15 @@
             </Border.Effect>
             <StackPanel>
                 <Image Source="Resources/Logo.jpg"/>
-                <TextBlock Text="Приложение для работы с графами онлайн" FontWeight="Bold" FontSize="12" Margin="0 -10 0 0" TextAlignment="Center"/>
-                <TextBox x:Name="textboxName" materialDesign:HintAssist.Hint="Введите отображаемое имя" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaxLines="1" MaxLength="32"/>
-                <TextBox x:Name="textboxEmail" materialDesign:HintAssist.Hint="Введите Email" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaxLines="1" MaxLength="32"/>
-                <PasswordBox x:Name="passwordbox_1" materialDesign:HintAssist.Hint="Введите пароль" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" MaxLength="40"/>
-                <PasswordBox x:Name="passwordbox_2" materialDesign:HintAssist.Hint="Введите пароль ещё раз" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" MaxLength="40"/>
-                <Button x:Name="regButton" Content="Зарегистрироваться" Margin="0 20" Click="RegButton_Clicked"/>
+                <TextBlock Text="{x:Static resx:Language.LogoText}" FontWeight="Bold" FontSize="12" Margin="0 -10 0 0" TextAlignment="Center"/>
+                <TextBox x:Name="textboxName" materialDesign:HintAssist.Hint="{x:Static resx:Language.EnterNameString}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaxLines="1" MaxLength="32"/>
+                <TextBox x:Name="textboxEmail" materialDesign:HintAssist.Hint="{x:Static resx:Language.EnterEmailString}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaxLines="1" MaxLength="32"/>
+                <PasswordBox x:Name="passwordbox_1" materialDesign:HintAssist.Hint="{x:Static resx:Language.EnterPasswordString1}" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" MaxLength="40"/>
+                <PasswordBox x:Name="passwordbox_2" materialDesign:HintAssist.Hint="{x:Static resx:Language.EnterPasswordString2}" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" MaxLength="40"/>
+                <Button x:Name="regButton" Content="{x:Static resx:Language.CreateAccBtn}" Margin="0 20" Click="RegButton_Clicked"/>
                 <Grid Height="60">
-                    <TextBlock HorizontalAlignment="Center" Text="Уже есть аккаунт?" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" Margin="0,6,0,0" />
-                    <Button HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="Войти" FontSize="16" Click="OpenAuthPage" Style="{StaticResource MaterialDesignFlatButton}"/>
+                    <TextBlock HorizontalAlignment="Center" Text="{x:Static resx:Language.HasAccountString}" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" Margin="0,6,0,0" TextAlignment="Center" Width="250" />
+                    <Button HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="{x:Static resx:Language.SignUp}" FontSize="16" Click="OpenAuthPage" Style="{StaticResource MaterialDesignFlatButton}"/>
                 </Grid>
             </StackPanel>
         </Border>

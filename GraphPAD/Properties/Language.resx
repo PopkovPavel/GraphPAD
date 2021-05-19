@@ -117,28 +117,556 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccountIDString" xml:space="preserve">
+    <value>ID Аккаунта</value>
+  </data>
+  <data name="AlgorithmsBtn" xml:space="preserve">
+    <value>Алгоритмы</value>
+  </data>
+  <data name="AnimationSpeedBtn" xml:space="preserve">
+    <value>Скорость анимации</value>
+  </data>
+  <data name="AnimationSpeedBtnTooltip" xml:space="preserve">
+    <value>Текущая скорость анимации - </value>
+  </data>
   <data name="ApplicationSettings" xml:space="preserve">
     <value>Настройки приложения</value>
+  </data>
+  <data name="AudioOffTooltip" xml:space="preserve">
+    <value>Выключить звук</value>
+  </data>
+  <data name="AudioOnTooltip" xml:space="preserve">
+    <value>Включить звук</value>
+  </data>
+  <data name="AuthBtn" xml:space="preserve">
+    <value>Авторизация</value>
+  </data>
+  <data name="AuthPageTitile" xml:space="preserve">
+    <value>GraphPAD (Авторизация)</value>
+  </data>
+  <data name="BrowserVersion" xml:space="preserve">
+    <value>Браузерная версия</value>
+  </data>
+  <data name="BrushBtn" xml:space="preserve">
+    <value>Кисть</value>
+  </data>
+  <data name="BrushSizeSlider" xml:space="preserve">
+    <value>Размер Кисти: </value>
+  </data>
+  <data name="CameraBtn" xml:space="preserve">
+    <value>Камера</value>
+  </data>
+  <data name="CancelBtn" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Caption" xml:space="preserve">
+    <value>Сообщение</value>
   </data>
   <data name="ChangeLangBtn" xml:space="preserve">
     <value>Изменить</value>
   </data>
+  <data name="ChangeLanguageBtnTooltip" xml:space="preserve">
+    <value>Применить выбранный язык</value>
+  </data>
+  <data name="ChangePasswordBtn" xml:space="preserve">
+    <value>Изменить Пароль</value>
+  </data>
+  <data name="ChooseAlgorithmComboBox" xml:space="preserve">
+    <value>Выберите алгоритм</value>
+  </data>
+  <data name="ChooseNewAvatar" xml:space="preserve">
+    <value>Выберите новый Аватар</value>
+  </data>
+  <data name="ClearFIeldBtn" xml:space="preserve">
+    <value>Очистить поле</value>
+  </data>
+  <data name="ColorPickerString" xml:space="preserve">
+    <value>Палитра цветов</value>
+  </data>
+  <data name="ConferenceChatString" xml:space="preserve">
+    <value>Чат конференции </value>
+  </data>
+  <data name="ConferenceParticipantsString" xml:space="preserve">
+    <value>Участники конференции</value>
+  </data>
+  <data name="ConferencesCount" xml:space="preserve">
+    <value>Конференций: </value>
+  </data>
+  <data name="ConferencesUpdateBtnTooltip" xml:space="preserve">
+    <value>Обновить список конференций</value>
+  </data>
+  <data name="ConferenceVideoChatString" xml:space="preserve">
+    <value>Видео-чат конференции</value>
+  </data>
+  <data name="ConferenssionIdString" xml:space="preserve">
+    <value>ID Конференции...</value>
+  </data>
+  <data name="ConferenssionNameString" xml:space="preserve">
+    <value>Название конференции...</value>
+  </data>
+  <data name="Confirmation" xml:space="preserve">
+    <value>Подтверждение</value>
+  </data>
+  <data name="ConfirmationMessage" xml:space="preserve">
+    <value>Создать новую конференцию?
+Название конференции: </value>
+  </data>
+  <data name="CopyIDBtn" xml:space="preserve">
+    <value>Скопировать ID</value>
+  </data>
+  <data name="CopyIDMessage" xml:space="preserve">
+    <value>ID скопирован в буфер обмена.</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Создать</value>
+  </data>
+  <data name="CreateAccBtn" xml:space="preserve">
+    <value>Зарегистрироваться</value>
+  </data>
+  <data name="CreateAccWithThisDataMessage" xml:space="preserve">
+    <value>Создать аккаунт с этими данными?
+Имя - </value>
+  </data>
+  <data name="CreateConferenssionMessage" xml:space="preserve">
+    <value>Вы успешно создали конференцию.
+Название: </value>
+  </data>
+  <data name="CreateGraphBtn" xml:space="preserve">
+    <value>Добавление</value>
+  </data>
+  <data name="CreateLobbyBtn" xml:space="preserve">
+    <value>Создать конференцию</value>
+  </data>
+  <data name="CurrentLanguage" xml:space="preserve">
+    <value>Текущий язык: Русский</value>
+  </data>
+  <data name="CurrentModeAlgorithms" xml:space="preserve">
+    <value>Текущий режим: Алгоритмы</value>
+  </data>
+  <data name="CurrentModeAlgorithmsOffTooltip" xml:space="preserve">
+    <value>Выключить режим Алгоритмов</value>
+  </data>
+  <data name="CurrentModeAlgorithmsOnTooltip" xml:space="preserve">
+    <value>Включить режим Алгоритмов</value>
+  </data>
+  <data name="CurrentModeBrush" xml:space="preserve">
+    <value>Текущий режим: Кисть</value>
+  </data>
+  <data name="CurrentModeBrushOffTooltip" xml:space="preserve">
+    <value>Выключить Кисть</value>
+  </data>
+  <data name="CurrentModeBrushOnTooltip" xml:space="preserve">
+    <value>Включить Кисть</value>
+  </data>
+  <data name="CurrentModeCreate" xml:space="preserve">
+    <value>Текущий режим: Создание</value>
+  </data>
+  <data name="CurrentModeCreateOffTooltip" xml:space="preserve">
+    <value>Выключить режим Создания</value>
+  </data>
+  <data name="CurrentModeCreateOnTooltip" xml:space="preserve">
+    <value>Включить режим Создания</value>
+  </data>
+  <data name="CurrentModeCursor" xml:space="preserve">
+    <value>Текущий режим: Курсор</value>
+  </data>
+  <data name="CurrentModeDelete" xml:space="preserve">
+    <value>Текущий режим: Удаление</value>
+  </data>
+  <data name="CurrentModeDeleteOffTooltip" xml:space="preserve">
+    <value>Выключить режим Удаления</value>
+  </data>
+  <data name="CurrentModeDeleteOnTooltip" xml:space="preserve">
+    <value>Включить режим Удаления</value>
+  </data>
+  <data name="CurrentModeEraser" xml:space="preserve">
+    <value>Текущий режим: Ластик</value>
+  </data>
+  <data name="CurrentModeEraserOffTooltip" xml:space="preserve">
+    <value>Выключить Ластик</value>
+  </data>
+  <data name="CurrentModeEraserOnTooltip" xml:space="preserve">
+    <value>Включить Ластик</value>
+  </data>
+  <data name="CurrentModeEraserSmart" xml:space="preserve">
+    <value>Текущий режим: Умный Ластик</value>
+  </data>
+  <data name="CurrentModeEraserSmartOffTooltip" xml:space="preserve">
+    <value>Выключить Умный Ластик</value>
+  </data>
+  <data name="CurrentModeEraserSmartOnTooltip" xml:space="preserve">
+    <value>Включить Умный Ластик</value>
+  </data>
+  <data name="CurrentModeGraphGen" xml:space="preserve">
+    <value>Текущий режим: Генерация графов</value>
+  </data>
+  <data name="CurrentModeGraphGenOffTooltip" xml:space="preserve">
+    <value>Выключить режим Генерации Графов</value>
+  </data>
+  <data name="CurrentModeGraphGenOnTooltip" xml:space="preserve">
+    <value>Включить режим Генерации Графов</value>
+  </data>
+  <data name="CurrentModeMove" xml:space="preserve">
+    <value>Текущий режим: Перемещение</value>
+  </data>
+  <data name="CurrentModeRandConnGraph" xml:space="preserve">
+    <value>Текущий режим: Случайный связный граф</value>
+  </data>
+  <data name="CurrentModeRandConnGraphOffTooltip" xml:space="preserve">
+    <value>Выключить режим Генерации Случайного Связного Графа</value>
+  </data>
+  <data name="CurrentModeRandConnGraphOnTooltip" xml:space="preserve">
+    <value>Включить режим Генерации Случайного Связного Графа</value>
+  </data>
+  <data name="CurrentModeRandTree" xml:space="preserve">
+    <value>Текущий режим: Случайное дерево</value>
+  </data>
+  <data name="CurrentModeRandTreeOffTooltip" xml:space="preserve">
+    <value>Выключить режим Генерации Случайного Дерева</value>
+  </data>
+  <data name="CurrentModeRandTreeOnTooltip" xml:space="preserve">
+    <value>Включить режим Генерации Случайного Дерева</value>
+  </data>
+  <data name="CurrentModeSelection" xml:space="preserve">
+    <value>Текущий режим: Выделение</value>
+  </data>
+  <data name="CurrentModeSelectionOffTooltip" xml:space="preserve">
+    <value>Выключить режим Выделения</value>
+  </data>
+  <data name="CurrentModeSelectionOnTooltip" xml:space="preserve">
+    <value>Включить режим Выделения</value>
+  </data>
+  <data name="DeleteConferenssionBtn" xml:space="preserve">
+    <value>Удалить Конференцию</value>
+  </data>
+  <data name="DeleteGraphBtn" xml:space="preserve">
+    <value>Удаление</value>
+  </data>
+  <data name="EdgesAmountBtn" xml:space="preserve">
+    <value>Кол-во рёбер</value>
+  </data>
+  <data name="EdgesCountErrorMessage" xml:space="preserve">
+    <value>Количество ребер не должно быть меньше N-1, количество ребер не должно быть больше N(N-1)/2.</value>
+  </data>
+  <data name="EdgesCountMessage" xml:space="preserve">
+    <value>Введено некорректное количество вершин.</value>
+  </data>
+  <data name="EdgesWeightBtn" xml:space="preserve">
+    <value>Вес ребра</value>
+  </data>
+  <data name="EmailString" xml:space="preserve">
+    <value>Эл. почта</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>Английский</value>
+  </data>
+  <data name="Enter" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="EnterConferenssionErrorMessage" xml:space="preserve">
+    <value>Такой конференции не существует, либо она уже была добавлена.</value>
+  </data>
+  <data name="EnterConferenssionIDTooltip" xml:space="preserve">
+    <value>Введите ID конференции</value>
+  </data>
+  <data name="EnterConferenssionMessage1" xml:space="preserve">
+    <value>Вы успешно вошли в конференцию.
+Её ID: </value>
+  </data>
+  <data name="EnterConferenssionMessage2" xml:space="preserve">
+    <value>Чтобы подключиться к конференции выберите её в списке слева.</value>
+  </data>
+  <data name="EnterConferenssionNameTooltip" xml:space="preserve">
+    <value>Введите название конференции</value>
+  </data>
+  <data name="EnterEmailString" xml:space="preserve">
+    <value>Введите эл. почту</value>
+  </data>
+  <data name="EnterLobbyBtn" xml:space="preserve">
+    <value>Войти в конференцию</value>
+  </data>
+  <data name="EnterMessageField" xml:space="preserve">
+    <value>Напишите сообщение ...</value>
+  </data>
+  <data name="EnterNameString" xml:space="preserve">
+    <value>Введите отображаемое имя</value>
+  </data>
+  <data name="EnterNewPasswordString" xml:space="preserve">
+    <value>Введите новый пароль</value>
+  </data>
+  <data name="EnterPasswordString1" xml:space="preserve">
+    <value>Введите пароль</value>
+  </data>
+  <data name="EnterPasswordString2" xml:space="preserve">
+    <value>Введите пароль ещё раз</value>
+  </data>
+  <data name="EraserBtn" xml:space="preserve">
+    <value>Ластик</value>
+  </data>
+  <data name="EraserSizeSlider" xml:space="preserve">
+    <value>Размер Ластика: </value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="ExistingEmail" xml:space="preserve">
+    <value>Пользователь с таким E-Mail-ом уже существует.</value>
+  </data>
+  <data name="ExitAccountBtn" xml:space="preserve">
+    <value>Выйти из Аккаунта</value>
+  </data>
+  <data name="ExitAppMessage" xml:space="preserve">
+    <value>Вы действительно хотите выйти?</value>
+  </data>
+  <data name="GenGraphBtn" xml:space="preserve">
+    <value>Создать граф</value>
+  </data>
+  <data name="GraphFileNotSelected" xml:space="preserve">
+    <value>Не выбран файл для загрузки графа.</value>
+  </data>
+  <data name="GraphGenBtn" xml:space="preserve">
+    <value>Генерация графов</value>
+  </data>
+  <data name="GraphModeChangerBtn" xml:space="preserve">
+    <value>Графы</value>
+  </data>
+  <data name="GraphModeChangerBtnTooltip" xml:space="preserve">
+    <value>Переключить на режим Рисования</value>
+  </data>
+  <data name="GuestAccsNotWork" xml:space="preserve">
+    <value>Гостевые аккаунты пока не поддерживаются.</value>
+  </data>
+  <data name="GuestModeBtn" xml:space="preserve">
+    <value>Продолжить без входа</value>
+  </data>
+  <data name="GuestString" xml:space="preserve">
+    <value>Гость</value>
+  </data>
+  <data name="HasAccountString" xml:space="preserve">
+    <value>Уже есть Аккаунт?</value>
+  </data>
+  <data name="HasConferenceString" xml:space="preserve">
+    <value>Конференция </value>
+  </data>
+  <data name="IncorrectEmailDataTooltip" xml:space="preserve">
+    <value>Введены некорректные данные.
+(Возможно отсутствует символ "@" или символ ".")</value>
+  </data>
+  <data name="InfoString" xml:space="preserve">
+    <value>Для работы с графами, а также общения с пользователями необходимо сначала войти в конференцию или же создать собственную.</value>
+  </data>
   <data name="InterfaceBtn" xml:space="preserve">
     <value>Интерфейс</value>
+  </data>
+  <data name="InterfaceText" xml:space="preserve">
+    <value>Настройки интерфейса</value>
+  </data>
+  <data name="LanguageHint" xml:space="preserve">
+    <value>Выберите язык</value>
+  </data>
+  <data name="LeaveConferenssionBtn" xml:space="preserve">
+    <value>Покинуть Конференцию</value>
+  </data>
+  <data name="LeaveString" xml:space="preserve">
+    <value>Покинуть</value>
   </data>
   <data name="Links" xml:space="preserve">
     <value>Ссылки:</value>
   </data>
+  <data name="LoginString" xml:space="preserve">
+    <value>Введите логин</value>
+  </data>
+  <data name="LoginSucess" xml:space="preserve">
+    <value>Успешный вход</value>
+  </data>
+  <data name="LogoText" xml:space="preserve">
+    <value>Приложение для работы с графами онлайн</value>
+  </data>
+  <data name="MessageBoxLanguageText" xml:space="preserve">
+    <value>Изменения вступят в силу после перезапуска приложения.</value>
+  </data>
   <data name="MyAccountBtn" xml:space="preserve">
-    <value>Мой аккаунт</value>
+    <value>Мой Аккаунт</value>
+  </data>
+  <data name="NoAccount" xml:space="preserve">
+    <value>Нет Аккаунта?</value>
+  </data>
+  <data name="NoConferenceString" xml:space="preserve">
+    <value>Конференция ...</value>
+  </data>
+  <data name="OrientationBtn" xml:space="preserve">
+    <value>Ориентированный?</value>
+  </data>
+  <data name="OwnerString" xml:space="preserve">
+    <value>Владелец: </value>
+  </data>
+  <data name="PaintModeChangerBtn" xml:space="preserve">
+    <value>Рисование</value>
+  </data>
+  <data name="PaintModeChangerBtnTooltip" xml:space="preserve">
+    <value>Переключить на режим Графов</value>
+  </data>
+  <data name="ParticipantsBtn" xml:space="preserve">
+    <value>Участники</value>
+  </data>
+  <data name="ParticipantsString" xml:space="preserve">
+    <value>Участники: </value>
+  </data>
+  <data name="PasswordAndAuth" xml:space="preserve">
+    <value>Пароль и аутентификация</value>
+  </data>
+  <data name="PasswordsDontMatchTooltip" xml:space="preserve">
+    <value>Пароли не совпадают.</value>
+  </data>
+  <data name="PasswordString" xml:space="preserve">
+    <value>Введите пароль</value>
   </data>
   <data name="ProfileSettings" xml:space="preserve">
     <value>Настройки пользователя</value>
   </data>
+  <data name="RandConnGraphBtn" xml:space="preserve">
+    <value>Случ. связный граф</value>
+  </data>
+  <data name="RandTreeBtn" xml:space="preserve">
+    <value>Случайное дерево</value>
+  </data>
+  <data name="RegPageTitile" xml:space="preserve">
+    <value>GraphPAD (Регистрация)</value>
+  </data>
+  <data name="RememberMeCheckBox" xml:space="preserve">
+    <value>Запомнить меня на этом компьютере</value>
+  </data>
+  <data name="ReorderBtn" xml:space="preserve">
+    <value>Упорядочить граф</value>
+  </data>
+  <data name="Russian" xml:space="preserve">
+    <value>Русский</value>
+  </data>
+  <data name="SaveGraphToFileBtnTooltip" xml:space="preserve">
+    <value>Сохранить граф в файл</value>
+  </data>
+  <data name="SaveImageString" xml:space="preserve">
+    <value>Сохранить изображение</value>
+  </data>
+  <data name="SaveToFileBtn" xml:space="preserve">
+    <value>Сохранить в файл</value>
+  </data>
+  <data name="SelectionBtn" xml:space="preserve">
+    <value>Выделение</value>
+  </data>
+  <data name="SendMessageYou" xml:space="preserve">
+    <value>Вы: </value>
+  </data>
   <data name="SettingsTitle" xml:space="preserve">
     <value>Настройки</value>
   </data>
+  <data name="SettingsTooltip" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="ShowAlgorithm" xml:space="preserve">
+    <value>Запустить</value>
+  </data>
+  <data name="ShowAlgorithmTooltip" xml:space="preserve">
+    <value>Запустить выбранный алгоритм</value>
+  </data>
+  <data name="SignUp" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="SmartEraserBtn" xml:space="preserve">
+    <value>Умный Ластик</value>
+  </data>
+  <data name="SomethingWentWrong" xml:space="preserve">
+    <value>Что-то пошло не так.</value>
+  </data>
+  <data name="SuccessPasswordChange" xml:space="preserve">
+    <value>Пароль успешно изменён.</value>
+  </data>
+  <data name="SuccessReg" xml:space="preserve">
+    <value>Регистрация прошла успешно.</value>
+  </data>
+  <data name="SymbolCountString" xml:space="preserve">
+    <value>Символов </value>
+  </data>
+  <data name="TextChatBtn" xml:space="preserve">
+    <value>Текстовый чат</value>
+  </data>
+  <data name="TooShortLoginTooltip" xml:space="preserve">
+    <value>Логин слишком короткий.
+Минимальная длина логина - 5 символов.</value>
+  </data>
+  <data name="TooShortNameTooltip" xml:space="preserve">
+    <value>Имя слишком короткое.
+Минимальная длина имени - 3 символа.</value>
+  </data>
+  <data name="TooShortPassword" xml:space="preserve">
+    <value>Пароль слишком короткий.
+Минимальная длина пароля - 8 символов.</value>
+  </data>
+  <data name="TooShortPasswordTooltip" xml:space="preserve">
+    <value>Пароль слишком короткий.
+Минимальная длина пароля - 8 символов.</value>
+  </data>
+  <data name="UploadGraphBtn" xml:space="preserve">
+    <value>Загрузить граф</value>
+  </data>
+  <data name="UserString" xml:space="preserve">
+    <value>Пользователь</value>
+  </data>
+  <data name="VertexAmountBtn" xml:space="preserve">
+    <value>Кол-во вершин</value>
+  </data>
+  <data name="VideoChatBtn" xml:space="preserve">
+    <value>Видео-чат</value>
+  </data>
+  <data name="VideoOffString" xml:space="preserve">
+    <value>Видео отключено</value>
+  </data>
+  <data name="VideoOffTooltip" xml:space="preserve">
+    <value>Выключить веб-камеру</value>
+  </data>
+  <data name="VideoOnString" xml:space="preserve">
+    <value>Видео подключено</value>
+  </data>
+  <data name="VideoOnTooltip" xml:space="preserve">
+    <value>Включить веб-камеру</value>
+  </data>
+  <data name="Vk" xml:space="preserve">
+    <value>Наш ВК</value>
+  </data>
   <data name="VoiceAndSoundBtn" xml:space="preserve">
     <value>Голос и звук</value>
+  </data>
+  <data name="VoiceChatOffString" xml:space="preserve">
+    <value>Голосовой чат выключен</value>
+  </data>
+  <data name="VoiceChatOffTooltip" xml:space="preserve">
+    <value>Выключить микрофон</value>
+  </data>
+  <data name="VoiceChatOnString" xml:space="preserve">
+    <value>Голосовой чат подключен</value>
+  </data>
+  <data name="VoiceChatOnTooltip" xml:space="preserve">
+    <value>Включить микрофон</value>
+  </data>
+  <data name="WelcomeString" xml:space="preserve">
+    <value>Здравствуйте, </value>
+  </data>
+  <data name="WrongLogOrPassTooltip" xml:space="preserve">
+    <value>Неверный логин или пароль.</value>
+  </data>
+  <data name="YouCannotDeleteThisRoom" xml:space="preserve">
+    <value>Вы не можете удалить чужую конференцию.</value>
+  </data>
+  <data name="YouCannotLeaveThisRoom" xml:space="preserve">
+    <value>Вы не можете покинуть собственную конференцию.</value>
+  </data>
+  <data name="YouDeletedRoom" xml:space="preserve">
+    <value>Вы удалили конференцию </value>
+  </data>
+  <data name="YouLeavedRoom" xml:space="preserve">
+    <value>Вы покинули конференцию </value>
+  </data>
+  <data name="YT" xml:space="preserve">
+    <value>Наш Youtube</value>
   </data>
 </root>

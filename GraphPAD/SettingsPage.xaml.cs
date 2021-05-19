@@ -27,31 +27,41 @@ namespace GraphPAD
         public SettingsPage()
         {
             InitializeComponent();
+            if (Properties.Language.Culture?.Name == "ru-RU" || Properties.Language.Culture == null)
+            {
+                countryFlag.Source = ImageSourceFromBitmap(Properties.Resources.russia);
+            }
+            else
+            {
+                countryFlag.Source = ImageSourceFromBitmap(Properties.Resources.england);
+            }
             DataContext = this;
             AccountCanvasScrollView.Visibility = Visibility.Visible;
             VoiceCanvas.Visibility = Visibility.Hidden;
             InterfaceCanvas.Visibility = Visibility.Hidden;
             SettingsAvatar.Source = NonBlockingLoad(UserInfo.Avatar);
             userNameTextBlock.Text = UserInfo.Name;
-            userRoleTextBlock.Text = "Пользователь";
+            userRoleTextBlock.Text = Properties.Language.UserString;
             nameStingTextBlock.Text = UserInfo.Name;
             IDStingTextBlock.Text = UserInfo.ID;
             emailStingTextBlock.Text = UserInfo.Email;
-            if (UserInfo.Name != null)
+            if (!MainPage.isGuestConnected)
             {
                 userNameTextBlock.Text = UserInfo.Name;
-                userRoleTextBlock.Text = "Пользователь";
+                userRoleTextBlock.Text = Properties.Language.UserString;
                 nameStingTextBlock.Text = UserInfo.Name;
                 IDStingTextBlock.Text = UserInfo.ID;
                 emailStingTextBlock.Text = UserInfo.Email;
             }
             else
             {
-                userNameTextBlock.Text = GuestInfo.Name;
-                userRoleTextBlock.Text = "Гость";
-                nameStingTextBlock.Text = GuestInfo.Name;
+                userNameTextBlock.Text = UserInfo.Name;
+                userRoleTextBlock.Text = Properties.Language.GuestString;
+                nameStingTextBlock.Text = UserInfo.Name;
                 IDStingTextBlock.Text = "...";
                 emailStingTextBlock.Text = "...";
+                ChangePasswordButton.IsEnabled = false;
+                VoiceButton.IsEnabled = false;
             }
         }
         #endregion
@@ -120,12 +130,12 @@ namespace GraphPAD
             string _newPassword = newPasswordBox.Password.Trim();
             if (_newPassword == null || _newPassword == "")
             {
-                newPasswordBox.ToolTip = "Введите новый пароль.";
+                newPasswordBox.ToolTip = Properties.Language.EnterNewPasswordString;
                 newPasswordBox.BorderBrush = Brushes.Red;
             }
             else if (_newPassword.Length < 8)
             {
-                newPasswordBox.ToolTip = "Пароль слишком короткий.\nМинимальная длина пароля - 8 символов.";
+                newPasswordBox.ToolTip = Properties.Language.TooShortPassword;
                 newPasswordBox.BorderBrush = Brushes.Red;
             }
             if (_newPassword.Length >= 8)
@@ -143,7 +153,7 @@ namespace GraphPAD
                 if (response.IsSuccessful)
                 {
                     File.Delete(@"Token.json");
-                    MessageBox.Show("Пароль успешно изменён.", "Сообщение", MessageBoxButton.OK);
+                    MessageBox.Show(Properties.Language.SuccessPasswordChange, Properties.Language.Caption, MessageBoxButton.OK);
                     AccountCanvas.Height = 390;
                     newPasswordBox.Password = null;
                     newPasswordBox.Visibility = Visibility.Hidden;
@@ -151,12 +161,12 @@ namespace GraphPAD
                 }
                 else
                 {
-                    MessageBox.Show("Что-то пошло не так.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Language.SomethingWentWrong, Properties.Language.Error, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
         #endregion
-        #region Mic & Voice Settings
+        #region Voice & Audio Settings
         //aeee
         #endregion
         #region Interface Settings
@@ -168,30 +178,31 @@ namespace GraphPAD
 
         private void ChangeLanguageButton_Click(object sender, RoutedEventArgs e)
         {
-
             if (selectedItem != null)
             {
                 if (selectedItem.Tag.ToString() == "ru")
                 {
-                    GraphPAD.Properties.Language.Culture = new System.Globalization.CultureInfo("ru-RU");
-                    countryFlag.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.russia);
+                    MessageBox.Show(Properties.Language.MessageBoxLanguageText, Properties.Language.Caption, MessageBoxButton.OK, MessageBoxImage.Information);
+                    //Properties.Language.Culture = new System.Globalization.CultureInfo("ru-RU");
+                    File.WriteAllText(@"Language.txt", "ru-RU");
                 }
                 else
                 {
-                    GraphPAD.Properties.Language.Culture = new System.Globalization.CultureInfo("en-US");
-                    countryFlag.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.england);
+                    MessageBox.Show(Properties.Language.MessageBoxLanguageText, Properties.Language.Caption, MessageBoxButton.OK, MessageBoxImage.Information);
+                    //Properties.Language.Culture = new System.Globalization.CultureInfo("en-US");
+                    File.WriteAllText(@"Language.txt", "en-US");
                 }
             }
             else
             {
-                MessageBox.Show("Выберите язык", "Ошибка", MessageBoxButton.OK);
+                MessageBox.Show(Properties.Language.LanguageHint, Properties.Language.Error, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         #endregion
         #region Avatar Changer
         private void AvatarButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            avatarButton.Content = "Изменить";
+            avatarButton.Content = Properties.Language.ChangeLangBtn;
             avatarButton.Opacity = 0.8;
         }
         private void AvatarButton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
@@ -216,7 +227,7 @@ namespace GraphPAD
             dlg.DefaultExt = ".jpg"; // Default file extension
             dlg.Filter = "Image files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png|All files (*.*)|*.*"; // Filter files by extension
             dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            dlg.Title = "Выберите новый аватар";
+            dlg.Title = Properties.Language.ChooseNewAvatar;
             bool? result = dlg.ShowDialog();
             if (result == true && result != null)
             {
@@ -230,7 +241,7 @@ namespace GraphPAD
                 catch (IOException copyError)
                 {
                     Console.WriteLine(copyError.Message);
-                    MessageBox.Show("Что-то пошло не так.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Language.SomethingWentWrong, Properties.Language.Error, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -249,12 +260,12 @@ namespace GraphPAD
         {
 
         }
-        #endregion
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string name)
         {
             if (PropertyChanged != null)
                 PropertyChanged.Invoke(this, new PropertyChangedEventArgs(name));
         }
+        #endregion
     }
 }

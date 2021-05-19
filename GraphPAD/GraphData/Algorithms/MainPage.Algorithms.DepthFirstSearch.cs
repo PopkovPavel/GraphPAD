@@ -18,7 +18,7 @@ namespace GraphPAD
            // if (visited.Find(item => item.Item1 == vertex && item.Item2 == true) != null) return;
             if (flagNegr == true) return;
             test += 1;
-            Dispatcher.Invoke(() => progressBar.Value = 100/(GraphArea.VertexList.Count-test+1));
+            //Dispatcher.Invoke(() => progressBar.Value = 100/(GraphArea.VertexList.Count-test+1));
             if (visited.Find(item => item.Vertex == vertex && item.Visited == false) == null) return; else visited.Find(item => item.Vertex == vertex && item.Visited == false).Visited = true;
             foreach(var vertex1 in GraphArea.EdgesList.Keys) 
             {
