@@ -81,6 +81,7 @@ namespace GraphPAD
         public int lobbyButtonsMargin = -70;
         public int chatCount;
         public int chatTextblockMargin;
+        public static bool isGuestConnected;
         /// <summary>
         /// Имя конференции
         /// </summary>
@@ -171,10 +172,12 @@ namespace GraphPAD
             chatCount = 0;
             lobbyButtonsMargin = 10;
             chatTextblockMargin = 5;
-            voiceChatTextBlock.Text = "Голосовой чат подключен";
-            videoTextBlock.Text = "Видео отключено";
+            voiceChatTextBlock.Text = Properties.Language.VoiceChatOnString;
+            videoTextBlock.Text = Properties.Language.VideoOffString;
             videoTextBlock.Foreground = Brushes.DarkGray;
             desktopPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\image.jpg";
+            animationSpeedButton.ToolTip = Properties.Language.AnimationSpeedBtnTooltip + "1";
+            charCounterTextBlock.Text = Properties.Language.SymbolCountString + "0/200";
             //Выключение всех режимов работы с графами
             isAddVetexOn = false;
             isRemoveVertexOn = false;
@@ -184,7 +187,6 @@ namespace GraphPAD
             isAlgorithmsOn = false;
             isRandomTreeOn = false;
             isRandomConnectedGraphOn = false;
-
             //Выключение всех режимов работы с рисовалкой
             isBrushModeOn = false;
             isEraserModeOn = false;
@@ -194,19 +196,18 @@ namespace GraphPAD
             isFreeModeOn = false;
             //Отключение Кисти при запуске
             PaintCanvas.EditingMode = InkCanvasEditingMode.None;
-            if (UserInfo.Name != null)
+            nameString.Text = UserInfo.Name;
+            if(!isGuestConnected)
             {
-                nameString.Text = UserInfo.Name;
-                userRoleString.Text = "Пользователь";
+                userRoleString.Text = Properties.Language.UserString;
             }
             else
             {
-                nameString.Text = GuestInfo.Name;
-                userRoleString.Text = "Гость";
+                userRoleString.Text = Properties.Language.GuestString;
             }
-            conferenssionString.Text = "Конференция ...";
+            conferenssionString.Text = Properties.Language.NoConferenceString;
 
-            //debug
+            //Скрытие лишних элементов главного окна
             ZoomCtrl.Visibility = Visibility.Hidden;
             PaintCanvasScroll.Visibility = Visibility.Hidden;
             GraphControlCanvas.Visibility = Visibility.Hidden;
@@ -238,11 +239,16 @@ namespace GraphPAD
 
                 }
             };
-            RefreshRooms();
+            if (!isGuestConnected)
+            {
+                RefreshRooms();
+            }
+            else
+            {
+                CreateLobbyButton.IsEnabled = false;
+            }
             ButtonsFix();
         }
-
-
         #endregion
         #region GraphArea Functions
         private void ZoomCtrl_MouseUp(object sender, MouseButtonEventArgs e)
@@ -521,12 +527,13 @@ namespace GraphPAD
             randomConnectedGraphButton.Visibility = Visibility.Hidden;
             vertexAmountTextBox.Visibility = Visibility.Hidden;
             edgesAmountTextBox.Visibility = Visibility.Hidden;
+            orientedGraphCheckbox.Visibility = Visibility.Hidden;
             downloadGraphButton.Visibility = Visibility.Hidden;
             createGraphButton.Visibility = Visibility.Hidden;
             animationSpeedButton.Visibility = Visibility.Hidden;
             showAnimatonButton.Visibility = Visibility.Hidden;
             algorithmsComboBox.Visibility = Visibility.Hidden;
-            currentGraphMode.Text = "Текущий режим: Перемещение";
+            currentGraphMode.Text = Properties.Language.CurrentModeMove;
             //PaintButtons Fix
             isBrushModeOn = false;
             isEraserModeOn = false;
@@ -548,11 +555,13 @@ namespace GraphPAD
             EraserButton.Visibility = Visibility.Visible;
             Eraser_SmartButton.Visibility = Visibility.Visible;
             SaveToFileButton.Visibility = Visibility.Visible;
+            ClearCanvasButton.Visibility = Visibility.Visible;
+            SelectionButton.Visibility = Visibility.Visible;
             EraserSlider.Visibility = Visibility.Hidden;
             EraserTextBlock.Visibility = Visibility.Hidden;
             BrushSlider.Visibility = Visibility.Hidden;
             BrushTextBlock.Visibility = Visibility.Hidden;
-            currentPaintMode.Text = "Текущий режим: Курсор";
+            currentPaintMode.Text = Properties.Language.CurrentModeCursor;
             //Menu Fix
             CancelCreateLobbyButton.Visibility = Visibility.Hidden;
             ConfirmCreateLobbyButton.Visibility = Visibility.Hidden;
@@ -590,7 +599,7 @@ namespace GraphPAD
                             LobbysCanvas.Height = LobbysCanvas.Height + 70;
                             //LobbysScrollView.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
                         }
-                        ConferensionsCountTextBlock.Text = "Конференций: " + (lobbyCount);
+                        ConferensionsCountTextBlock.Text = Properties.Language.ConferencesCount + (lobbyCount);
 
                         //Первый элемент контекстного меню
                         var menuCopyItem = new MenuItem()
@@ -605,8 +614,8 @@ namespace GraphPAD
                             Padding = new Thickness(10, 0, 0, 0),
                             Height = 40,
                             Width = 190,
-                            Header = "Скопировать ID",
-                            ToolTip = "Скопировать ID конференции в буфер"
+                            Header = Properties.Language.CopyIDBtn,
+                            ToolTip = Properties.Language.CopyIDBtn
                         };
                         var contextMenu = new ContextMenu()
                         {
@@ -618,7 +627,7 @@ namespace GraphPAD
                         {
                             //Копирование текста в буфер обмена
                             Clipboard.SetData(DataFormats.Text, (Object)room.RoomID);
-                            MessageBox.Show("ID скопирован", "Сообщение");
+                            MessageBox.Show(Properties.Language.CopyIDMessage, Properties.Language.Caption);
                         };
                         if (room.RoomOwner.Id != UserInfo.ID)
                         {
@@ -635,8 +644,8 @@ namespace GraphPAD
                                 Padding = new Thickness(10, 0, 0, 0),
                                 Height = 40,
                                 Width = 190,
-                                Header = "Покинуть конференцию",
-                                ToolTip = "Покинуть конференцию"
+                                Header = Properties.Language.LeaveConferenssionBtn,
+                                ToolTip = Properties.Language.LeaveConferenssionBtn
                             };
                             menuLeaveItem.Click += (s, ea) =>
                             {
@@ -659,8 +668,8 @@ namespace GraphPAD
                                 Padding = new Thickness(10, 0, 0, 0),
                                 Height = 40,
                                 Width = 190,
-                                Header = "Удалить конференцию",
-                                ToolTip = "Удалить конференцию"
+                                Header = Properties.Language.DeleteConferenssionBtn,
+                                ToolTip = Properties.Language.DeleteConferenssionBtn
                             };
                             menuDeleteItem.Click += (s, ea) =>
                             {
@@ -707,12 +716,12 @@ namespace GraphPAD
                 }
                 else
                 {
-                    MessageBox.Show("Что-то пошло не так.", "Ошибка");
+                    MessageBox.Show(Properties.Language.SomethingWentWrong, Properties.Language.Error);
                 }
             }
             catch
             {
-                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
+                MessageBox.Show(Properties.Language.SomethingWentWrong, Properties.Language.Error);
 
             }
         }
@@ -727,17 +736,17 @@ namespace GraphPAD
                 RestSharp.IRestResponse response = client.Execute(request);
                 if (response.IsSuccessful)
                 {
-                    MessageBox.Show($"Вы покинули конференцию \"{roomName}\"", "Сообщение");
+                    MessageBox.Show(Properties.Language.YouLeavedRoom + $"\"{roomName}\"", Properties.Language.Caption);
                     RefreshRooms();
                 }
                 else
                 {
-                    MessageBox.Show("Вы не можете покинуть собственную комнату", "Ошибка");
+                    MessageBox.Show(Properties.Language.YouCannotLeaveThisRoom, Properties.Language.Error);
                 }
             }
             catch
             {
-                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
+                MessageBox.Show(Properties.Language.SomethingWentWrong, Properties.Language.Error);
 
             }
         }
@@ -752,36 +761,39 @@ namespace GraphPAD
                 RestSharp.IRestResponse response = client.Execute(request);
                 if (response.IsSuccessful)
                 {
-                    MessageBox.Show($"Вы удалили конференцию \"{roomName}\"", "Сообщение");
+                    MessageBox.Show(Properties.Language.YouDeletedRoom + $"\"{roomName}\"", Properties.Language.Caption);
                     RefreshRooms();
                 }
                 else
                 {
-                    MessageBox.Show("Вы не можете удалить чужую комнату", "Ошибка");
+                    MessageBox.Show(Properties.Language.YouCannotDeleteThisRoom, Properties.Language.Error);
                 }
             }
             catch
             {
-                MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
+                MessageBox.Show(Properties.Language.SomethingWentWrong, Properties.Language.Error);
 
             }
         }
         public Tuple<JSONroomuser[], JSONroomuser> GetUsers(string roomId)
         {
-            var client = new RestSharp.RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}");
-            client.Timeout = -1;
-            var request = new RestSharp.RestRequest(RestSharp.Method.GET);
-            request.AddHeader("x-access-token", UserInfo.Token);
-            RestSharp.IRestResponse response = client.Execute(request);
-            if (response.IsSuccessful)
+            if (!isGuestConnected)
             {
-                JSONroom room = Newtonsoft.Json.JsonConvert.DeserializeObject<JSONroom>(response.Content.ToString());
-                Console.WriteLine(room.Data.Users.ToString());
-                return Tuple.Create(room.Data.Users, room.Data.RoomOwner);
+                var client = new RestSharp.RestClient($"https://testingwebrtc.herokuapp.com/room/{roomId}");
+                client.Timeout = -1;
+                var request = new RestSharp.RestRequest(RestSharp.Method.GET);
+                request.AddHeader("x-access-token", UserInfo.Token);
+                RestSharp.IRestResponse response = client.Execute(request);
+                if (response.IsSuccessful)
+                {
+                    JSONroom room = Newtonsoft.Json.JsonConvert.DeserializeObject<JSONroom>(response.Content.ToString());
+                    return Tuple.Create(room.Data.Users, room.Data.RoomOwner);
+                }
+                return null;
             }
             return null;
         }
-        private void ChangeImage(string path, Button btn) //Функция для смены изображений в кнопке
+        private void ChangeImage(string path, Button btn)
         {
             Uri resourceUri = new Uri(path, UriKind.Relative);
             System.Windows.Resources.StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
@@ -794,13 +806,10 @@ namespace GraphPAD
         #region Menu Enter Lobby
         private void EnterLobby_Click(object sender, RoutedEventArgs e)
         {
-            if (UserInfo.Email != null)
-            {
-                CreateLobbyButton.Visibility = Visibility.Hidden;
-                ConferensionIDTextBox.Visibility = Visibility.Visible;
-                CancelEnterLobbyButton.Visibility = Visibility.Visible;
-                ConfirmEnterLobbyButton.Visibility = Visibility.Visible;
-            }
+            CreateLobbyButton.Visibility = Visibility.Hidden;
+            ConferensionIDTextBox.Visibility = Visibility.Visible;
+            CancelEnterLobbyButton.Visibility = Visibility.Visible;
+            ConfirmEnterLobbyButton.Visibility = Visibility.Visible;
         }
         private void CancelEnterLobby_Click(object sender, RoutedEventArgs e)
         {
@@ -814,38 +823,51 @@ namespace GraphPAD
         }
         private void ConfirmEnterLobby_Click(object sender, RoutedEventArgs e)
         {
-            string _conferensionID = ConferensionIDTextBox.Text.Trim().ToLower(); //Trim() - Удаление лишних пробелов
+
+            string _conferensionID = ConferensionIDTextBox.Text.Trim().ToLower();
             if (_conferensionID == "")
             {
-                ConferensionIDTextBox.ToolTip = "Введите ID конференции";
+                ConferensionIDTextBox.ToolTip = Properties.Language.EnterConferenssionIDTooltip;
                 ConferensionIDTextBox.BorderBrush = Brushes.Red;
             }
             else
             {
-                try
+                if (!isGuestConnected)
                 {
-                    var client = new RestSharp.RestClient("https://testingwebrtc.herokuapp.com/room/" + _conferensionID + "/join");
-                    client.Timeout = -1;
-                    var request = new RestSharp.RestRequest(RestSharp.Method.POST);
-                    request.AddHeader("x-access-token", UserInfo.Token);
-                    RestSharp.IRestResponse response = client.Execute(request);
-                    if (response.IsSuccessful)
+                    try
                     {
-                        MessageBox.Show("Вы успешно вошли в конференцию.\nЕё ID: " + _conferensionID + "\nЧтобы подкючиться к конференции выберите её в списке слева.", "Сообщение");
-                        ConferensionIDTextBox.Text = "";
-                        ConferensionIDTextBox.BorderBrush = Brushes.Transparent;
-                        ConferensionIDTextBox.ToolTip = null;
-                        RefreshRooms();
+                        var client = new RestSharp.RestClient("https://testingwebrtc.herokuapp.com/room/" + _conferensionID + "/join");
+                        client.Timeout = -1;
+                        var request = new RestSharp.RestRequest(RestSharp.Method.POST);
+                        request.AddHeader("x-access-token", UserInfo.Token);
+                        RestSharp.IRestResponse response = client.Execute(request);
+                        if (response.IsSuccessful)
+                        {
+                            MessageBox.Show(Properties.Language.EnterConferenssionMessage1 + _conferensionID + "\n" + Properties.Language.EnterConferenssionMessage2, Properties.Language.Caption);
+                            ConferensionIDTextBox.Text = "";
+                            ConferensionIDTextBox.BorderBrush = Brushes.Transparent;
+                            ConferensionIDTextBox.ToolTip = null;
+                            RefreshRooms();
+                        }
+                        else
+                        {
+                            MessageBox.Show(Properties.Language.EnterConferenssionErrorMessage, Properties.Language.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
-                    else
+                    catch
                     {
-                        MessageBox.Show("Возможно такой конференции не существует, либо она уже была добавлена", "Ошибка");
+                        MessageBox.Show(Properties.Language.SomethingWentWrong, Properties.Language.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+
                     }
                 }
-                catch
+                else
                 {
-                    MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
-
+                    //MessageBox.Show(Properties.Language.EnterConferenssionMessage1 + _conferensionID + "\n" + Properties.Language.EnterConferenssionMessage2, Properties.Language.Caption);
+                    ConferensionIDTextBox.Text = "";
+                    ConferensionIDTextBox.BorderBrush = Brushes.Transparent;
+                    ConferensionIDTextBox.ToolTip = null;
+                    //ez
+                    LobbyEnter_ClickAsync(_conferensionID, "");
                 }
             }
         }
@@ -871,14 +893,14 @@ namespace GraphPAD
         private void ConfirmCreateLobby_Click(object sender, RoutedEventArgs e)
         {
             ConferensionName = NewConferensionNameTextBox.Text;
-            string _newConferensionName = NewConferensionNameTextBox.Text.Trim().ToLower(); //Trim() - Удаление лишних пробелов
+            string _newConferensionName = NewConferensionNameTextBox.Text.Trim().ToLower();
             if (_newConferensionName == "")
             {
-                NewConferensionNameTextBox.ToolTip = "Введите название конференции";
+                NewConferensionNameTextBox.ToolTip = Properties.Language.EnterConferenssionNameTooltip;
                 NewConferensionNameTextBox.BorderBrush = Brushes.Red;
             }
             else
-            if (MessageBox.Show(this, $"Создать новую конференцию?\nНазвание конференции: {ConferensionName}", "Подтверждение", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            if (MessageBox.Show(this, Properties.Language.ConfirmationMessage + ConferensionName, Properties.Language.Confirmation, MessageBoxButton.YesNo) != MessageBoxResult.Yes)
             {
                 //pass
             }
@@ -897,7 +919,7 @@ namespace GraphPAD
                         JSONroom room = Newtonsoft.Json.JsonConvert.DeserializeObject<JSONroom>(response.Content.ToString());
                         var newRoomID = room.Data.RoomID;
                         var newRoomName = room.Data.RoomName;
-                        MessageBox.Show($"Вы успешно создали конференцию\nНазвание: {newRoomName}\nID: {newRoomID}", "Сообщение");
+                        MessageBox.Show(Properties.Language.CreateConferenssionMessage + newRoomName + $"\nID: {newRoomID}", Properties.Language.Caption, MessageBoxButton.OK, MessageBoxImage.Information);
                         NewConferensionNameTextBox.Text = "";
                         NewConferensionNameTextBox.BorderBrush = Brushes.Transparent;
                         NewConferensionNameTextBox.ToolTip = null;
@@ -912,12 +934,12 @@ namespace GraphPAD
                     }
                     else
                     {
-                        MessageBox.Show("Что-то пошло не так.", "Ошибка");
+                        MessageBox.Show(Properties.Language.SomethingWentWrong, Properties.Language.Error);
                     }
                 }
                 catch
                 {
-                    MessageBox.Show("Что-то пошло не так. Сообщите об этом администратору ribalko2006@mail.ru", "Ошибка");
+                    MessageBox.Show(Properties.Language.SomethingWentWrong, Properties.Language.Error);
                 }
             }
         }
@@ -943,12 +965,12 @@ namespace GraphPAD
             infoTextBlock.Visibility = Visibility.Hidden;
             //Нижнее-левое поле управления
             leaveButton.Visibility = Visibility.Visible;
-            conferenssionString.Text = $"Конференция \"{roomName}\"";
+            conferenssionString.Text = Properties.Language.HasConferenceString + $"\"{roomName}\"";
             //Правая часть окна
             chatGrid.Visibility = Visibility.Visible;
             VideoChatCanvas.Children.Add(camera);
             ConferensionString.Visibility = Visibility.Visible;
-            ConferensionString.Text = $"Чат конференции \"{roomName}\"";
+            ConferensionString.Text = Properties.Language.ConferenceChatString + $"\"{roomName}\"";
             VideoString.Visibility = Visibility.Hidden;
             ParticipantsString.Visibility = Visibility.Hidden;
             //Главное меню
@@ -966,12 +988,15 @@ namespace GraphPAD
             //Отображение участников конференции
             int participants = 0;
             var temp = GetUsers(roomId);
-            ParticipantsBox.AppendText($"Владелец: {temp.Item2.Name}\n\nУчастники:\n");
-            if (temp.Item1 != null)
+            ParticipantsBox.AppendText(Properties.Language.OwnerString + temp?.Item2.Name + "\n\n" + Properties.Language.ParticipantsString + "\n");
+            if (temp?.Item1 != null || isGuestConnected == true)
             {
-                foreach (JSONroomuser participant in temp.Item1)
+                if (!isGuestConnected)
                 {
-                    ParticipantsBox.AppendText($"#{++participants}: {participant.Name}\n");
+                    foreach (JSONroomuser participant in temp.Item1)
+                    {
+                        ParticipantsBox.AppendText($"#{++participants}: {participant.Name}\n");
+                    }
                 }
                 try
                 {
@@ -995,9 +1020,6 @@ namespace GraphPAD
                             Color = stroke2[0].Color,
                             FitToCurve = true
                         };
-                        //MessageBox.Show(stroke2[0].Color.ToString() +"jopa", "");
-                        //MessageBox.Show(stroke2[0].Width.ToString(), "");
-                        //MessageBox.Show(stroke2[0].StrokeArray.ToString(), "");
                         var stroke = new System.Windows.Ink.Stroke(stroke2[0].StrokeArray, drawingAttributes);
 
                         await Dispatcher.BeginInvoke((Action)(() => PaintCanvas.Strokes.Add(stroke))); 
@@ -1005,6 +1027,10 @@ namespace GraphPAD
                     chatTextBox.IsReadOnly = (SocketConnector.IsConnected) ? false : true;
                 }
                 catch { }
+            }
+            else
+            {
+                MessageBox.Show("negri");
             }
             ButtonsFix();
             GraphArea.ClearLayout();
@@ -1017,7 +1043,7 @@ namespace GraphPAD
             await SocketConnector.Disconnect();
             chatTextBox.IsReadOnly = !SocketConnector.IsConnected;
             //Изменения интерфейса до состояния в момент запуска
-
+            GraphArea.ClearLayout();
             //Список конференций в левой части окна
             LobbysCanvas.Visibility = Visibility.Visible;
             //Главные поля и панели для работы
@@ -1033,7 +1059,7 @@ namespace GraphPAD
             PaintControlCanvas.Visibility = Visibility.Hidden;
             PaintModeChangerButton.Visibility = Visibility.Hidden;
             //Нижнее-левое поле управления
-            conferenssionString.Text = "Конференция ...";
+            conferenssionString.Text = Properties.Language.NoConferenceString;
             leaveButton.Visibility = Visibility.Hidden;
             //Очистить и скрыть правую часть окна
             chatGrid.Visibility = Visibility.Hidden;
@@ -1073,10 +1099,10 @@ namespace GraphPAD
             ChatsScrollView.Visibility = Visibility.Visible;
             VideosScrollView.Visibility = Visibility.Hidden;
             ParticipantsScrollView.Visibility = Visibility.Hidden;
-            //Отображение элементов чата внизу
-            chatTextBox.Visibility = Visibility.Visible;
-            charCounterTextBlock.Visibility = Visibility.Visible;
-            sendButton.Visibility = Visibility.Visible;
+            ////Отображение элементов чата внизу
+            //chatTextBox.Visibility = Visibility.Visible;
+            //charCounterTextBlock.Visibility = Visibility.Visible;
+            //sendButton.Visibility = Visibility.Visible;
         }
         private void VideoChatButton_Clicked(object sender, RoutedEventArgs e)
         {
@@ -1092,10 +1118,10 @@ namespace GraphPAD
             ChatsScrollView.Visibility = Visibility.Hidden;
             VideosScrollView.Visibility = Visibility.Visible;
             ParticipantsScrollView.Visibility = Visibility.Hidden;
-            //Отображение элементов чата внизу
-            chatTextBox.Visibility = Visibility.Hidden;
-            charCounterTextBlock.Visibility = Visibility.Hidden;
-            sendButton.Visibility = Visibility.Hidden;
+            ////Отображение элементов чата внизу
+            //chatTextBox.Visibility = Visibility.Hidden;
+            //charCounterTextBlock.Visibility = Visibility.Hidden;
+            //sendButton.Visibility = Visibility.Hidden;
         }
         private void ParticipantsButton_Clicked(object sender, RoutedEventArgs e)
         {
@@ -1111,10 +1137,10 @@ namespace GraphPAD
             ChatsScrollView.Visibility = Visibility.Hidden;
             VideosScrollView.Visibility = Visibility.Hidden;
             ParticipantsScrollView.Visibility = Visibility.Visible;
-            //Отображение элементов чата внизу
-            chatTextBox.Visibility = Visibility.Hidden;
-            charCounterTextBlock.Visibility = Visibility.Hidden;
-            sendButton.Visibility = Visibility.Hidden;
+            ////Отображение элементов чата внизу
+            //chatTextBox.Visibility = Visibility.Hidden;
+            //charCounterTextBlock.Visibility = Visibility.Hidden;
+            //sendButton.Visibility = Visibility.Hidden;
         }
         #endregion
         #region Microphone
@@ -1124,23 +1150,23 @@ namespace GraphPAD
             {
                 var path = "Resources/microphone_off.png";
                 ChangeImage(path, micButton);
-                voiceChatTextBlock.Text = "Голосовой чат выключен";
+                voiceChatTextBlock.Text = Properties.Language.VoiceChatOffString;
                 voiceChatTextBlock.Foreground = Brushes.Red;
-                micButton.ToolTip = "Вкл. микрофон";
+                micButton.ToolTip = Properties.Language.VoiceChatOnTooltip;
                 isMicOn = false;
             }
             else
             {
                 var path = "Resources/microphone_on.png";
                 ChangeImage(path, micButton);
-                voiceChatTextBlock.Text = "Голосовой чат подключен";
+                voiceChatTextBlock.Text = Properties.Language.VoiceChatOnString;
                 voiceChatTextBlock.Foreground = greenbrush;
-                micButton.ToolTip = "Выкл. микрофон";
+                micButton.ToolTip = Properties.Language.VoiceChatOffTooltip;
                 isMicOn = true;
 
                 path = "Resources/headphones_on.png";
                 ChangeImage(path, headphonesButton);
-                headphonesButton.ToolTip = "Выкл. звук";
+                headphonesButton.ToolTip = Properties.Language.AudioOffTooltip;
                 isHeadPhonesOn = true;
             }
         }
@@ -1152,7 +1178,7 @@ namespace GraphPAD
             {
                 var path = "Resources/headphones_off.png";
                 ChangeImage(path, headphonesButton);
-                headphonesButton.ToolTip = "Вкл. звук";
+                headphonesButton.ToolTip = Properties.Language.AudioOnTooltip;
                 isHeadPhonesOn = false;
 
                 if (isMicOn)
@@ -1165,23 +1191,23 @@ namespace GraphPAD
                 }
                 path = "Resources/microphone_off.png";
                 ChangeImage(path, micButton);
-                voiceChatTextBlock.Text = "Голосовой чат выключен";
+                voiceChatTextBlock.Text = Properties.Language.VoiceChatOffString;
                 voiceChatTextBlock.Foreground = Brushes.Red;
-                micButton.ToolTip = "Вкл. микрофон";
+                micButton.ToolTip = Properties.Language.VoiceChatOnTooltip;
             }
             else
             {
                 var path = "Resources/headphones_on.png";
                 ChangeImage(path, headphonesButton);
-                headphonesButton.ToolTip = "Выкл. звук";
+                headphonesButton.ToolTip = Properties.Language.AudioOffTooltip;
                 isHeadPhonesOn = true;
                 if (!_flag)
                 {
                     path = "Resources/microphone_on.png";
                     ChangeImage(path, micButton);
-                    voiceChatTextBlock.Text = "Голосовой чат подключен";
+                    voiceChatTextBlock.Text = Properties.Language.VoiceChatOnString;
                     voiceChatTextBlock.Foreground = greenbrush;
-                    micButton.ToolTip = "Выкл. микрофон";
+                    micButton.ToolTip = Properties.Language.VoiceChatOffTooltip;
                     isMicOn = true;
                 }
                 else
@@ -1200,17 +1226,17 @@ namespace GraphPAD
             if (isVideoOn)
             {
                 //Веб-камера выключена
-                videoTextBlock.Text = "Видео отключено";
+                videoTextBlock.Text = Properties.Language.VideoOffString;
                 videoTextBlock.Foreground = Brushes.DarkGray;
-                videoButton.ToolTip = "Вкл. камеру";
+                videoButton.ToolTip = Properties.Language.VideoOnTooltip;
                 isVideoOn = false;
             }
             else
             {
                 //Веб-камера включена
-                videoTextBlock.Text = "Видео подключено";
+                videoTextBlock.Text = Properties.Language.VideoOnString;
                 videoTextBlock.Foreground = greenbrush;
-                videoButton.ToolTip = "Выкл. камеру";
+                videoButton.ToolTip = Properties.Language.VideoOffTooltip;
                 isVideoOn = true;
             }
         }
@@ -1264,7 +1290,6 @@ namespace GraphPAD
         {
             if (!isAddVetexOn)
             {
-                //function = AddVertex;
                 deleteVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
@@ -1272,9 +1297,9 @@ namespace GraphPAD
                 reorderGraph.Visibility = Visibility.Hidden;
                 edgesWeightTextBox.Visibility = Visibility.Visible;
                 orientedCheckbox.Visibility = Visibility.Visible;
-                currentGraphMode.Text = "Текущий режим: Создание";
+                currentGraphMode.Text = Properties.Language.CurrentModeCreate;
                 isAddVetexOn = true;
-                addVertexBtn.ToolTip = "Выключить режим добавления вершин";
+                addVertexBtn.ToolTip = Properties.Language.CurrentModeCreateOffTooltip;
 
                 ZoomCtrl.Cursor = Cursors.Pen;
                 _opMode = EditorOperationMode.Edit;
@@ -1282,7 +1307,6 @@ namespace GraphPAD
             }
             else
             {
-                //function = null;
                 deleteVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
@@ -1290,9 +1314,9 @@ namespace GraphPAD
                 reorderGraph.Visibility = Visibility.Visible;
                 edgesWeightTextBox.Visibility = Visibility.Hidden;
                 orientedCheckbox.Visibility = Visibility.Hidden;
-                currentGraphMode.Text = "Текущий режим: Перемещение";
+                currentGraphMode.Text = Properties.Language.CurrentModeMove;
                 isAddVetexOn = false;
-                addVertexBtn.ToolTip = "Включить режим добавления вершин";
+                addVertexBtn.ToolTip = Properties.Language.CurrentModeCreateOnTooltip;
 
                 ZoomCtrl.Cursor = Cursors.Hand;
                 _opMode = EditorOperationMode.Select;
@@ -1311,9 +1335,9 @@ namespace GraphPAD
                 addVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
-                currentGraphMode.Text = "Текущий режим: Удаление";
+                currentGraphMode.Text = Properties.Language.CurrentModeDelete;
                 isRemoveVertexOn = true;
-                deleteVertexBtn.ToolTip = "Выключить режим удаления вершин";
+                deleteVertexBtn.ToolTip = Properties.Language.CurrentModeDeleteOffTooltip;
 
                 ZoomCtrl.Cursor = Cursors.Help;
                 _opMode = EditorOperationMode.Delete;
@@ -1327,9 +1351,9 @@ namespace GraphPAD
                 addVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
-                currentGraphMode.Text = "Текущий режим: Перемещение";
+                currentGraphMode.Text = Properties.Language.CurrentModeMove;
                 isRemoveVertexOn = false;
-                deleteVertexBtn.ToolTip = "Включить режим удаления вершин";
+                deleteVertexBtn.ToolTip = Properties.Language.CurrentModeDeleteOnTooltip;
                 ZoomCtrl.Cursor = Cursors.Hand;
                 _opMode = EditorOperationMode.Select;
                 GraphArea.SetVerticesDrag(true, true);
@@ -1351,9 +1375,9 @@ namespace GraphPAD
                 randomConnectedGraphButton.Visibility = Visibility.Visible;
                 downloadGraphButton.Visibility = Visibility.Visible;
                 createGraphButton.Visibility = Visibility.Hidden;
-                currentGraphMode.Text = "Текущий режим: Генерация графов";
+                currentGraphMode.Text = Properties.Language.CurrentModeGraphGen;
                 isGraphGeneratorOn = true;
-                graphGeneratorBtn.ToolTip = "Вылючить режим генерации графов";
+                graphGeneratorBtn.ToolTip = Properties.Language.CurrentModeGraphGenOffTooltip;
             }
             else
             {
@@ -1366,9 +1390,9 @@ namespace GraphPAD
                 randomConnectedGraphButton.Visibility = Visibility.Hidden;
                 downloadGraphButton.Visibility = Visibility.Hidden;
                 createGraphButton.Visibility = Visibility.Hidden;
-                currentGraphMode.Text = "Текущий режим: Перемещение";
+                currentGraphMode.Text = Properties.Language.CurrentModeMove;
                 isGraphGeneratorOn = false;
-                graphGeneratorBtn.ToolTip = "Включить режим генерации графов";
+                graphGeneratorBtn.ToolTip = Properties.Language.CurrentModeGraphGenOnTooltip;
             }
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGray ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGray;
@@ -1386,9 +1410,9 @@ namespace GraphPAD
                 animationSpeedButton.Visibility = Visibility.Visible;
                 showAnimatonButton.Visibility = Visibility.Visible;
                 algorithmsComboBox.Visibility = Visibility.Visible;
-                currentGraphMode.Text = "Текущий режим: Алгоритмы";
+                currentGraphMode.Text = Properties.Language.CurrentModeAlgorithms;
                 isAlgorithmsOn = true;
-                algorithmsBtn.ToolTip = "Выключить режим алгоритмов";
+                algorithmsBtn.ToolTip = Properties.Language.CurrentModeAlgorithmsOffTooltip;
                 _opMode = EditorOperationMode.Algorithm;
                 GraphArea.SetVerticesDrag(false);
                 flagNegr = false;
@@ -1405,9 +1429,9 @@ namespace GraphPAD
                 animationSpeedButton.Visibility = Visibility.Hidden;
                 showAnimatonButton.Visibility = Visibility.Hidden;
                 algorithmsComboBox.Visibility = Visibility.Hidden;
-                currentGraphMode.Text = "Текущий режим: Перемещение";
+                currentGraphMode.Text = Properties.Language.CurrentModeMove;
                 isAlgorithmsOn = false;
-                algorithmsBtn.ToolTip = "Включить режим алгоритмов";
+                algorithmsBtn.ToolTip = Properties.Language.CurrentModeAlgorithmsOnTooltip;
                 //DrawAlgorithm();
                 GraphArea.SetVerticesDrag(true);
             }
@@ -1418,27 +1442,29 @@ namespace GraphPAD
         {
             if (!isRandomTreeOn)
             {
+                orientedGraphCheckbox.Visibility = Visibility.Visible;
                 randomConnectedGraphButton.IsEnabled = false;
                 vertexAmountTextBox.Visibility = Visibility.Visible;
                 edgesAmountTextBox.Visibility = Visibility.Hidden;
                 graphGeneratorBtn.IsEnabled = false;
                 downloadGraphButton.Visibility = Visibility.Hidden;
                 createGraphButton.Visibility = Visibility.Visible;
-                currentGraphMode.Text = "Текущий режим: Случайное дерево";
+                currentGraphMode.Text = Properties.Language.CurrentModeRandTree;
                 isRandomTreeOn = true;
-                randomTreeButton.ToolTip = "Выключить генерацию случайного дерева";
+                randomTreeButton.ToolTip = Properties.Language.CurrentModeRandTreeOffTooltip;
             }
             else
             {
+                orientedGraphCheckbox.Visibility = Visibility.Hidden;
                 randomConnectedGraphButton.IsEnabled = true;
                 vertexAmountTextBox.Visibility = Visibility.Hidden;
                 edgesAmountTextBox.Visibility = Visibility.Hidden;
                 graphGeneratorBtn.IsEnabled = true;
                 downloadGraphButton.Visibility = Visibility.Visible;
                 createGraphButton.Visibility = Visibility.Hidden;
-                currentGraphMode.Text = "Текущий режим: Генерация графов";
+                currentGraphMode.Text = Properties.Language.CurrentModeGraphGen;
                 isRandomTreeOn = false;
-                randomTreeButton.ToolTip = "Включить генерацию случайного дерева";
+                randomTreeButton.ToolTip = Properties.Language.CurrentModeRandTreeOnTooltip;
             }
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGreen ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGreen;
@@ -1447,27 +1473,29 @@ namespace GraphPAD
         {
             if (!isRandomConnectedGraphOn)
             {
+                orientedGraphCheckbox.Visibility = Visibility.Visible;
                 randomTreeButton.IsEnabled = false;
                 vertexAmountTextBox.Visibility = Visibility.Visible;
                 edgesAmountTextBox.Visibility = Visibility.Visible;
                 graphGeneratorBtn.IsEnabled = false;
                 downloadGraphButton.Visibility = Visibility.Hidden;
                 createGraphButton.Visibility = Visibility.Visible;
-                currentGraphMode.Text = "Текущий режим: Случайный сввязный граф";
+                currentGraphMode.Text = Properties.Language.CurrentModeRandConnGraph;
                 isRandomConnectedGraphOn = true;
-                randomConnectedGraphButton.ToolTip = "Выключить генерацию случайного связного графа";
+                randomConnectedGraphButton.ToolTip = Properties.Language.CurrentModeRandConnGraphOffTooltip;
             }
             else
             {
+                orientedGraphCheckbox.Visibility = Visibility.Hidden;
                 randomTreeButton.IsEnabled = true;
                 vertexAmountTextBox.Visibility = Visibility.Hidden;
                 edgesAmountTextBox.Visibility = Visibility.Hidden;
                 graphGeneratorBtn.IsEnabled = true;
                 downloadGraphButton.Visibility = Visibility.Visible;
                 createGraphButton.Visibility = Visibility.Hidden;
-                currentGraphMode.Text = "Текущий режим: Генерация графов";
+                currentGraphMode.Text = Properties.Language.CurrentModeGraphGen;
                 isRandomConnectedGraphOn = false;
-                randomConnectedGraphButton.ToolTip = "Включить генерацию случайного связного графа";
+                randomConnectedGraphButton.ToolTip = Properties.Language.CurrentModeRandConnGraphOnTooltip;
             }
             Button btn = sender as Button;
             btn.Background = btn.Background == Brushes.DarkGreen ? (SolidColorBrush)(new BrushConverter().ConvertFrom("#00000000")) : Brushes.DarkGreen;
@@ -1539,11 +1567,11 @@ namespace GraphPAD
                     Data2D = (int[,])(ReadGraphFromFile(filename)).Clone();
                 }
                 else
-                    throw new Exception("Не выбран файл для загрузки графа!");
+                    throw new Exception(Properties.Language.GraphFileNotSelected);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка!");
+                MessageBox.Show(ex.Message, Properties.Language.Error);
             }
             if (Data2D.Length > 1)
             {
@@ -1571,7 +1599,7 @@ namespace GraphPAD
             edgesAmountTextBox.SelectionStart = edgesAmountTextBox.Text.Length;
         }
         #endregion
-        #region random graph
+        #region Random graph
         private void createGraphButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -1660,7 +1688,7 @@ namespace GraphPAD
                             }
                             else
                             {
-                                MessageBox.Show("Количество ребер не должно быть меньше N-1, количество ребер не должно быть больше N(N-1)/2", "Сообщение");
+                                MessageBox.Show(Properties.Language.EdgesCountErrorMessage, Properties.Language.Caption);
                             }
                             break;
                         }
@@ -1689,7 +1717,7 @@ namespace GraphPAD
 
                             } else
                             {
-                                MessageBox.Show("Введено некорректное количество вершин", "Сообщение");
+                                MessageBox.Show(Properties.Language.EdgesCountMessage, Properties.Language.Caption);
                             }
                             break;
                         }
@@ -1746,7 +1774,7 @@ namespace GraphPAD
             var brushSize = BrushSlider.Value;
             PaintCanvas.DefaultDrawingAttributes.Width = brushSize;
             PaintCanvas.DefaultDrawingAttributes.Height = brushSize;
-            BrushTextBlock.Text = "Размер Кисти: " + (brushSize).ToString();
+            BrushTextBlock.Text = Properties.Language.BrushSizeSlider + (brushSize).ToString();
         }
         private void BrushSlider_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -1791,26 +1819,25 @@ namespace GraphPAD
         private void animationSpeed_Click(object sender, RoutedEventArgs e)
         {
             var i = animationSpeedButton.Tag.ToString();
-            string path;
             ImageSourceConverter c = new ImageSourceConverter();
             switch (i)
             {
                 case "1":
                     animationSpeedButton.Tag = "2";
-                    animationSpeedButton.ToolTip = "Текущая скорость анимации - 2";
-                    animationSpeedImage.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.speed_2);
+                    animationSpeedButton.ToolTip = Properties.Language.AnimationSpeedBtnTooltip + "2";
+                    animationSpeedImage.Source = ImageSourceFromBitmap(Properties.Resources.speed_2);
                     GraphData.Algorithms.AlgorithmHelper.AlgorithmTime = 750;
                     break;
                 case "2":
                     animationSpeedButton.Tag = "3";
-                    animationSpeedButton.ToolTip = "Текущая скорость анимации - 3";
-                    animationSpeedImage.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.speed_3);
+                    animationSpeedButton.ToolTip = Properties.Language.AnimationSpeedBtnTooltip + "3";
+                    animationSpeedImage.Source = ImageSourceFromBitmap(Properties.Resources.speed_3);
                     GraphData.Algorithms.AlgorithmHelper.AlgorithmTime = 250;
                     break;
                 case "3":
                     animationSpeedButton.Tag = "1";
-                    animationSpeedButton.ToolTip = "Текущая скорость анимации - 1";
-                    animationSpeedImage.Source = ImageSourceFromBitmap(GraphPAD.Properties.Resources.speed_1);
+                    animationSpeedButton.ToolTip = Properties.Language.AnimationSpeedBtnTooltip + "1";
+                    animationSpeedImage.Source = ImageSourceFromBitmap(Properties.Resources.speed_1);
                     GraphData.Algorithms.AlgorithmHelper.AlgorithmTime = 1500;
                     break;
             }
@@ -1823,6 +1850,8 @@ namespace GraphPAD
         }
         private void algorithmsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            //Выбор Алгоритма
+            
             //ComboBox comboBox = (ComboBox)sender;
             //ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
             //MessageBox.Show(selectedItem.Content.ToString());
@@ -1857,8 +1886,8 @@ namespace GraphPAD
                 ColorPickerTextBlock.Visibility = Visibility.Visible;
                 ColorPicker.Visibility = Visibility.Visible;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.Ink;
-                currentPaintMode.Text = "Текущий режим: Кисть";
-                BrushButton.ToolTip = "Выключить Кисть";
+                currentPaintMode.Text = Properties.Language.CurrentModeBrush;
+                BrushButton.ToolTip = Properties.Language.CurrentModeBrushOffTooltip;
                 //ColorPickerTextBlock.Visibility = Visibility.Visible;
                 //ColorPicker.Visibility = Visibility.Visible;
                 isBrushModeOn = true;
@@ -1880,8 +1909,8 @@ namespace GraphPAD
                 ColorPickerTextBlock.Visibility = Visibility.Hidden;
                 ColorPicker.Visibility = Visibility.Hidden;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.None;
-                currentPaintMode.Text = "Текущий режим: Курсор";
-                BrushButton.ToolTip = "Включить Кисть";
+                currentPaintMode.Text = Properties.Language.CurrentModeCursor;
+                BrushButton.ToolTip = Properties.Language.CurrentModeBrushOnTooltip;
                 //ColorPickerTextBlock.Visibility = Visibility.Hidden;
                 //ColorPicker.Visibility = Visibility.Hidden;
                 isBrushModeOn = false;
@@ -1902,8 +1931,8 @@ namespace GraphPAD
                 SaveToFileButton.IsEnabled = false;
                 SaveToFileButton.Visibility = Visibility.Hidden;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.EraseByPoint;
-                currentPaintMode.Text = "Текущий режим: Ластик";
-                EraserButton.ToolTip = "Выключить Ластик";
+                currentPaintMode.Text = Properties.Language.CurrentModeEraser;
+                EraserButton.ToolTip = Properties.Language.CurrentModeEraserOffTooltip;
                 EraserTextBlock.Visibility = Visibility.Visible;
                 EraserSlider.Visibility = Visibility.Visible;
                 isEraserModeOn = true;
@@ -1918,8 +1947,8 @@ namespace GraphPAD
                 SaveToFileButton.IsEnabled = true;
                 SaveToFileButton.Visibility = Visibility.Visible;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.None;
-                currentPaintMode.Text = "Текущий режим: Курсор";
-                EraserButton.ToolTip = "Включить Ластик";
+                currentPaintMode.Text = Properties.Language.CurrentModeCursor;
+                EraserButton.ToolTip = Properties.Language.CurrentModeEraserOnTooltip;
                 EraserTextBlock.Visibility = Visibility.Hidden;
                 EraserSlider.Visibility = Visibility.Hidden;
                 isEraserModeOn = false;
@@ -1938,8 +1967,8 @@ namespace GraphPAD
                 ClearCanvasButton.IsEnabled = false;
                 SaveToFileButton.IsEnabled = false;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.EraseByStroke;
-                currentPaintMode.Text = "Текущий режим: Умный Ластик";
-                Eraser_SmartButton.ToolTip = "Выключить Умный Ластик";
+                currentPaintMode.Text = Properties.Language.CurrentModeEraserSmart;
+                Eraser_SmartButton.ToolTip = Properties.Language.CurrentModeEraserSmartOffTooltip;
                 isEraser_SmartModeOn = true;
             }
             else
@@ -1951,8 +1980,8 @@ namespace GraphPAD
                 ClearCanvasButton.IsEnabled = true;
                 SaveToFileButton.IsEnabled = true;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.None;
-                currentPaintMode.Text = "Текущий режим: Курсор";
-                Eraser_SmartButton.ToolTip = "Включить Умный Ластик";
+                currentPaintMode.Text = Properties.Language.CurrentModeCursor;
+                Eraser_SmartButton.ToolTip = Properties.Language.CurrentModeEraserSmartOnTooltip;
                 isEraser_SmartModeOn = false;
             }
             Button btn = sender as Button;
@@ -1969,8 +1998,8 @@ namespace GraphPAD
                 ClearCanvasButton.IsEnabled = false;
                 SaveToFileButton.IsEnabled = false;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.Select;
-                currentPaintMode.Text = "Текущий режим: Выделение";
-                SelectionButton.ToolTip = "Выключить Режим Выделения";
+                currentPaintMode.Text = Properties.Language.CurrentModeSelection;
+                SelectionButton.ToolTip = Properties.Language.CurrentModeSelectionOffTooltip;
                 isSelectionModeOn = true;
             }
             else
@@ -1982,8 +2011,8 @@ namespace GraphPAD
                 ClearCanvasButton.IsEnabled = true;
                 SaveToFileButton.IsEnabled = true;
                 PaintCanvas.EditingMode = InkCanvasEditingMode.None;
-                currentPaintMode.Text = "Текущий режим: Курсор";
-                SelectionButton.ToolTip = "Включить Режим Выделения";
+                currentPaintMode.Text = Properties.Language.CurrentModeCursor;
+                SelectionButton.ToolTip = Properties.Language.CurrentModeSelectionOnTooltip;
                 isSelectionModeOn = false;
             }
             Button btn = sender as Button;
@@ -2005,7 +2034,7 @@ namespace GraphPAD
             dlg.AddExtension = true;
             dlg.Filter = "jpg (*.jpg)|*.jpg|jpeg (*.jpeg)|*.jpeg|png (*.png)|*.png"; // Filter files by extension
             dlg.InitialDirectory = desktopPath;
-            dlg.Title = "Сохранить изображение";
+            dlg.Title = Properties.Language.SaveImageString;
             bool? result = dlg.ShowDialog();
             if (result == true)
             {
@@ -2024,7 +2053,7 @@ namespace GraphPAD
                 catch (System.IO.IOException copyError)
                 {
                     Console.WriteLine(copyError.Message);
-                    MessageBox.Show("Что-то пошло не так.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(Properties.Language.SomethingWentWrong, Properties.Language.Error, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -2047,7 +2076,7 @@ namespace GraphPAD
         {
             var eraserSize = EraserSlider.Value;
             PaintCanvas.EraserShape = new System.Windows.Ink.EllipseStylusShape(eraserSize, eraserSize);
-            EraserTextBlock.Text = "Размер Ластика: " + (eraserSize).ToString();
+            EraserTextBlock.Text = Properties.Language.EraserSizeSlider + (eraserSize).ToString();
         }
         private void EraserSlider_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -2096,7 +2125,7 @@ namespace GraphPAD
         #region Closing
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
-            if (MessageBox.Show(this, "Вы действительно хотите выйти ? ", "Подтверждение", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            if (MessageBox.Show(this, Properties.Language.ExitAppMessage, Properties.Language.Confirmation, MessageBoxButton.YesNo) != MessageBoxResult.Yes)
             {
                 cancelEventArgs.Cancel = true;
             }
@@ -2117,7 +2146,7 @@ namespace GraphPAD
             {
                 chatCount += 1;
                 ChatsScrollView.ScrollToBottom();
-                ChatBox.AppendText($"Вы: {chatTextBox.Text}\n\n");
+                ChatBox.AppendText(Properties.Language.SendMessageYou + chatTextBox.Text + "\n\n");
                 SocketConnector.SendMessage(chatTextBox.Text);
                 chatTextBox.Text = "";
             }
@@ -2138,7 +2167,7 @@ namespace GraphPAD
             {
                 charCount = userInput[0];
             }
-            charCounterTextBlock.Text = "Символов " + userInput.Length.ToString() + "/200";
+            charCounterTextBlock.Text = Properties.Language.SymbolCountString + userInput.Length.ToString() + "/200";
         }
         private void Ez_Click(object sender, RoutedEventArgs e)
         {
@@ -2148,10 +2177,5 @@ namespace GraphPAD
             RefreshRooms();
         }
         #endregion
-        public static void RestartApp()
-        {
-            System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
-            Application.Current.Shutdown();
-        }
     }
 }

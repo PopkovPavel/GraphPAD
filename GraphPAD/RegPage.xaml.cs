@@ -37,7 +37,7 @@ namespace GraphPAD
             //Логика регистрации
             if (_name.Length < 3)
             {
-                textboxName.ToolTip = "Имя слишком короткое.\n(Минимальная длина - 3 символа)";
+                textboxName.ToolTip = Properties.Language.TooShortNameTooltip;
                 textboxName.BorderBrush = Brushes.Red;
             }
             else //Имя верно
@@ -48,12 +48,12 @@ namespace GraphPAD
             }
             if (_Email.Length < 5)
             {
-                textboxEmail.ToolTip = "Логин слишком короткий.\n(Минимальная длина - 5 символов)";
+                textboxEmail.ToolTip = Properties.Language.TooShortLoginTooltip;
                 textboxEmail.BorderBrush = Brushes.Red;
             }
             else if (!_Email.Contains("@") || (!_Email.Contains(".")))
             {
-                textboxEmail.ToolTip = "Введены некорректные данные.\n(Возможно отсутствует символ \"@\" или символ \".\")";
+                textboxEmail.ToolTip = Properties.Language.IncorrectEmailDataTooltip;
                 textboxEmail.BorderBrush = Brushes.Red;
             }
             else //Почта верна
@@ -64,16 +64,16 @@ namespace GraphPAD
             }
             if (_password1 != _password2 || (_password1 == "" && _password2 == ""))
             {
-                passwordbox_1.ToolTip = "Пароли не совпадают.";
+                passwordbox_1.ToolTip = Properties.Language.PasswordsDontMatchTooltip;
                 passwordbox_1.BorderBrush = Brushes.Red;
-                passwordbox_2.ToolTip = "Пароли не совпадают.";
+                passwordbox_2.ToolTip = Properties.Language.PasswordsDontMatchTooltip;
                 passwordbox_2.BorderBrush = Brushes.Red;
             }
             else if (_password1.Length < 8 || _password2.Length < 8)
             {
-                passwordbox_1.ToolTip = "Пароль слишком короткий.\nМинимальная длина пароля - 8 символов.";
+                passwordbox_1.ToolTip = Properties.Language.TooShortPasswordTooltip;
                 passwordbox_1.BorderBrush = Brushes.Red;
-                passwordbox_2.ToolTip = "Пароль слишком короткий.\nМинимальная длина пароля - 8 символов.";
+                passwordbox_2.ToolTip = Properties.Language.TooShortPasswordTooltip;
                 passwordbox_2.BorderBrush = Brushes.Red;
             }
             else //Пароли совпадают
@@ -86,7 +86,7 @@ namespace GraphPAD
             }
             if (nameCorrect == true && emailCorrect == true && ispassEqual == true)
             {
-                if (MessageBox.Show(this, "Создать аккаунт с этими данными?\n\nИмя - " + textboxName.Text + "\nEmail - " + textboxEmail.Text, "Подтверждение", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                if (MessageBox.Show(this, Properties.Language.CreateAccWithThisDataMessage + textboxName.Text + "\nEmail - " + textboxEmail.Text, Properties.Language.Confirmation, MessageBoxButton.YesNo) != MessageBoxResult.Yes)
                 {
                     //pass
                 }
@@ -111,14 +111,14 @@ namespace GraphPAD
                         //UserInfo.ID = tempUser.ID;
                         UserInfo.Role = tempUser.Data.Role;
                         UserInfo.Token = tempUser.Token;
-                        MessageBox.Show("Регистрация прошла успешно", "Выполнено", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show(Properties.Language.SuccessReg, Properties.Language.Caption, MessageBoxButton.OK, MessageBoxImage.Information);
                         AuthPage authPage = new AuthPage();
                         this.Visibility = Visibility.Hidden; //Скрывает текущее окно
                         authPage.Show();
                     }
                     catch
                     {
-                        textboxEmail.ToolTip = "Пользователь с таким E-Mail-ом уже существует";
+                        textboxEmail.ToolTip = Properties.Language.ExistingEmail;
                         textboxEmail.BorderBrush = Brushes.Red;
                     }
                 }
@@ -126,7 +126,7 @@ namespace GraphPAD
         }
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs) //Подтверждения выхода из программы
         {
-            if (MessageBox.Show(this, "Вы действительно хотите выйти ? ", "Подтверждение", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            if (MessageBox.Show(this, Properties.Language.ExitAppMessage, Properties.Language.Confirmation, MessageBoxButton.YesNo) != MessageBoxResult.Yes)
             {
                 cancelEventArgs.Cancel = true;
             }

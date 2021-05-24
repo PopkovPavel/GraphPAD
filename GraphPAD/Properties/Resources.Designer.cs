@@ -391,15 +391,6 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на testString.
-        /// </summary>
-        public static string testString {
-            get {
-                return ResourceManager.GetString("testString", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap tree {

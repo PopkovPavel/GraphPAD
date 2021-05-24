@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:GraphPAD"
         xmlns:graphx="http://schemas.panthernet.ru/graphx/"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:resx="clr-namespace:GraphPAD.Properties"
         xmlns:model="clr-namespace:GraphPAD.GraphData.Model"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -58,12 +59,12 @@
 
             </Grid>
             <Grid Grid.Row="1" Background="#FF171720">
-                <Button Click="RefreshRoomsList" BorderThickness="2" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Center" Margin="22,35,23,15" VerticalAlignment="Center" Width="50" Height="50" BorderBrush="White" IsTabStop="False" ToolTip="Обновить список конференций">
+                <Button Click="RefreshRoomsList" BorderThickness="2" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Center" Margin="22,35,23,15" VerticalAlignment="Center" Width="50" Height="50" BorderBrush="White" IsTabStop="False" ToolTip="{x:Static resx:Language.ConferencesUpdateBtnTooltip}">
                     <Button.Background>
                         <ImageBrush ImageSource="Resources/refresh.png"/>
                     </Button.Background>
                 </Button>
-                <TextBlock x:Name="ConferensionsCountTextBlock" Text="Конференций: 0" TextAlignment="Center" Foreground="White" Margin="0,10,0,70" TextDecorations="{x:Null}" FontSize="10" FontWeight="Bold"/>
+                <TextBlock x:Name="ConferensionsCountTextBlock" Text="" TextAlignment="Center" Foreground="White" Margin="0,10,0,70" TextDecorations="{x:Null}" FontSize="10" FontWeight="Bold"/>
             </Grid>
         </Grid>
         <Grid x:Name="BGgrid" Grid.Column="1" Background="#FF555593">
@@ -82,17 +83,17 @@
                     </ResourceDictionary>
                 </Grid.Resources>
                 <Canvas x:Name="menuCanvas" HorizontalAlignment="Center" Height="185" Margin="0,150,0,0" VerticalAlignment="Center" Width="350">
-                    <Button x:Name="EnterLobbyButton" Click="EnterLobby_Click" Content="Войти в конференцию" Width="350" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False"/>
-                    <Button x:Name="CancelCreateLobbyButton" Visibility="Hidden" Click="CancelCreateLobby_Click" Content="Назад" Width="150" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Canvas.Top="145"/>
-                    <Button x:Name="ConfirmCreateLobbyButton" Visibility="Hidden" Click="ConfirmCreateLobby_Click" Content="Создать" Width="150" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Padding="16,4" Canvas.Left="200" Canvas.Top="145"/>
-                    <Button x:Name="CreateLobbyButton" Click="CreateLobby_Click" Content="Создать конференцию" Width="350" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Canvas.Top="48"/>
-                    <Button x:Name="CancelEnterLobbyButton" Visibility="Hidden" Click="CancelEnterLobby_Click" Content="Назад" Width="150" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Canvas.Top="98"/>
-                    <Button x:Name="ConfirmEnterLobbyButton" Visibility="Hidden" Click="ConfirmEnterLobby_Click" Content="Войти" Width="150" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Padding="16,4" Canvas.Left="200" Canvas.Top="98"/>
-                    <TextBox x:Name="ConferensionIDTextBox" Visibility="Hidden" HorizontalAlignment="Left" Height="32" TextWrapping="Wrap" materialDesign:HintAssist.Hint="ID конференции..." Width="350" Foreground="White" FontSize="18" MaxLines="1" MaxLength="36" Background="Black" IsTabStop="False" Padding="0" VerticalContentAlignment="Stretch" Canvas.Top="52"/>
-                    <TextBox x:Name="NewConferensionNameTextBox" Visibility="Hidden" HorizontalAlignment="Left" Height="33" TextWrapping="Wrap" materialDesign:HintAssist.Hint="Название конференции..." Width="350" Foreground="White" FontSize="18" MaxLines="1" MaxLength="35" Background="Black" IsTabStop="False" HorizontalContentAlignment="Stretch" Padding="0" VerticalContentAlignment="Stretch" Canvas.Top="101"/>
+                    <Button x:Name="EnterLobbyButton" Click="EnterLobby_Click" Content="{x:Static resx:Language.EnterLobbyBtn}" Width="350" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False"/>
+                    <Button x:Name="CancelCreateLobbyButton" Visibility="Hidden" Click="CancelCreateLobby_Click" Content="{x:Static resx:Language.CancelBtn}" Width="150" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Canvas.Top="145"/>
+                    <Button x:Name="ConfirmCreateLobbyButton" Visibility="Hidden" Click="ConfirmCreateLobby_Click" Content="{x:Static resx:Language.Create}" Width="150" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Padding="16,4" Canvas.Left="200" Canvas.Top="145"/>
+                    <Button x:Name="CreateLobbyButton" Click="CreateLobby_Click" Content="{x:Static resx:Language.CreateLobbyBtn}" Width="350" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Canvas.Top="48"/>
+                    <Button x:Name="CancelEnterLobbyButton" Visibility="Hidden" Click="CancelEnterLobby_Click" Content="{x:Static resx:Language.CancelBtn}" Width="150" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Canvas.Top="98"/>
+                    <Button x:Name="ConfirmEnterLobbyButton" Visibility="Hidden" Click="ConfirmEnterLobby_Click" Content="{x:Static resx:Language.Enter}" Width="150" Height="40" FontSize="18" Background="{StaticResource MainPurple}" BorderBrush="{x:Null}" IsTabStop="False" Padding="16,4" Canvas.Left="200" Canvas.Top="98"/>
+                    <TextBox x:Name="ConferensionIDTextBox" Visibility="Hidden" HorizontalAlignment="Left" Height="32" TextWrapping="Wrap" materialDesign:HintAssist.Hint="{x:Static resx:Language.ConferenssionIdString}" Width="350" Foreground="White" FontSize="18" MaxLines="1" MaxLength="36" Background="Black" IsTabStop="False" Padding="0" VerticalContentAlignment="Stretch" Canvas.Top="52"/>
+                    <TextBox x:Name="NewConferensionNameTextBox" Visibility="Hidden" HorizontalAlignment="Left" Height="33" TextWrapping="Wrap" materialDesign:HintAssist.Hint="{x:Static resx:Language.ConferenssionNameString}" Width="350" Foreground="White" FontSize="18" MaxLines="1" MaxLength="35" Background="Black" IsTabStop="False" HorizontalContentAlignment="Stretch" Padding="0" VerticalContentAlignment="Stretch" Canvas.Top="101"/>
                 </Canvas>
                 <!--Поля для графов и рисовалки-->
-                <graphx:ZoomControl x:Name="ZoomCtrl" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1" Background="White" VerticalContentAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" >
+                <graphx:ZoomControl x:Name="ZoomCtrl" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1" Background="White" VerticalContentAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" IsTabStop="False" TabIndex="0" MinZoom="0.1" MaxZoom="10" >
                     <model:GraphZone x:Name="GraphArea"/>
                 </graphx:ZoomControl>
                 <graphx:ZoomControl x:Name="PaintCanvasScroll" Grid.Column="1" BorderBrush="Transparent" BorderThickness="1" Background="Transparent" VerticalContentAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" >
@@ -105,129 +106,133 @@
             <Grid Grid.Row="1" Background="#22223d">
                 <!--Нижняя часть интерфейса-->
                 <Canvas x:Name="UserCanvas" HorizontalAlignment="Left" Height="148" Margin="10,0,0,0" Width="295" Background="#FF0E0E19" VerticalAlignment="Center">
-                    <Button x:Name="micButton" Click="MicButton_Clicked" ToolTip="Выкл. микрофон" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="76" Canvas.Top="107" IsTabStop="False">
+                    <Button x:Name="micButton" Click="MicButton_Clicked" ToolTip="{x:Static resx:Language.VoiceChatOffTooltip}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="76" Canvas.Top="107" IsTabStop="False">
                         <Button.Background>
                             <ImageBrush ImageSource="Resources/microphone_on.png" Stretch="UniformToFill"/>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="headphonesButton" Click="HeadPhonesButton_Clicked" ToolTip="Выкл. звук" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="113" Canvas.Top="107" IsTabStop="False">
+                    <Button x:Name="headphonesButton" Click="HeadPhonesButton_Clicked" ToolTip="{x:Static resx:Language.AudioOffTooltip}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="113" Canvas.Top="107" IsTabStop="False">
                         <Button.Background>
                             <ImageBrush ImageSource="Resources/headphones_on.png" Stretch="UniformToFill"/>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="settingsButton" Click="SettingsButton_Clicked" ToolTip="Настройки" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="150" Canvas.Top="107" IsTabStop="False">
+                    <Button x:Name="settingsButton" Click="SettingsButton_Clicked" ToolTip="{x:Static resx:Language.SettingsTooltip}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="150" Canvas.Top="107" IsTabStop="False">
                         <Button.Background>
                             <ImageBrush ImageSource="Resources/settings.png" Stretch="UniformToFill"/>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="videoButton" Click="VideoButton_Clicked" ToolTip="Вкл. камеру" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" BorderBrush="White" Canvas.Left="187" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="videoButton" Click="VideoButton_Clicked" ToolTip="{x:Static resx:Language.VideoOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" BorderBrush="White" Canvas.Left="187" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-10" Width="90" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/video.png"/>
-                            <TextBlock Margin="4,5,0,5" TextWrapping="Wrap" Text="Видео" Canvas.Top="118" Foreground="White" Height="20" Width="55" FontWeight="Bold"/>
+                            <TextBlock Margin="4,5,0,5" TextWrapping="Wrap" Text="{x:Static resx:Language.CameraBtn}" Canvas.Top="118" Foreground="White" Height="20" Width="55" FontWeight="Bold"/>
                         </StackPanel>
                     </Button>
                     <Image x:Name="Avatar" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Stretch="Fill" Canvas.Left="7" Canvas.Top="75"/>
-                    <TextBlock x:Name="conferenssionString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Конференция ..." VerticalAlignment="Top" Foreground="White" Width="178" FontSize="11" Height="30" Canvas.Left="4" Canvas.Top="4" FontWeight="Bold"/>
-                    <TextBlock x:Name="nameString" HorizontalAlignment="Left" Text="Шабинский Д.А." VerticalAlignment="Top" Foreground="White" FontSize="16" Canvas.Left="76" Canvas.Top="66" Height="22" Width="219" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
-                    <TextBlock x:Name="userRoleString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Пользователь" VerticalAlignment="Top" Foreground="White" Canvas.Left="76" Canvas.Top="88" Height="15" Width="100" FontStyle="Italic"/>
-                    <TextBlock x:Name="voiceChatTextBlock" HorizontalAlignment="Left" Text="Голосовой чат подключен" VerticalAlignment="Top" Foreground="#FF13C713" Width="178" Height="20" Canvas.Left="4" Canvas.Top="34" TextDecorations="{x:Null}"/>
-                    <TextBlock x:Name="videoTextBlock" HorizontalAlignment="Left" Text="Видео подключено" VerticalAlignment="Top" Foreground="#FF13C713" Width="178" Height="20" Canvas.Left="4" Canvas.Top="52" TextDecorations="{x:Null}"/>
-                    <Button x:Name="leaveButton" Content="Покинуть" ToolTip="Покинуть конференцию" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Canvas.Left="187" Canvas.Top="6" Background="#FF472781" BorderBrush="#FF472781" Height="30" FontSize="14" FontWeight="Bold" Foreground="#DDFFFFFF" IsTabStop="False"/>
+                    <TextBlock x:Name="conferenssionString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{x:Static resx:Language.NoConferenceString}" VerticalAlignment="Top" Foreground="White" Width="178" FontSize="11" Height="30" Canvas.Left="4" Canvas.Top="4" FontWeight="Bold"/>
+                    <TextBlock x:Name="nameString" HorizontalAlignment="Left" Text="Иванов И.И." VerticalAlignment="Top" Foreground="White" FontSize="16" Canvas.Left="76" Canvas.Top="66" Height="22" Width="219" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock x:Name="userRoleString" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{x:Static resx:Language.UserString}" VerticalAlignment="Top" Foreground="White" Canvas.Left="76" Canvas.Top="88" Height="15" Width="100" FontStyle="Italic"/>
+                    <TextBlock x:Name="voiceChatTextBlock" HorizontalAlignment="Left" Text="{x:Static resx:Language.VoiceChatOnString}" VerticalAlignment="Top" Foreground="#FF13C713" Width="178" Height="20" Canvas.Left="4" Canvas.Top="34" TextDecorations="{x:Null}"/>
+                    <TextBlock x:Name="videoTextBlock" HorizontalAlignment="Left" Text="{x:Static resx:Language.VideoOnString}" VerticalAlignment="Top" Foreground="#FF13C713" Width="178" Height="20" Canvas.Left="4" Canvas.Top="52" TextDecorations="{x:Null}"/>
+                    <Button x:Name="leaveButton" Content="{x:Static resx:Language.LeaveString}" ToolTip="{x:Static resx:Language.LeaveConferenssionBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Canvas.Left="187" Canvas.Top="6" Background="#FF472781" BorderBrush="#FF472781" Height="30" FontSize="14" FontWeight="Bold" Foreground="#DDFFFFFF" IsTabStop="False"/>
                 </Canvas>
-                <TextBlock x:Name="infoTextBlock" Visibility="Visible" Text="Для работы с графами, а также общения с пользователями необходимо сначала войти в конференцию или же создать собственную." HorizontalAlignment="Center" Margin="310 40 10 40" Foreground="#FFFFC11A" FontSize="20" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" TextAlignment="Center"/>
+                <TextBlock x:Name="infoTextBlock" Visibility="Visible" Text="{x:Static resx:Language.InfoString}" HorizontalAlignment="Center" Margin="310 40 10 40" Foreground="#FFFFC11A" FontSize="20" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" TextAlignment="Center"/>
 
                 <!--Панель для работы с графами-->
                 <Canvas x:Name="GraphControlCanvas" Visibility="Visible" Margin="315,7.5,10,7.5" Background="#FF0E0E19">
-                    <Button x:Name="addVertexBtn" Click="AddVertex_Click" Visibility="Hidden" ToolTip="Включить режим создания" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="addVertexBtn" Click="AddVertex_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.CurrentModeCreateOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/add_vertex.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Добавление" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.CreateGraphBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="clearGraph" Click="ClearGraphs_Click" Visibility="Hidden" ToolTip="Очистить поле для графов" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="clearGraph" Click="ClearGraphs_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.ClearFIeldBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/clear.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Очистить поле" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.ClearFIeldBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="reorderGraph" Click="ReorderGraph_Click" Visibility="Hidden" ToolTip="Упорядочить граф" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="reorderGraph" Click="ReorderGraph_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.ReorderBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/reorder.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Упорядочить граф" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.ReorderBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="saveGraph" Click="SaveGraph_Click" Visibility="Visible" ToolTip="Сохранить в файл" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" BorderBrush="White" Canvas.Left="343" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="saveGraph" Click="SaveGraph_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.SaveGraphToFileBtnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" BorderBrush="White" Canvas.Left="343" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="32" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/save.png" Width="32"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="deleteVertexBtn" Click="RemoveVertex_Click" Visibility="Hidden" ToolTip="Включить режим удаления" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="deleteVertexBtn" Click="RemoveVertex_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.CurrentModeDeleteOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/remove_vertex.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Удаление" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.DeleteGraphBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <TextBox x:Name="edgesWeightTextBox" Visibility="Hidden" materialDesign:HintAssist.Hint="Вес ребра" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="66" Background="{x:Null}" IsTabStop="False" Height="30" TextChanged="edgesVeightTextBox_TextChanged" PreviewTextInput="NumberValidationTextBox" BorderThickness="0,0,0,1" ClipToBounds="True" Foreground="White" MaxLines="1" MaxLength="6" HorizontalAlignment="Left" VerticalAlignment="Top" CaretBrush="White" Padding="0" FontSize="14"/>
-                    <CheckBox x:Name="orientedCheckbox" Visibility="Hidden" IsChecked="False" Content="Ориентированный?" FontSize="14" Height="32" Canvas.Left="181" Canvas.Top="64" Width="150" Foreground="White" Padding="2,0,0,0" Background="#FF1AAB1E" BorderBrush="White" IsTabStop="False" TabIndex="0">
+                    <TextBox x:Name="edgesWeightTextBox" Visibility="Hidden" materialDesign:HintAssist.Hint="{x:Static resx:Language.EdgesWeightBtn}" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="66" Background="{x:Null}" IsTabStop="False" Height="30" TextChanged="edgesVeightTextBox_TextChanged" PreviewTextInput="NumberValidationTextBox" BorderThickness="0,0,0,1" ClipToBounds="True" Foreground="White" MaxLines="1" MaxLength="6" HorizontalAlignment="Left" VerticalAlignment="Top" CaretBrush="White" Padding="0" FontSize="14"/>
+                    <CheckBox x:Name="orientedCheckbox" Visibility="Hidden" IsChecked="False" Content="{x:Static resx:Language.OrientationBtn}" FontSize="14" Height="32" Canvas.Left="181" Canvas.Top="64" Width="150" Foreground="White" Padding="2,0,0,0" Background="#FF1AAB1E" BorderBrush="White" IsTabStop="False" TabIndex="0">
                         <CheckBox.Resources >
                             <SolidColorBrush x:Key="MaterialDesignCheckBoxOff" Color="White"/>
                         </CheckBox.Resources>
                     </CheckBox>
-                    <Button x:Name="graphGeneratorBtn" Click="GraphGenerator_Click" Visibility="Hidden" ToolTip="Включить режим генерации графов" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="graphGeneratorBtn" Click="GraphGenerator_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.CurrentModeGraphGenOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image x:Name="freeModeImage2" Source="Resources/graph_generator.png"/>
-                            <TextBlock x:Name="freeModeTextBlock2" TextWrapping="NoWrap" Text="Генерация графов" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock x:Name="freeModeTextBlock2" TextWrapping="NoWrap" Text="{x:Static resx:Language.GraphGenBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="algorithmsBtn" Click="Algorithms_Click" Visibility="Visible" ToolTip="Включить режим алгоритмов" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="algorithmsBtn" Click="Algorithms_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.CurrentModeAlgorithmsOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image x:Name="freeModeImage1" Source="Resources/algorithm.png"/>
-                            <TextBlock x:Name="freeModeTextBlock1" TextWrapping="NoWrap" Text="Алгоритмы" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock x:Name="freeModeTextBlock1" TextWrapping="NoWrap" Text="{x:Static resx:Language.AlgorithmsBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-
-
-                    <TextBlock x:Name="currentGraphMode" Text="Текущий режим: Перемещение" Canvas.Left="10" Canvas.Top="2" Width="321" Foreground="White" Height="16" Padding="1" FontSize="10" TextAlignment="Center" FontWeight="Medium"/>
+                    <TextBlock x:Name="currentGraphMode" Text="{x:Static resx:Language.CurrentModeMove}" Canvas.Left="10" Canvas.Top="2" Width="321" Foreground="White" Height="16" Padding="1" FontSize="10" TextAlignment="Center" FontWeight="Medium"/>
                     <!--Генерация графов-->
-                    <Button x:Name="randomTreeButton" Click="randomTreeButton_Click" Visibility="Hidden" ToolTip="Включить генерацию случайного дерева" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="randomTreeButton" Click="randomTreeButton_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.CurrentModeRandTreeOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/tree.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Случайное дерево" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.RandTreeBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="randomConnectedGraphButton" Click="randomConnectedGraphButton_Click" Visibility="Hidden" ToolTip="Включить генерацию случайного связного графа" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="randomConnectedGraphButton" Click="randomConnectedGraphButton_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.CurrentModeRandConnGraphOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/connected_graph.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Случ. связный граф" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.RandConnGraphBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <TextBox x:Name="vertexAmountTextBox" Visibility="Hidden" TextChanged="vertexAmountTextBox_TextChanged" PreviewTextInput="NumberValidationTextBox" materialDesign:HintAssist.Hint="Кол-во вершин" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False" Height="30" BorderThickness="0,0,0,1" ClipToBounds="True" Foreground="White" MaxLines="1" MaxLength="3" HorizontalAlignment="Left" VerticalAlignment="Top" CaretBrush="White" Padding="0" FontSize="14"/>
-                    <TextBox x:Name="edgesAmountTextBox" Visibility="Hidden" TextChanged="edgesAmountTextBox_TextChanged" PreviewTextInput="NumberValidationTextBox" materialDesign:HintAssist.Hint="Кол-во рёбер" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False" Height="30" BorderThickness="0,0,0,1" ClipToBounds="True" Foreground="White" MaxLines="1" MaxLength="3" HorizontalAlignment="Left" VerticalAlignment="Top" CaretBrush="White" Padding="0" FontSize="14"/>
-                    <Button x:Name="downloadGraphButton" Click="downloadGraphButton_Click" Visibility="Hidden" ToolTip="Загрузить граф из файла" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <TextBox x:Name="vertexAmountTextBox" Visibility="Hidden" TextChanged="vertexAmountTextBox_TextChanged" PreviewTextInput="NumberValidationTextBox" materialDesign:HintAssist.Hint="{x:Static resx:Language.VertexAmountBtn}" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False" Height="30" BorderThickness="0,0,0,1" ClipToBounds="True" Foreground="White" MaxLines="1" MaxLength="3" HorizontalAlignment="Left" VerticalAlignment="Top" CaretBrush="White" Padding="0" FontSize="14"/>
+                    <TextBox x:Name="edgesAmountTextBox" Visibility="Hidden" TextChanged="edgesAmountTextBox_TextChanged" PreviewTextInput="NumberValidationTextBox" materialDesign:HintAssist.Hint="{x:Static resx:Language.EdgesAmountBtn}" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False" Height="30" BorderThickness="0,0,0,1" ClipToBounds="True" Foreground="White" MaxLines="1" MaxLength="3" HorizontalAlignment="Left" VerticalAlignment="Top" CaretBrush="White" Padding="0" FontSize="14"/>
+                    <Button x:Name="downloadGraphButton" Click="downloadGraphButton_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.UploadGraphBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/download.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Загрузить граф" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.UploadGraphBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="createGraphButton" Click="createGraphButton_Click" Visibility="Hidden" ToolTip="Создать граф" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="createGraphButton" Click="createGraphButton_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.GenGraphBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/create_graph.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Создать граф" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.GenGraphBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="animationSpeedButton" Tag="1" Click="animationSpeed_Click" Visibility="Visible" ToolTip="Текущая скорость анимации - 1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <CheckBox x:Name="orientedGraphCheckbox" Visibility="Hidden" IsChecked="False" ToolTip="{x:Static resx:Language.OrientationBtn}" Content="" FontSize="14" Height="32" Canvas.Left="343" Canvas.Top="64" Width="32" Foreground="White" Padding="0" Background="#FF1AAB1E" BorderBrush="White" IsTabStop="False" TabIndex="0" BorderThickness="0" VerticalContentAlignment="Stretch">
+                        <CheckBox.Resources >
+                            <SolidColorBrush x:Key="MaterialDesignCheckBoxOff" Color="White"/>
+                        </CheckBox.Resources>
+                    </CheckBox>
+                    <!--Алгоритмы-->
+                    <Button x:Name="animationSpeedButton" Tag="1" Click="animationSpeed_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.AnimationSpeedBtnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image x:Name="animationSpeedImage" Source="Resources/speed-1.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Скорость анимации" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.AnimationSpeedBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="showAnimatonButton" Click="showAlgorithm_Click" Visibility="Visible" ToolTip="Отрисовать алгоритм" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="showAnimatonButton" Click="showAlgorithm_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.ShowAlgorithmTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/brush.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Отрисовать" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.ShowAlgorithm}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <ComboBox x:Name="algorithmsComboBox" materialDesign:TextFieldAssist.HasClearButton="True" materialDesign:HintAssist.Hint="Выберите алгоритм" MinWidth="128" Canvas.Left="10" Canvas.Top="23" Foreground="White" BorderBrush="White" Background="#FF0E0E19" Width="150">
+                    <ComboBox x:Name="algorithmsComboBox" Visibility="Visible" materialDesign:TextFieldAssist.HasClearButton="True" materialDesign:HintAssist.Hint="{x:Static resx:Language.ChooseAlgorithmComboBox}" MinWidth="128" Canvas.Left="10" Canvas.Top="23" Foreground="White" BorderBrush="White" Background="#FF0E0E19" Width="150" SelectionChanged="algorithmsComboBox_SelectionChanged">
                         <ComboBox.Resources>
                             <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FF0E0E19"/>
                         </ComboBox.Resources>
@@ -235,59 +240,65 @@
                         <ComboBoxItem Content="item2"/>
                         <ComboBoxItem Content="item3"/>
                         <ComboBoxItem Content="item4"/>
+                        <ComboBoxItem Content="item5"/>
+                        <ComboBoxItem Content="item6"/>
+                        <ComboBoxItem Content="item7"/>
+                        <ComboBoxItem Content="item8"/>
+                        <ComboBoxItem Content="item9"/>
+                        <ComboBoxItem Content="item10"/>
+                        
                     </ComboBox>
-                    <ProgressBar x:Name="progressBar" Height="10" Canvas.Left="10" Canvas.Top="54" Width="150" Value="0"/>
-
+                    <!--<ProgressBar x:Name="progressBar" Height="10" Canvas.Left="10" Canvas.Top="54" Width="150" Value="0"/>-->
                 </Canvas>
-                <Button x:Name="GraphModeChangerButton" Visibility="Hidden" Content="Графы" Click="FreeMode_Click" ToolTip="Переключить на свободный режим" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" BorderBrush="White" Canvas.Left="456" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" ClipToBounds="True" Margin="0,7.5,10,0"/>
+                <Button x:Name="GraphModeChangerButton" Visibility="Hidden" Content="{x:Static resx:Language.GraphModeChangerBtn}" Click="FreeMode_Click" ToolTip="{x:Static resx:Language.GraphModeChangerBtnTooltip}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" BorderBrush="White" Canvas.Left="456" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" ClipToBounds="True" Margin="0,7.5,10,0"/>
                 <!--Панель для работы с рисовалкой-->
                 <Canvas x:Name="PaintControlCanvas" Visibility="Hidden" Margin="315,7.5,10,7.5" Background="#FF0E0E19">
-                    <TextBlock x:Name="currentPaintMode" Text="Текущий режим: Курсор" Canvas.Left="10" Canvas.Top="2" Width="321" Foreground="White" Height="16" Padding="1" FontSize="10" TextAlignment="Center" FontWeight="Medium"/>
-                    <Button x:Name="BrushButton" Tag="Ink" Click="BrushButton_Click" ToolTip="Включить Кисть" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False" LayoutUpdated="BrushButton_LayoutUpdated">
+                    <TextBlock x:Name="currentPaintMode" Text="{x:Static resx:Language.CurrentModeCursor}" Canvas.Left="10" Canvas.Top="2" Width="321" Foreground="White" Height="16" Padding="1" FontSize="10" TextAlignment="Center" FontWeight="Medium"/>
+                    <Button x:Name="BrushButton" Tag="Ink" Click="BrushButton_Click" ToolTip="{x:Static resx:Language.CurrentModeBrushOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False" LayoutUpdated="BrushButton_LayoutUpdated">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/brush.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Кисть" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.BrushBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="EraserButton" Click="EraserButton_Click" ToolTip="Включить Ластик" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="EraserButton" Click="EraserButton_Click" ToolTip="{x:Static resx:Language.CurrentModeEraserOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/eraser.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Ластик" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.EraserBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="Eraser_SmartButton" Click="Eraser_SmartButton_Click" ToolTip="Включить Умный Ластик" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="Eraser_SmartButton" Click="Eraser_SmartButton_Click" ToolTip="{x:Static resx:Language.CurrentModeEraserSmartOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/eraser_smart.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Умный Ластик" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.SmartEraserBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="SelectionButton" Click="SelectionButton_Click" ToolTip="Включить Режим Выделения" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="SelectionButton" Click="SelectionButton_Click" ToolTip="{x:Static resx:Language.CurrentModeSelectionOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/selection.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Выделение" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.SelectionBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="ClearCanvasButton" Visibility="Visible" Click="ClearCanvasButton_Click" ToolTip="Отчистить поле" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="108" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="ClearCanvasButton" Visibility="Visible" Click="ClearCanvasButton_Click" ToolTip="{x:Static resx:Language.ClearFIeldBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="108" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/clear.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Отчистить поле" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.ClearFIeldBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="SaveToFileButton" Visibility="Visible" Click="SaveToFileButton_Click" ToolTip="Сохранить в файл (.jpg)" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="108" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="SaveToFileButton" Visibility="Visible" Click="SaveToFileButton_Click" ToolTip="{x:Static resx:Language.SaveToFileBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="108" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/save.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="Сохранить в файл" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.SaveToFileBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <TextBlock x:Name="ColorPickerTextBlock" Visibility="Hidden" Canvas.Left="180" TextWrapping="Wrap" Text="Палитра цветов" Canvas.Top="21" Foreground="White" FontWeight="SemiBold" Width="200" FontSize="10" Height="14"/>
+                    <TextBlock x:Name="ColorPickerTextBlock" Visibility="Hidden" Canvas.Left="180" TextWrapping="Wrap" Text="{x:Static resx:Language.ColorPickerString}" Canvas.Top="21" Foreground="White" FontWeight="SemiBold" Width="200" FontSize="10" Height="14"/>
                     <materialDesign:ColorPicker x:Name="ColorPicker" Visibility="Hidden" Canvas.Left="180" Canvas.Top="35" Height="100" Width="200" BorderBrush="White" BorderThickness="1" Background="White" Foreground="White" ColorChanged="ColorPicker_ColorChanged" Color="Black" LayoutUpdated="ColorPicker_LayoutUpdated" IsTabStop="False"/>
                     <Slider x:Name="EraserSlider" Visibility="Hidden" IsSnapToTickEnabled="True" Canvas.Left="180" Canvas.Top="122" Width="150" BorderBrush="White" Foreground="White" LayoutUpdated="EraserSlider_LayoutUpdated" Minimum="10" Maximum="100" Value="30" BorderThickness="0" MouseEnter="EraserSlider_MouseEnter" MouseLeave="EraserSlider_MouseLeave" IsTabStop="False" SmallChange="0" LargeChange="0" Interval="1" TickFrequency="10"/>
                     <Slider x:Name="BrushSlider" Visibility="Hidden" IsSnapToTickEnabled="True" Canvas.Left="10" Canvas.Top="122" Width="150" BorderBrush="White" Foreground="White" LayoutUpdated="BrushSlider_LayoutUpdated" Minimum="1"  Maximum="20" Value="2" BorderThickness="0" MouseEnter="BrushSlider_MouseEnter" MouseLeave="BrushSlider_MouseLeave" IsTabStop="False" SmallChange="0" LargeChange="0" Interval="1" TickFrequency="1"/>
-                    <TextBlock x:Name="EraserTextBlock" Visibility="Hidden" Canvas.Left="181" TextWrapping="Wrap" Text="Размер Ластика: 30" Canvas.Top="108" Foreground="White" FontWeight="SemiBold" Width="150" FontSize="10" Height="14"/>
-                    <TextBlock x:Name="BrushTextBlock" Visibility="Hidden" Canvas.Left="11" TextWrapping="Wrap" Text="Размер Кисти: 2" Canvas.Top="108" Foreground="White" FontWeight="SemiBold" Width="150" FontSize="10" Height="14"/>
+                    <TextBlock x:Name="EraserTextBlock" Visibility="Hidden" Canvas.Left="181" TextWrapping="Wrap" Text="{x:Static resx:Language.EraserSizeSlider}" Canvas.Top="108" Foreground="White" FontWeight="SemiBold" Width="150" FontSize="10" Height="14"/>
+                    <TextBlock x:Name="BrushTextBlock" Visibility="Hidden" Canvas.Left="11" TextWrapping="Wrap" Text="{x:Static resx:Language.BrushSizeSlider}" Canvas.Top="108" Foreground="White" FontWeight="SemiBold" Width="150" FontSize="10" Height="14"/>
                 </Canvas>
 
-                <Button x:Name="PaintModeChangerButton" Visibility="Hidden" Content="Рисование" Click="FreeMode_Click" ToolTip="Переключить на режим графов" Width="100" BorderBrush="White" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,7.5,10,0"/>
+                <Button x:Name="PaintModeChangerButton" Visibility="Hidden" Content="{x:Static resx:Language.PaintModeChangerBtn}" Click="FreeMode_Click" ToolTip="{x:Static resx:Language.PaintModeChangerBtnTooltip}" Width="100" BorderBrush="White" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,7.5,10,0"/>
             </Grid>
         </Grid>
         <Grid x:Name="chatGrid" Grid.Column="2" Background="#FF141424">
@@ -299,21 +310,19 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <!--Верхние кнопки-->
-                <Button Click="TextChatButton_Clicked" Content="Текстовый чат" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatAccentButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
-                <Button Click="VideoChatButton_Clicked" Content="Видео-чат" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
-                <Button Click="ParticipantsButton_Clicked" Content="Участники" HorizontalAlignment="Right" VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
+                <Button Click="TextChatButton_Clicked" Content="{x:Static resx:Language.TextChatBtn}" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatAccentButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
+                <Button Click="VideoChatButton_Clicked" Content="{x:Static resx:Language.VideoChatBtn}" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
+                <Button Click="ParticipantsButton_Clicked" Content="{x:Static resx:Language.ParticipantsBtn}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
             </Grid>
             <Grid Grid.Row="1">
                 <!--Верхняя Строка-->
-                <TextBlock x:Name="ConferensionString" Visibility="Visible" Padding="0,8,0,0" Text="Чат конференции №123" Height="50" FontSize="20" TextDecorations="{x:Null}" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" TextTrimming="CharacterEllipsis" Width="400" Canvas.Top="5" TextAlignment="Center" FontWeight="Bold"/>
-                <TextBlock x:Name="VideoString" Visibility="Hidden" Padding="0,8,0,0" Text="Видео-чат конференции" Height="50" FontSize="20" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="CharacterEllipsis" Width="400" Canvas.Top="5"/>
-                <TextBlock x:Name="ParticipantsString" Visibility="Hidden" Padding="0,8,0,0" Text="Участники конференции" Height="50" FontSize="20" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="CharacterEllipsis" Width="400" Canvas.Top="5"/>
+                <TextBlock x:Name="ConferensionString" Visibility="Visible" Padding="0,8,0,0" Text="{x:Static resx:Language.ConferenceChatString}" Height="50" FontSize="20" TextDecorations="{x:Null}" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" TextTrimming="CharacterEllipsis" Width="400" Canvas.Top="5" TextAlignment="Center" FontWeight="Bold"/>
+                <TextBlock x:Name="VideoString" Visibility="Hidden" Padding="0,8,0,0" Text="{x:Static resx:Language.ConferenceVideoChatString}" Height="50" FontSize="20" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="CharacterEllipsis" Width="400" Canvas.Top="5"/>
+                <TextBlock x:Name="ParticipantsString" Visibility="Hidden" Padding="0,8,0,0" Text="{x:Static resx:Language.ConferenceParticipantsString}" Height="50" FontSize="20" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="CharacterEllipsis" Width="400" Canvas.Top="5"/>
             </Grid>
             <Grid Grid.Row="2">
                 <!--Чат со сообщениями-->
-
                 <ScrollViewer x:Name="ChatsScrollView" Visibility="Visible" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0" Grid.Row="2" Foreground="White">
-
                     <TextBox x:Name="ChatBox" Visibility="Visible" TextWrapping="Wrap" Text="" IsReadOnly="True" FontSize="20" TextAlignment="Left" IsTabStop="False" AllowDrop="False"/>
                 </ScrollViewer>
                 <!--Веб-камеры-->
@@ -327,8 +336,8 @@
             </Grid>
             <Grid Grid.Row="3">
                 <!--Элементы для чата-->
-                <TextBox x:Name="chatTextBox" Height="120" materialDesign:HintAssist.Hint="Напишите сообщение ..." Background="#FF323232" FontSize="16" MaxLength="200" MaxLines="20" MinLines="1" TextWrapping="Wrap" TextAlignment="Left" CaretBrush="{x:Null}" Foreground="White" TextChanged="ChatTextBox_TextChanged" SpellCheck.IsEnabled="True" VerticalAlignment="Bottom" Margin="5,0,50,8.5"/>
-                <TextBlock x:Name="charCounterTextBlock" TextWrapping="Wrap" Text="Символов 0/200" Foreground="White" Margin="5,0,250,128" VerticalAlignment="Bottom"/>
+                <TextBox x:Name="chatTextBox" Height="120" materialDesign:HintAssist.Hint="{x:Static resx:Language.EnterMessageField}" Background="#FF323232" FontSize="16" MaxLength="200" MaxLines="20" MinLines="1" TextWrapping="Wrap" TextAlignment="Left" CaretBrush="{x:Null}" Foreground="White" TextChanged="ChatTextBox_TextChanged" SpellCheck.IsEnabled="True" VerticalAlignment="Bottom" Margin="5,0,50,8.5"/>
+                <TextBlock x:Name="charCounterTextBlock" TextWrapping="Wrap" Text="{x:Static resx:Language.SymbolCountString}" Foreground="White" Margin="5,0,250,128" VerticalAlignment="Bottom"/>
                 <Button x:Name="sendButton" Click="SendButton_Clicked" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionButton}" Width="48" Height="48" FontSize="16" Foreground="{x:Null}" BorderBrush="{x:Null}" IsTabStop="False" Margin="0,0,0,8.5" VerticalAlignment="Bottom">
                     <Button.Background>
                         <ImageBrush ImageSource="Resources/send.png" Stretch="UniformToFill"/>

@@ -17,6 +17,32 @@ namespace GraphPAD
     {
         public AuthPage()
         {
+            //if (UserInfo.Lang == "ru-RU")
+            //{
+            //    GraphPAD.Properties.Language.Culture = new System.Globalization.CultureInfo("ru-RU");
+            //}
+            //else
+            //{
+            //    GraphPAD.Properties.Language.Culture = new System.Globalization.CultureInfo("en-US");
+            //}
+            if (!File.Exists(@"Language.txt"))
+            {
+                File.WriteAllText(@"Language.txt", "ru-RU");
+                Properties.Language.Culture = new System.Globalization.CultureInfo("ru-RU");
+            }
+            else
+            {
+                var temp = File.ReadAllText(@"Language.txt");
+                if (temp == "ru-RU")
+                {
+                    Properties.Language.Culture = new System.Globalization.CultureInfo("ru-RU");
+                }
+                else if (temp == "en-US")
+                {
+                    Properties.Language.Culture = new System.Globalization.CultureInfo("en-US");
+                }
+
+            }
             InitializeComponent();
             Closing += OnClosing; //Делегат для отлова закрытия окна
             this.KeyDown += new KeyEventHandler(AuthWindow_KeyDown);
@@ -42,7 +68,7 @@ namespace GraphPAD
                     UserInfo.ID = tempUser.Data.userId;
                     UserInfo.Token = tempUser.Token;
                     UserInfo.Role = tempUser.Data.Role;
-                    MessageBox.Show("Здравствуйте, " + UserInfo.Name, "Успешный вход", MessageBoxButton.OK);
+                    MessageBox.Show(Properties.Language.WelcomeString + UserInfo.Name, Properties.Language.LoginSucess, MessageBoxButton.OK);
                     MainPage mainPage = new MainPage();
                     this.Visibility = Visibility.Hidden;
                     mainPage.Show();
@@ -64,12 +90,12 @@ namespace GraphPAD
             //Логика авторизации
             if (_Email.Length < 5)
             {
-                textboxLogin.ToolTip = "Логин слишком короткий.\n(Минимальная длина - 5 символов)"; //ToolTip - Выдаёт подсказку при наведении курсора мыши на объект
+                textboxLogin.ToolTip = Properties.Language.TooShortLoginTooltip;
                 textboxLogin.BorderBrush = Brushes.Red;
             } 
             else if(!_Email.Contains("@") || (!_Email.Contains(".")))
             {
-                textboxLogin.ToolTip = "Введены некорректные данные.\n(Возможно отсутствует символ \"@\" или символ \".\")";
+                textboxLogin.ToolTip = Properties.Language.IncorrectEmailDataTooltip;
                 textboxLogin.BorderBrush = Brushes.Red;
             } 
             else //Логин верен
@@ -80,7 +106,7 @@ namespace GraphPAD
             }
             if (_password.Length < 8)
             {
-                passwordboxPassword.ToolTip = "Пароль слишком короткий.\nМинимальная длина пароля - 8 символов.";
+                passwordboxPassword.ToolTip = Properties.Language.TooShortPasswordTooltip;
                 passwordboxPassword.BorderBrush = Brushes.Red;
             }
             else //Пароль верен
@@ -109,17 +135,16 @@ namespace GraphPAD
                     UserInfo.ID = tempUser.Data.userId;
                     UserInfo.Role = tempUser.Data.Role;
                     UserInfo.Token = tempUser.Token;
-                    GuestInfo.Name = "exist";
                     UserInfo.Name = tempUser.Data.Name;
                     
                     MainPage mainPage = new MainPage();
                     this.Visibility = Visibility.Hidden;
-                    MessageBox.Show("Здравствуйте, " + UserInfo.Name, "Успешный вход", MessageBoxButton.OK);
+                    MessageBox.Show(Properties.Language.WelcomeString + UserInfo.Name, Properties.Language.LoginSucess, MessageBoxButton.OK);
                     mainPage.Show();
                     
                     if (checkboxRemember.IsChecked == true)
                     {
-                        UserInfo JSONUser = new UserInfo();
+                        //UserInfo JSONUser = new UserInfo();
                         
                         File.WriteAllText(@"Token.json", JsonConvert.SerializeObject(tempUser));
 
@@ -133,7 +158,7 @@ namespace GraphPAD
                 }
                 catch
                 {
-                    passwordboxPassword.ToolTip = "Неверный логин или пароль.";
+                    passwordboxPassword.ToolTip = Properties.Language.WrongLogOrPassTooltip;
                     passwordboxPassword.BorderBrush = Brushes.Red;
                     passwordboxPassword.Password = "";
                     //MessageBox.Show("Введен неверный логин или пароль", "Ошибка", MessageBoxButton.OK);
@@ -142,14 +167,14 @@ namespace GraphPAD
         }
         private void OpenMainPageGuest(object sender, RoutedEventArgs e) //Открытие главного окна без входа в аккаунт ("Гостевой Профиль")
         {
-            //NameEnterPage nameEnterPage = new NameEnterPage();
-            //this.Visibility = Visibility.Hidden;
-            //nameEnterPage.Show();
-            MessageBox.Show("Гостевые аккаунты пока не поддерживаются.", "Сообщение");
+            NameEnterPage nameEnterPage = new NameEnterPage();
+            this.Visibility = Visibility.Hidden;
+            nameEnterPage.Show();
+            //MessageBox.Show(Properties.Language.GuestAccsNotWork, Properties.Language.Caption);
         }
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs) //Подтверждения выхода из программы
         {
-            if (MessageBox.Show(this, "Вы действительно хотите выйти ? ", "Подтверждение", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            if (MessageBox.Show(this, Properties.Language.ExitAppMessage, Properties.Language.Confirmation, MessageBoxButton.YesNo) != MessageBoxResult.Yes)
             {
                 cancelEventArgs.Cancel = true;
             }
@@ -157,22 +182,6 @@ namespace GraphPAD
             {
                 Process.GetCurrentProcess().Kill(); //Полное выключение программы
             }
-
-        }
-        private void checkboxRemember_Click(object sender, RoutedEventArgs e)
-        {
-            if (checkboxRemember.IsChecked == true) //Запоминает информацию для последующего входа в аккаунт без необходимости вводить данные
-            {
-
-            }
-            else
-            {
-                //pass
-            }
-        }
-        private void authButton_KeyDown(object sender, KeyEventArgs e)
-        {
-
         }
         private void AuthWindow_KeyDown(object sender, KeyEventArgs e)
         {

@@ -16,10 +16,11 @@ namespace GraphPAD
         private void AuthButtonNoAcc_Clicked(object sender, RoutedEventArgs e)
         {
             string _Name = textboxName.Text.Trim(); //ToLower() - Перевод всех символов строки в нижний регистр
-            GuestInfo.Name = _Name;
+            UserInfo.Name = _Name;
+            MainPage.isGuestConnected = true;
             if (_Name.Length < 3)
             {
-                textboxName.ToolTip = "Имя слишком короткое.\n(Минимальная длина - 3 символа)"; //ToolTip - Выдаёт подсказку при наведении курсора мыши на объект
+                textboxName.ToolTip = Properties.Language.TooShortNameTooltip; //ToolTip - Выдаёт подсказку при наведении курсора мыши на объект
                 textboxName.BorderBrush = Brushes.Red;
             }
             else //Имя подходит
@@ -34,7 +35,7 @@ namespace GraphPAD
         }
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
-            if (MessageBox.Show(this, "Вы действительно хотите выйти ? ", "Подтверждение", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            if (MessageBox.Show(this, Properties.Language.ExitAppMessage, Properties.Language.Confirmation, MessageBoxButton.YesNo) != MessageBoxResult.Yes)
             {
                 cancelEventArgs.Cancel = true;
             }

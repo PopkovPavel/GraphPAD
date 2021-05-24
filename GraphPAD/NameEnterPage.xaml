@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GraphPAD"
+        xmlns:resx="clr-namespace:GraphPAD.Properties"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="GraphPAD" Height="200" Width="350" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Icon="Resources/icon.jpg">
@@ -13,9 +14,8 @@
                 <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0"/>
             </Border.Effect>
             <StackPanel Margin="10">
-                <TextBox x:Name="textboxName" materialDesign:HintAssist.Hint="Введите отображаемое имя" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaxLines="1" MaxLength="20" FontSize="16"/>
-                <Button Content="Войти" Margin="0 20" Click="AuthButtonNoAcc_Clicked"/>
-                
+                <TextBox x:Name="textboxName" materialDesign:HintAssist.Hint="{x:Static resx:Language.EnterNameString}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaxLines="1" MaxLength="20" FontSize="16"/>
+                <Button Content="{x:Static resx:Language.SignUp}" Margin="0 20" Click="AuthButtonNoAcc_Clicked"/>
             </StackPanel>
         </Border>
     </Grid>

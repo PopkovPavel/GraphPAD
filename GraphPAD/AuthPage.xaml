@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GraphPAD"
+        xmlns:resx="clr-namespace:GraphPAD.Properties"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="GraphPAD (Авторизация)" Height="450" Width="450" MinWidth="400" MinHeight="450" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" KeyDown="AuthWindow_KeyDown" Icon="Resources/icon.jpg">
+        Title="{x:Static resx:Language.AuthPageTitile}" Height="450" Width="450" MinWidth="400" MinHeight="450" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" KeyDown="AuthWindow_KeyDown" Icon="Resources/icon.jpg">
     <Grid Background="#303030">
         <Border MinWidth="300" MinHeight="300" Margin="15" Background="White" VerticalAlignment="Center" Padding="30" CornerRadius="20">
             <Border.Effect>
@@ -14,15 +15,15 @@
             </Border.Effect>
             <StackPanel>
                 <Image Source="Resources/Logo.jpg"/>
-                <TextBlock Text="Приложение для работы с графами онлайн" FontWeight="Bold" FontSize="12" Margin="0 -10 0 0" TextAlignment="Center"/>
-                <TextBox x:Name="textboxLogin" materialDesign:HintAssist.Hint="Введите логин" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaxLines="1" MaxLength="32"/>
-                <PasswordBox x:Name="passwordboxPassword" materialDesign:HintAssist.Hint="Введите пароль" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" MaxLength="40"/>
-                <CheckBox x:Name="checkboxRemember" IsChecked="False" Click="checkboxRemember_Click" Content="Запомнить меня на этом компьютере" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,-10" VerticalContentAlignment="Bottom" Height="25"/>
-                <Button x:Name="authButton" Content="Авторизация" Margin="0 20" Click="AuthButton_Clicked" KeyDown="authButton_KeyDown"/>
+                <TextBlock Text="{x:Static resx:Language.LogoText}" FontWeight="Bold" FontSize="12" Margin="0 -10 0 0" TextAlignment="Center"/>
+                <TextBox x:Name="textboxLogin" materialDesign:HintAssist.Hint="{x:Static resx:Language.LoginString}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaxLines="1" MaxLength="32"/>
+                <PasswordBox x:Name="passwordboxPassword" materialDesign:HintAssist.Hint="{x:Static resx:Language.PasswordString}" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" MaxLength="40"/>
+                <CheckBox x:Name="checkboxRemember" IsChecked="False" Content="{x:Static resx:Language.RememberMeCheckBox}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,-10" VerticalContentAlignment="Bottom" Height="25" Width="280"/>
+                <Button x:Name="authButton" Content="{x:Static resx:Language.AuthBtn}" Margin="0 20" Click="AuthButton_Clicked"/>
                 <Grid Margin="0 -15 0 0" Height="70">
-                    <TextBlock HorizontalAlignment="Left" Text="Нет аккаунта?" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" Margin="0,6,0,0" />
-                    <Button HorizontalAlignment="Right" VerticalAlignment="Top" Content="Зарегистрироваться" FontSize="16" Click="OpenRegPage" Style="{StaticResource MaterialDesignFlatButton}" Width="160" Padding="0,4"/>
-                    <Button VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="0 0 0 0" Content="Продолжить без входа" FontSize="12" Click="OpenMainPageGuest" Style="{StaticResource MaterialDesignFlatButton}" Foreground="Black"/>
+                    <TextBlock HorizontalAlignment="Left" Text="{x:Static resx:Language.NoAccount}" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" Margin="0,6,0,0" Width="180" />
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Top" Content="{x:Static resx:Language.CreateAccBtn}" FontSize="16" Click="OpenRegPage" Style="{StaticResource MaterialDesignFlatButton}" Width="160" Padding="0,4"/>
+                    <Button VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="0 0 0 0" Content="{x:Static resx:Language.GuestModeBtn}" FontSize="12" Click="OpenMainPageGuest" Style="{StaticResource MaterialDesignFlatButton}" Foreground="Black" Width="180"/>
                 </Grid>
             </StackPanel>
         </Border>

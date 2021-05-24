@@ -38,22 +38,22 @@
             <!--Left menu buttons-->
             <TextBlock HorizontalAlignment="Left" TextAlignment="Center" TextWrapping="Wrap" Text="{x:Static resx:Language.ProfileSettings}" VerticalAlignment="Top" Height="20" Width="120" Foreground="White" FontSize="10" Padding="3,3,2,0"/>
             <TextBlock HorizontalAlignment="Left" TextAlignment="Center" TextWrapping="Wrap" Text="{x:Static resx:Language.ApplicationSettings}" VerticalAlignment="Top" Height="20" Width="120" Foreground="White" FontSize="10" Padding="3,3,2,0" Grid.Row="2"/>
-            <Button x:Name="AccountButton" Click="AccountButton_Click" Content="{x:Static resx:Language.MyAccountBtn}" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False"/>
-            <Button x:Name="VoiceButton" Click="VoiceButton_Click" Content="{x:Static resx:Language.VoiceAndSoundBtn}" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False"/>
-            <Button x:Name="InterfaceButton" Click="InterfaceButton_Click" Content="{x:Static resx:Language.InterfaceBtn}" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" Margin="0,30,0,0" IsTabStop="False"/>
+            <Button x:Name="AccountButton" Click="AccountButton_Click" Content="{x:Static resx:Language.MyAccountBtn}" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False" Padding="0"/>
+            <Button x:Name="VoiceButton" Click="VoiceButton_Click" Content="{x:Static resx:Language.VoiceAndSoundBtn}" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" IsTabStop="False" Padding="0"/>
+            <Button x:Name="InterfaceButton" Click="InterfaceButton_Click" Content="{x:Static resx:Language.InterfaceBtn}" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Width="120" BorderBrush="{x:Null}" Background="#FF3D246A" Height="30" Margin="0,30,0,0" IsTabStop="False" Padding="0"/>
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{x:Static resx:Language.Links}" VerticalAlignment="Bottom" Height="60" Width="120" Foreground="White" Padding="3,0,0,0" Grid.Row="5" FontSize="10"/>
             <!--Links Buttons-->
-            <Button x:Name="vkButton" Click="vkButton_Clicked" ToolTip="Наш ВК" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="76" Canvas.Top="107" IsTabStop="False" Margin="6,14,0,14">
+            <Button x:Name="vkButton" Click="vkButton_Clicked" ToolTip="{x:Static resx:Language.Vk}" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="76" Canvas.Top="107" IsTabStop="False" Margin="6,14,0,14">
                 <Button.Background>
                     <ImageBrush ImageSource="Resources/vk.png" Stretch="UniformToFill"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="ytButton" Click="ytButton_Clicked" ToolTip="Наш YouTube канал" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="76" Canvas.Top="107" IsTabStop="False" Margin="43,14,0,14">
+            <Button x:Name="ytButton" Click="ytButton_Clicked" ToolTip="{x:Static resx:Language.YT}" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="76" Canvas.Top="107" IsTabStop="False" Margin="43,14,0,14">
                 <Button.Background>
                     <ImageBrush ImageSource="Resources/youtube.png" Stretch="UniformToFill"/>
                 </Button.Background>
             </Button>
-            <Button x:Name="webButton" Click="webButton_Clicked" ToolTip="Браузерная версия" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="76" Canvas.Top="107" IsTabStop="False" Margin="80,14,0,14">
+            <Button x:Name="webButton" Click="webButton_Clicked" ToolTip="{x:Static resx:Language.BrowserVersion}" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" Height="32" BorderBrush="{x:Null}" Canvas.Left="76" Canvas.Top="107" IsTabStop="False" Margin="80,14,0,14">
                 <Button.Background>
                     <ImageBrush ImageSource="Resources/web.png" Stretch="UniformToFill"/>
                 </Button.Background>
@@ -63,48 +63,47 @@
             <!--Account Canvas-->
             <ScrollViewer x:Name="AccountCanvasScrollView" Visibility="Hidden" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0" Height="391" Width="563" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Canvas x:Name="AccountCanvas" Visibility="Visible" HorizontalAlignment="Left" Height="390" VerticalAlignment="Top" Width="563">
-                    <TextBlock Text="Мой аккаунт" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" FontWeight="Bold" Height="30" Padding="5,1,0,0" FontSize="20" TextDecorations="{x:Null}" Canvas.Left="40" Canvas.Top="15"/>
-                    <Button x:Name="DisconnectButton" Click="DisconnectButton_Click" Content="Выйти из Аккаунта" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="120" BorderBrush="#FF510202" Background="#FF510202" Height="30" FontSize="12" FontWeight="SemiBold" Padding="0" Canvas.Left="400" Canvas.Top="350" IsTabStop="False"/>
-                    <Button x:Name="ChangePasswordButton" Click="ChangePasswordButton_Click" Content="Изменить Пароль" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="120" BorderBrush="#FF3D246A" Background="#FF3D246A" Height="30" FontSize="12" FontWeight="SemiBold" Padding="0" Canvas.Left="40" Canvas.Top="350" IsTabStop="False"/>
+                    <TextBlock Text="{x:Static resx:Language.MyAccountBtn}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" FontWeight="Bold" Height="30" Padding="5,1,0,0" FontSize="20" TextDecorations="{x:Null}" Canvas.Left="40" Canvas.Top="15"/>
+                    <Button x:Name="DisconnectButton" Click="DisconnectButton_Click" Content="{x:Static resx:Language.ExitAccountBtn}" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="120" BorderBrush="#FF510202" Background="#FF510202" Height="30" FontSize="12" FontWeight="SemiBold" Padding="0" Canvas.Left="400" Canvas.Top="350" IsTabStop="False"/>
+                    <Button x:Name="ChangePasswordButton" Click="ChangePasswordButton_Click" Content="{x:Static resx:Language.ChangePasswordBtn}" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Top" Width="120" BorderBrush="#FF3D246A" Background="#FF3D246A" Height="30" FontSize="12" FontWeight="SemiBold" Padding="0" Canvas.Left="40" Canvas.Top="350" IsTabStop="False"/>
                     <Border CornerRadius="10" BorderThickness="1" HorizontalAlignment="Left" Height="240" VerticalAlignment="Top" Width="480" Canvas.Left="40" Canvas.Top="60" BorderBrush="#FF141424" Background="#FF141424"/>
                     <Image x:Name="SettingsAvatar" HorizontalAlignment="Left" Height="60" VerticalAlignment="Top" Width="60" Stretch="Fill" Canvas.Left="60" Canvas.Top="80"/>
                     <Border CornerRadius="10" BorderThickness="1" HorizontalAlignment="Left" Height="120" VerticalAlignment="Top" Width="440" Canvas.Left="60" Canvas.Top="160" Background="#FF22223D" BorderBrush="#FF22223D"/>
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Имя пользователя" VerticalAlignment="Top" Foreground="#FF8B8B8B" Width="110" Height="12" FontSize="10" FontWeight="Medium" Canvas.Left="70" Canvas.Top="170"/>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{x:Static resx:Language.UserString}" VerticalAlignment="Top" Foreground="#FF8B8B8B" Width="110" Height="12" FontSize="10" FontWeight="Medium" Canvas.Left="70" Canvas.Top="170"/>
                     <TextBlock x:Name="nameStingTextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Шабинский Д.А." VerticalAlignment="Top" Foreground="White" Width="350" Height="16" FontWeight="Medium" Padding="0,0,0,0" Canvas.Left="70" Canvas.Top="182"/>
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="ID Аккаунта" VerticalAlignment="Top" Foreground="#FF8B8B8B" Width="110" Height="12" FontSize="10" FontWeight="Medium" Canvas.Left="70" Canvas.Top="205"/>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{x:Static resx:Language.AccountIDString}" VerticalAlignment="Top" Foreground="#FF8B8B8B" Width="110" Height="12" FontSize="10" FontWeight="Medium" Canvas.Left="70" Canvas.Top="205"/>
                     <TextBlock x:Name="IDStingTextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="123456-123456-123456-123456" VerticalAlignment="Top" Foreground="White" Width="350" Height="16" FontWeight="Medium" Padding="0,0,0,0" Canvas.Left="70" Canvas.Top="217"/>
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Email" VerticalAlignment="Top" Foreground="#FF8B8B8B" Width="110" Height="12" FontSize="10" FontWeight="Medium" Canvas.Left="70" Canvas.Top="240"/>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{x:Static resx:Language.EmailString}" VerticalAlignment="Top" Foreground="#FF8B8B8B" Width="110" Height="12" FontSize="10" FontWeight="Medium" Canvas.Left="70" Canvas.Top="240"/>
                     <TextBlock x:Name="emailStingTextBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="gabajoba@mail.ru" VerticalAlignment="Top" Foreground="White" Width="350" Height="16" FontWeight="Medium" Padding="0,0,0,0" Canvas.Left="70" Canvas.Top="252"/>
-                    <TextBlock x:Name="userNameTextBlock" Canvas.Left="140" Text="Шабинский Д.А." Canvas.Top="90" Foreground="White" FontWeight="Bold" FontSize="20" Width="250"/>
-                    <TextBlock x:Name="userRoleTextBlock" Canvas.Left="140" Text="Пользователь" Canvas.Top="117" Foreground="White" FontSize="14" Width="250"/>
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Пароль и аутентификация" VerticalAlignment="Top" Foreground="White" Width="240" Height="20" FontWeight="Medium" Canvas.Left="40" Canvas.Top="330"/>
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Foreground="White" Width="220" Height="20" FontWeight="Medium" Canvas.Left="320" Canvas.Top="320" TextAlignment="Right"/>
+                    <TextBlock x:Name="userNameTextBlock" Canvas.Left="140" Text="Иванов И.И." Canvas.Top="90" Foreground="White" FontWeight="Bold" FontSize="20" Width="360"/>
+                    <TextBlock x:Name="userRoleTextBlock" Canvas.Left="140" Text="{x:Static resx:Language.UserString}" Canvas.Top="117" Foreground="White" FontSize="14" Width="250"/>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{x:Static resx:Language.PasswordAndAuth}" VerticalAlignment="Top" Foreground="White" Width="240" Height="20" FontWeight="Medium" Canvas.Left="40" Canvas.Top="330"/>
                     <Button x:Name="avatarButton" Content="Изменить" Click="AvatarButton_Clicked" HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Canvas.Left="60" Canvas.Top="80" Height="60" Background="Black" Foreground="#DDFFFFFF" FontWeight="SemiBold" IsTabStop="False" Padding="0" BorderThickness="1" FontSize="10" VerticalContentAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalContentAlignment="Center" UseLayoutRounding="False" BorderBrush="{x:Null}" MouseEnter="AvatarButton_MouseEnter" MouseLeave="AvatarButton_MouseLeave" Opacity="0"/>
                     <Rectangle Width="60" Height="60" Canvas.Left="60" Canvas.Top="80" Stroke="#FFC3C3C3" />
-                    <PasswordBox x:Name="newPasswordBox" Visibility="Hidden" materialDesign:HintAssist.Hint="Введите новый пароль" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" MaxLength="40" Height="30" Width="200" Canvas.Left="40" Canvas.Top="390" Foreground="White" Padding="0,-10,0,0"/>
-                    <Button x:Name="CancelChangePassword" Visibility="Hidden" Click="CancelChangePasswordButton_Click" Content="Отмена" HorizontalAlignment="Left" VerticalAlignment="Top" Width="80" BorderBrush="#FF3D246A" Background="#FF3D246A" Height="20" FontSize="12" FontWeight="SemiBold" Padding="0" Canvas.Left="40" Canvas.Top="425" IsTabStop="False"/>
-                    <Button x:Name="ConfirmChangePasswordButton" Visibility="Hidden" Click="ConfirmChangePasswordButton_Click" Content="Изменить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="80" BorderBrush="#FF3D246A" Background="#FF3D246A" Height="20" FontSize="12" FontWeight="SemiBold" Padding="0" Canvas.Left="160" Canvas.Top="425" IsTabStop="False"/>
+                    <PasswordBox x:Name="newPasswordBox" Visibility="Hidden" materialDesign:HintAssist.Hint="{x:Static resx:Language.EnterNewPasswordString}" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" MaxLength="40" Height="30" Width="200" Canvas.Left="40" Canvas.Top="390" Foreground="White" Padding="0,-10,0,0"/>
+                    <Button x:Name="CancelChangePassword" Visibility="Hidden" Click="CancelChangePasswordButton_Click" Content="{x:Static resx:Language.CancelBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="80" BorderBrush="#FF3D246A" Background="#FF3D246A" Height="20" FontSize="12" FontWeight="SemiBold" Padding="0" Canvas.Left="40" Canvas.Top="425" IsTabStop="False"/>
+                    <Button x:Name="ConfirmChangePasswordButton" Visibility="Hidden" Click="ConfirmChangePasswordButton_Click" Content="{x:Static resx:Language.ChangeLangBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="80" BorderBrush="#FF3D246A" Background="#FF3D246A" Height="20" FontSize="12" FontWeight="SemiBold" Padding="0" Canvas.Left="160" Canvas.Top="425" IsTabStop="False"/>
                 </Canvas>
             </ScrollViewer>
 
             <!--Voice Canvas-->
             <Canvas x:Name="VoiceCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="371" VerticalAlignment="Top" Width="474">
-                <TextBlock Text="Голос и звук" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" FontWeight="Bold" Height="30" Padding="5,1,0,0" FontSize="20" TextDecorations="{x:Null}" Margin="40,15,294,356"/>
+                <TextBlock Text="{x:Static resx:Language.VoiceAndSoundBtn}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" FontWeight="Bold" Height="30" Padding="5,1,0,0" FontSize="20" TextDecorations="{x:Null}" Margin="40,15,294,356"/>
             </Canvas>
             <!--Interface Canvas-->
             <Canvas x:Name="InterfaceCanvas" Visibility="Visible" HorizontalAlignment="Left" Height="401" VerticalAlignment="Top" Width="574">
                 <Border CornerRadius="10" BorderThickness="1" HorizontalAlignment="Left" Height="240" VerticalAlignment="Top" Width="480" Canvas.Left="40" Canvas.Top="60" BorderBrush="#FF141424" Background="#FF141424"/>
                 <TextBlock Text="{x:Static resx:Language.InterfaceBtn}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" FontWeight="Bold" Height="30" Padding="5,1,0,0" FontSize="20" TextDecorations="{x:Null}" Margin="40,15,294,356"/>
-                <TextBlock Text="настройки языка" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30" Padding="0,4,0,0" FontSize="16" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="80" FontWeight="SemiBold"/>
-                <ComboBox x:Name="languagesComboBox" materialDesign:TextFieldAssist.HasClearButton="False" materialDesign:HintAssist.Hint="Выберите язык" MinWidth="128" Canvas.Left="60" Canvas.Top="120" Foreground="White" BorderBrush="White" Background="#FF0E0E19" Width="160" SelectionChanged="languagesComboBox_SelectionChanged">
+                <TextBlock Text="{x:Static resx:Language.InterfaceText}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30" Padding="0,4,0,0" FontSize="16" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="80" FontWeight="SemiBold"/>
+                <ComboBox x:Name="languagesComboBox" materialDesign:TextFieldAssist.HasClearButton="False" materialDesign:HintAssist.Hint="{x:Static resx:Language.LanguageHint}" MinWidth="128" Canvas.Left="60" Canvas.Top="120" Foreground="White" BorderBrush="White" Background="#FF0E0E19" Width="160" SelectionChanged="languagesComboBox_SelectionChanged">
                     <ComboBox.Resources>
                         <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FF0E0E19"/>
                     </ComboBox.Resources>
-                    <ComboBoxItem Tag="ru" Content="Русский"/>
-                    <ComboBoxItem Tag="eu" Content="Английский"/>
+                    <ComboBoxItem Tag="ru" Content="{x:Static resx:Language.Russian}"/>
+                    <ComboBoxItem Tag="eu" Content="{x:Static resx:Language.English}"/>
                 </ComboBox>
-                <Button x:Name="changeLanguageButton" Content="{x:Static resx:Language.ChangeLangBtn}" Click="ChangeLanguageButton_Click" ToolTip="Применить выбранный язык" Width="80" Height="20" Canvas.Left="240" Canvas.Top="128" FontSize="12" Padding="0"/>
-                <TextBlock x:Name="currentLanguageTextBlock" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" Height="30" Padding="5,0,0,0" FontSize="14" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="250" FontWeight="SemiBold"><Run Text="Текущий язык: Русский"/>
+                <Button x:Name="changeLanguageButton" Content="{x:Static resx:Language.ChangeLangBtn}" Click="ChangeLanguageButton_Click" ToolTip="{x:Static resx:Language.ChangeLanguageBtnTooltip}" Width="80" Height="20" Canvas.Left="240" Canvas.Top="128" FontSize="12" Padding="0"/>
+                <TextBlock x:Name="currentLanguageTextBlock" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" Height="30" Padding="5,0,0,0" FontSize="14" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="250" FontWeight="SemiBold"><Run Text="{x:Static resx:Language.CurrentLanguage}"/>
                     <InlineUIContainer>
                         <Image x:Name="countryFlag" Source="{StaticResource countryImage}" Width="24" Height="24" Margin="0,0,0,-5"/>
                     </InlineUIContainer></TextBlock>

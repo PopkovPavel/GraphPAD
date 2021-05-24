@@ -61,11 +61,137 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на ID Аккаунта.
+        /// </summary>
+        public static string AccountIDString {
+            get {
+                return ResourceManager.GetString("AccountIDString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Алгоритмы.
+        /// </summary>
+        public static string AlgorithmsBtn {
+            get {
+                return ResourceManager.GetString("AlgorithmsBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Скорость анимации.
+        /// </summary>
+        public static string AnimationSpeedBtn {
+            get {
+                return ResourceManager.GetString("AnimationSpeedBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущая скорость анимации - .
+        /// </summary>
+        public static string AnimationSpeedBtnTooltip {
+            get {
+                return ResourceManager.GetString("AnimationSpeedBtnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Настройки приложения.
         /// </summary>
         public static string ApplicationSettings {
             get {
                 return ResourceManager.GetString("ApplicationSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выключить звук.
+        /// </summary>
+        public static string AudioOffTooltip {
+            get {
+                return ResourceManager.GetString("AudioOffTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Включить звук.
+        /// </summary>
+        public static string AudioOnTooltip {
+            get {
+                return ResourceManager.GetString("AudioOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Авторизация.
+        /// </summary>
+        public static string AuthBtn {
+            get {
+                return ResourceManager.GetString("AuthBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на GraphPAD (Авторизация).
+        /// </summary>
+        public static string AuthPageTitile {
+            get {
+                return ResourceManager.GetString("AuthPageTitile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Браузерная версия.
+        /// </summary>
+        public static string BrowserVersion {
+            get {
+                return ResourceManager.GetString("BrowserVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Кисть.
+        /// </summary>
+        public static string BrushBtn {
+            get {
+                return ResourceManager.GetString("BrushBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Размер Кисти: .
+        /// </summary>
+        public static string BrushSizeSlider {
+            get {
+                return ResourceManager.GetString("BrushSizeSlider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Камера.
+        /// </summary>
+        public static string CameraBtn {
+            get {
+                return ResourceManager.GetString("CameraBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отмена.
+        /// </summary>
+        public static string CancelBtn {
+            get {
+                return ResourceManager.GetString("CancelBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сообщение.
+        /// </summary>
+        public static string Caption {
+            get {
+                return ResourceManager.GetString("Caption", resourceCulture);
             }
         }
         
@@ -79,11 +205,907 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Применить выбранный язык.
+        /// </summary>
+        public static string ChangeLanguageBtnTooltip {
+            get {
+                return ResourceManager.GetString("ChangeLanguageBtnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Изменить Пароль.
+        /// </summary>
+        public static string ChangePasswordBtn {
+            get {
+                return ResourceManager.GetString("ChangePasswordBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выберите алгоритм.
+        /// </summary>
+        public static string ChooseAlgorithmComboBox {
+            get {
+                return ResourceManager.GetString("ChooseAlgorithmComboBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выберите новый Аватар.
+        /// </summary>
+        public static string ChooseNewAvatar {
+            get {
+                return ResourceManager.GetString("ChooseNewAvatar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Очистить поле.
+        /// </summary>
+        public static string ClearFIeldBtn {
+            get {
+                return ResourceManager.GetString("ClearFIeldBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Палитра цветов.
+        /// </summary>
+        public static string ColorPickerString {
+            get {
+                return ResourceManager.GetString("ColorPickerString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Чат конференции .
+        /// </summary>
+        public static string ConferenceChatString {
+            get {
+                return ResourceManager.GetString("ConferenceChatString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Участники конференции.
+        /// </summary>
+        public static string ConferenceParticipantsString {
+            get {
+                return ResourceManager.GetString("ConferenceParticipantsString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Конференций: .
+        /// </summary>
+        public static string ConferencesCount {
+            get {
+                return ResourceManager.GetString("ConferencesCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обновить список конференций.
+        /// </summary>
+        public static string ConferencesUpdateBtnTooltip {
+            get {
+                return ResourceManager.GetString("ConferencesUpdateBtnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Видео-чат конференции.
+        /// </summary>
+        public static string ConferenceVideoChatString {
+            get {
+                return ResourceManager.GetString("ConferenceVideoChatString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на ID Конференции....
+        /// </summary>
+        public static string ConferenssionIdString {
+            get {
+                return ResourceManager.GetString("ConferenssionIdString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Название конференции....
+        /// </summary>
+        public static string ConferenssionNameString {
+            get {
+                return ResourceManager.GetString("ConferenssionNameString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Подтверждение.
+        /// </summary>
+        public static string Confirmation {
+            get {
+                return ResourceManager.GetString("Confirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Создать новую конференцию?
+        ///Название конференции: .
+        /// </summary>
+        public static string ConfirmationMessage {
+            get {
+                return ResourceManager.GetString("ConfirmationMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Скопировать ID.
+        /// </summary>
+        public static string CopyIDBtn {
+            get {
+                return ResourceManager.GetString("CopyIDBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на ID скопирован в буфер обмена..
+        /// </summary>
+        public static string CopyIDMessage {
+            get {
+                return ResourceManager.GetString("CopyIDMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Создать.
+        /// </summary>
+        public static string Create {
+            get {
+                return ResourceManager.GetString("Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Зарегистрироваться.
+        /// </summary>
+        public static string CreateAccBtn {
+            get {
+                return ResourceManager.GetString("CreateAccBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Создать аккаунт с этими данными?
+        ///Имя - .
+        /// </summary>
+        public static string CreateAccWithThisDataMessage {
+            get {
+                return ResourceManager.GetString("CreateAccWithThisDataMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы успешно создали конференцию.
+        ///Название: .
+        /// </summary>
+        public static string CreateConferenssionMessage {
+            get {
+                return ResourceManager.GetString("CreateConferenssionMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Добавление.
+        /// </summary>
+        public static string CreateGraphBtn {
+            get {
+                return ResourceManager.GetString("CreateGraphBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Создать конференцию.
+        /// </summary>
+        public static string CreateLobbyBtn {
+            get {
+                return ResourceManager.GetString("CreateLobbyBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий язык: Русский.
+        /// </summary>
+        public static string CurrentLanguage {
+            get {
+                return ResourceManager.GetString("CurrentLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий режим: Алгоритмы.
+        /// </summary>
+        public static string CurrentModeAlgorithms {
+            get {
+                return ResourceManager.GetString("CurrentModeAlgorithms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выключить режим Алгоритмов.
+        /// </summary>
+        public static string CurrentModeAlgorithmsOffTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeAlgorithmsOffTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Включить режим Алгоритмов.
+        /// </summary>
+        public static string CurrentModeAlgorithmsOnTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeAlgorithmsOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий режим: Кисть.
+        /// </summary>
+        public static string CurrentModeBrush {
+            get {
+                return ResourceManager.GetString("CurrentModeBrush", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выключить Кисть.
+        /// </summary>
+        public static string CurrentModeBrushOffTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeBrushOffTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Включить Кисть.
+        /// </summary>
+        public static string CurrentModeBrushOnTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeBrushOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий режим: Создание.
+        /// </summary>
+        public static string CurrentModeCreate {
+            get {
+                return ResourceManager.GetString("CurrentModeCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выключить режим Создания.
+        /// </summary>
+        public static string CurrentModeCreateOffTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeCreateOffTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Включить режим Создания.
+        /// </summary>
+        public static string CurrentModeCreateOnTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeCreateOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий режим: Курсор.
+        /// </summary>
+        public static string CurrentModeCursor {
+            get {
+                return ResourceManager.GetString("CurrentModeCursor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий режим: Удаление.
+        /// </summary>
+        public static string CurrentModeDelete {
+            get {
+                return ResourceManager.GetString("CurrentModeDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выключить режим Удаления.
+        /// </summary>
+        public static string CurrentModeDeleteOffTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeDeleteOffTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Включить режим Удаления.
+        /// </summary>
+        public static string CurrentModeDeleteOnTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeDeleteOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий режим: Ластик.
+        /// </summary>
+        public static string CurrentModeEraser {
+            get {
+                return ResourceManager.GetString("CurrentModeEraser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выключить Ластик.
+        /// </summary>
+        public static string CurrentModeEraserOffTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeEraserOffTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Включить Ластик.
+        /// </summary>
+        public static string CurrentModeEraserOnTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeEraserOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий режим: Умный Ластик.
+        /// </summary>
+        public static string CurrentModeEraserSmart {
+            get {
+                return ResourceManager.GetString("CurrentModeEraserSmart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выключить Умный Ластик.
+        /// </summary>
+        public static string CurrentModeEraserSmartOffTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeEraserSmartOffTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Включить Умный Ластик.
+        /// </summary>
+        public static string CurrentModeEraserSmartOnTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeEraserSmartOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий режим: Генерация графов.
+        /// </summary>
+        public static string CurrentModeGraphGen {
+            get {
+                return ResourceManager.GetString("CurrentModeGraphGen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выключить режим Генерации Графов.
+        /// </summary>
+        public static string CurrentModeGraphGenOffTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeGraphGenOffTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Включить режим Генерации Графов.
+        /// </summary>
+        public static string CurrentModeGraphGenOnTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeGraphGenOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий режим: Перемещение.
+        /// </summary>
+        public static string CurrentModeMove {
+            get {
+                return ResourceManager.GetString("CurrentModeMove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий режим: Случайный связный граф.
+        /// </summary>
+        public static string CurrentModeRandConnGraph {
+            get {
+                return ResourceManager.GetString("CurrentModeRandConnGraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выключить режим Генерации Случайного Связного Графа.
+        /// </summary>
+        public static string CurrentModeRandConnGraphOffTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeRandConnGraphOffTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Включить режим Генерации Случайного Связного Графа.
+        /// </summary>
+        public static string CurrentModeRandConnGraphOnTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeRandConnGraphOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий режим: Случайное дерево.
+        /// </summary>
+        public static string CurrentModeRandTree {
+            get {
+                return ResourceManager.GetString("CurrentModeRandTree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выключить режим Генерации Случайного Дерева.
+        /// </summary>
+        public static string CurrentModeRandTreeOffTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeRandTreeOffTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Включить режим Генерации Случайного Дерева.
+        /// </summary>
+        public static string CurrentModeRandTreeOnTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeRandTreeOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущий режим: Выделение.
+        /// </summary>
+        public static string CurrentModeSelection {
+            get {
+                return ResourceManager.GetString("CurrentModeSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выключить режим Выделения.
+        /// </summary>
+        public static string CurrentModeSelectionOffTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeSelectionOffTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Включить режим Выделения.
+        /// </summary>
+        public static string CurrentModeSelectionOnTooltip {
+            get {
+                return ResourceManager.GetString("CurrentModeSelectionOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удалить Конференцию.
+        /// </summary>
+        public static string DeleteConferenssionBtn {
+            get {
+                return ResourceManager.GetString("DeleteConferenssionBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Удаление.
+        /// </summary>
+        public static string DeleteGraphBtn {
+            get {
+                return ResourceManager.GetString("DeleteGraphBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Кол-во рёбер.
+        /// </summary>
+        public static string EdgesAmountBtn {
+            get {
+                return ResourceManager.GetString("EdgesAmountBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Количество ребер не должно быть меньше N-1, количество ребер не должно быть больше N(N-1)/2..
+        /// </summary>
+        public static string EdgesCountErrorMessage {
+            get {
+                return ResourceManager.GetString("EdgesCountErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введено некорректное количество вершин..
+        /// </summary>
+        public static string EdgesCountMessage {
+            get {
+                return ResourceManager.GetString("EdgesCountMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вес ребра.
+        /// </summary>
+        public static string EdgesWeightBtn {
+            get {
+                return ResourceManager.GetString("EdgesWeightBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Эл. почта.
+        /// </summary>
+        public static string EmailString {
+            get {
+                return ResourceManager.GetString("EmailString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Английский.
+        /// </summary>
+        public static string English {
+            get {
+                return ResourceManager.GetString("English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Войти.
+        /// </summary>
+        public static string Enter {
+            get {
+                return ResourceManager.GetString("Enter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Такой конференции не существует, либо она уже была добавлена..
+        /// </summary>
+        public static string EnterConferenssionErrorMessage {
+            get {
+                return ResourceManager.GetString("EnterConferenssionErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите ID конференции.
+        /// </summary>
+        public static string EnterConferenssionIDTooltip {
+            get {
+                return ResourceManager.GetString("EnterConferenssionIDTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы успешно вошли в конференцию.
+        ///Её ID: .
+        /// </summary>
+        public static string EnterConferenssionMessage1 {
+            get {
+                return ResourceManager.GetString("EnterConferenssionMessage1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Чтобы подключиться к конференции выберите её в списке слева..
+        /// </summary>
+        public static string EnterConferenssionMessage2 {
+            get {
+                return ResourceManager.GetString("EnterConferenssionMessage2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите название конференции.
+        /// </summary>
+        public static string EnterConferenssionNameTooltip {
+            get {
+                return ResourceManager.GetString("EnterConferenssionNameTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите эл. почту.
+        /// </summary>
+        public static string EnterEmailString {
+            get {
+                return ResourceManager.GetString("EnterEmailString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Войти в конференцию.
+        /// </summary>
+        public static string EnterLobbyBtn {
+            get {
+                return ResourceManager.GetString("EnterLobbyBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Напишите сообщение ....
+        /// </summary>
+        public static string EnterMessageField {
+            get {
+                return ResourceManager.GetString("EnterMessageField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите отображаемое имя.
+        /// </summary>
+        public static string EnterNameString {
+            get {
+                return ResourceManager.GetString("EnterNameString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите новый пароль.
+        /// </summary>
+        public static string EnterNewPasswordString {
+            get {
+                return ResourceManager.GetString("EnterNewPasswordString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите пароль.
+        /// </summary>
+        public static string EnterPasswordString1 {
+            get {
+                return ResourceManager.GetString("EnterPasswordString1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите пароль ещё раз.
+        /// </summary>
+        public static string EnterPasswordString2 {
+            get {
+                return ResourceManager.GetString("EnterPasswordString2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ластик.
+        /// </summary>
+        public static string EraserBtn {
+            get {
+                return ResourceManager.GetString("EraserBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Размер Ластика: .
+        /// </summary>
+        public static string EraserSizeSlider {
+            get {
+                return ResourceManager.GetString("EraserSizeSlider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пользователь с таким E-Mail-ом уже существует..
+        /// </summary>
+        public static string ExistingEmail {
+            get {
+                return ResourceManager.GetString("ExistingEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выйти из Аккаунта.
+        /// </summary>
+        public static string ExitAccountBtn {
+            get {
+                return ResourceManager.GetString("ExitAccountBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы действительно хотите выйти?.
+        /// </summary>
+        public static string ExitAppMessage {
+            get {
+                return ResourceManager.GetString("ExitAppMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Создать граф.
+        /// </summary>
+        public static string GenGraphBtn {
+            get {
+                return ResourceManager.GetString("GenGraphBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не выбран файл для загрузки графа..
+        /// </summary>
+        public static string GraphFileNotSelected {
+            get {
+                return ResourceManager.GetString("GraphFileNotSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Генерация графов.
+        /// </summary>
+        public static string GraphGenBtn {
+            get {
+                return ResourceManager.GetString("GraphGenBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Графы.
+        /// </summary>
+        public static string GraphModeChangerBtn {
+            get {
+                return ResourceManager.GetString("GraphModeChangerBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Переключить на режим Рисования.
+        /// </summary>
+        public static string GraphModeChangerBtnTooltip {
+            get {
+                return ResourceManager.GetString("GraphModeChangerBtnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Гостевые аккаунты пока не поддерживаются..
+        /// </summary>
+        public static string GuestAccsNotWork {
+            get {
+                return ResourceManager.GetString("GuestAccsNotWork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Продолжить без входа.
+        /// </summary>
+        public static string GuestModeBtn {
+            get {
+                return ResourceManager.GetString("GuestModeBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Гость.
+        /// </summary>
+        public static string GuestString {
+            get {
+                return ResourceManager.GetString("GuestString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Уже есть Аккаунт?.
+        /// </summary>
+        public static string HasAccountString {
+            get {
+                return ResourceManager.GetString("HasAccountString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Конференция .
+        /// </summary>
+        public static string HasConferenceString {
+            get {
+                return ResourceManager.GetString("HasConferenceString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введены некорректные данные.
+        ///(Возможно отсутствует символ &quot;@&quot; или символ &quot;.&quot;).
+        /// </summary>
+        public static string IncorrectEmailDataTooltip {
+            get {
+                return ResourceManager.GetString("IncorrectEmailDataTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Для работы с графами, а также общения с пользователями необходимо сначала войти в конференцию или же создать собственную..
+        /// </summary>
+        public static string InfoString {
+            get {
+                return ResourceManager.GetString("InfoString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Интерфейс.
         /// </summary>
         public static string InterfaceBtn {
             get {
                 return ResourceManager.GetString("InterfaceBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Настройки интерфейса.
+        /// </summary>
+        public static string InterfaceText {
+            get {
+                return ResourceManager.GetString("InterfaceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выберите язык.
+        /// </summary>
+        public static string LanguageHint {
+            get {
+                return ResourceManager.GetString("LanguageHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Покинуть Конференцию.
+        /// </summary>
+        public static string LeaveConferenssionBtn {
+            get {
+                return ResourceManager.GetString("LeaveConferenssionBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Покинуть.
+        /// </summary>
+        public static string LeaveString {
+            get {
+                return ResourceManager.GetString("LeaveString", resourceCulture);
             }
         }
         
@@ -97,11 +1119,146 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Мой аккаунт.
+        ///   Ищет локализованную строку, похожую на Введите логин.
+        /// </summary>
+        public static string LoginString {
+            get {
+                return ResourceManager.GetString("LoginString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Успешный вход.
+        /// </summary>
+        public static string LoginSucess {
+            get {
+                return ResourceManager.GetString("LoginSucess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Приложение для работы с графами онлайн.
+        /// </summary>
+        public static string LogoText {
+            get {
+                return ResourceManager.GetString("LogoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Изменения вступят в силу после перезапуска приложения..
+        /// </summary>
+        public static string MessageBoxLanguageText {
+            get {
+                return ResourceManager.GetString("MessageBoxLanguageText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Мой Аккаунт.
         /// </summary>
         public static string MyAccountBtn {
             get {
                 return ResourceManager.GetString("MyAccountBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Нет Аккаунта?.
+        /// </summary>
+        public static string NoAccount {
+            get {
+                return ResourceManager.GetString("NoAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Конференция ....
+        /// </summary>
+        public static string NoConferenceString {
+            get {
+                return ResourceManager.GetString("NoConferenceString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ориентированный?.
+        /// </summary>
+        public static string OrientationBtn {
+            get {
+                return ResourceManager.GetString("OrientationBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Владелец: .
+        /// </summary>
+        public static string OwnerString {
+            get {
+                return ResourceManager.GetString("OwnerString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Рисование.
+        /// </summary>
+        public static string PaintModeChangerBtn {
+            get {
+                return ResourceManager.GetString("PaintModeChangerBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Переключить на режим Графов.
+        /// </summary>
+        public static string PaintModeChangerBtnTooltip {
+            get {
+                return ResourceManager.GetString("PaintModeChangerBtnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Участники.
+        /// </summary>
+        public static string ParticipantsBtn {
+            get {
+                return ResourceManager.GetString("ParticipantsBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Участники: .
+        /// </summary>
+        public static string ParticipantsString {
+            get {
+                return ResourceManager.GetString("ParticipantsString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пароль и аутентификация.
+        /// </summary>
+        public static string PasswordAndAuth {
+            get {
+                return ResourceManager.GetString("PasswordAndAuth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пароли не совпадают..
+        /// </summary>
+        public static string PasswordsDontMatchTooltip {
+            get {
+                return ResourceManager.GetString("PasswordsDontMatchTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Введите пароль.
+        /// </summary>
+        public static string PasswordString {
+            get {
+                return ResourceManager.GetString("PasswordString", resourceCulture);
             }
         }
         
@@ -115,6 +1272,105 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Случ. связный граф.
+        /// </summary>
+        public static string RandConnGraphBtn {
+            get {
+                return ResourceManager.GetString("RandConnGraphBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Случайное дерево.
+        /// </summary>
+        public static string RandTreeBtn {
+            get {
+                return ResourceManager.GetString("RandTreeBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на GraphPAD (Регистрация).
+        /// </summary>
+        public static string RegPageTitile {
+            get {
+                return ResourceManager.GetString("RegPageTitile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Запомнить меня на этом компьютере.
+        /// </summary>
+        public static string RememberMeCheckBox {
+            get {
+                return ResourceManager.GetString("RememberMeCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Упорядочить граф.
+        /// </summary>
+        public static string ReorderBtn {
+            get {
+                return ResourceManager.GetString("ReorderBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Русский.
+        /// </summary>
+        public static string Russian {
+            get {
+                return ResourceManager.GetString("Russian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сохранить граф в файл.
+        /// </summary>
+        public static string SaveGraphToFileBtnTooltip {
+            get {
+                return ResourceManager.GetString("SaveGraphToFileBtnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сохранить изображение.
+        /// </summary>
+        public static string SaveImageString {
+            get {
+                return ResourceManager.GetString("SaveImageString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сохранить в файл.
+        /// </summary>
+        public static string SaveToFileBtn {
+            get {
+                return ResourceManager.GetString("SaveToFileBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выделение.
+        /// </summary>
+        public static string SelectionBtn {
+            get {
+                return ResourceManager.GetString("SelectionBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы: .
+        /// </summary>
+        public static string SendMessageYou {
+            get {
+                return ResourceManager.GetString("SendMessageYou", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Настройки.
         /// </summary>
         public static string SettingsTitle {
@@ -124,11 +1380,321 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Настройки.
+        /// </summary>
+        public static string SettingsTooltip {
+            get {
+                return ResourceManager.GetString("SettingsTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Запустить.
+        /// </summary>
+        public static string ShowAlgorithm {
+            get {
+                return ResourceManager.GetString("ShowAlgorithm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Запустить выбранный алгоритм.
+        /// </summary>
+        public static string ShowAlgorithmTooltip {
+            get {
+                return ResourceManager.GetString("ShowAlgorithmTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Войти.
+        /// </summary>
+        public static string SignUp {
+            get {
+                return ResourceManager.GetString("SignUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Умный Ластик.
+        /// </summary>
+        public static string SmartEraserBtn {
+            get {
+                return ResourceManager.GetString("SmartEraserBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Что-то пошло не так..
+        /// </summary>
+        public static string SomethingWentWrong {
+            get {
+                return ResourceManager.GetString("SomethingWentWrong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пароль успешно изменён..
+        /// </summary>
+        public static string SuccessPasswordChange {
+            get {
+                return ResourceManager.GetString("SuccessPasswordChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Регистрация прошла успешно..
+        /// </summary>
+        public static string SuccessReg {
+            get {
+                return ResourceManager.GetString("SuccessReg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Символов .
+        /// </summary>
+        public static string SymbolCountString {
+            get {
+                return ResourceManager.GetString("SymbolCountString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Текстовый чат.
+        /// </summary>
+        public static string TextChatBtn {
+            get {
+                return ResourceManager.GetString("TextChatBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Логин слишком короткий.
+        ///Минимальная длина логина - 5 символов..
+        /// </summary>
+        public static string TooShortLoginTooltip {
+            get {
+                return ResourceManager.GetString("TooShortLoginTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Имя слишком короткое.
+        ///Минимальная длина имени - 3 символа..
+        /// </summary>
+        public static string TooShortNameTooltip {
+            get {
+                return ResourceManager.GetString("TooShortNameTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пароль слишком короткий.
+        ///Минимальная длина пароля - 8 символов..
+        /// </summary>
+        public static string TooShortPassword {
+            get {
+                return ResourceManager.GetString("TooShortPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пароль слишком короткий.
+        ///Минимальная длина пароля - 8 символов..
+        /// </summary>
+        public static string TooShortPasswordTooltip {
+            get {
+                return ResourceManager.GetString("TooShortPasswordTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Загрузить граф.
+        /// </summary>
+        public static string UploadGraphBtn {
+            get {
+                return ResourceManager.GetString("UploadGraphBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Пользователь.
+        /// </summary>
+        public static string UserString {
+            get {
+                return ResourceManager.GetString("UserString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Кол-во вершин.
+        /// </summary>
+        public static string VertexAmountBtn {
+            get {
+                return ResourceManager.GetString("VertexAmountBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Видео-чат.
+        /// </summary>
+        public static string VideoChatBtn {
+            get {
+                return ResourceManager.GetString("VideoChatBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Видео отключено.
+        /// </summary>
+        public static string VideoOffString {
+            get {
+                return ResourceManager.GetString("VideoOffString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выключить веб-камеру.
+        /// </summary>
+        public static string VideoOffTooltip {
+            get {
+                return ResourceManager.GetString("VideoOffTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Видео подключено.
+        /// </summary>
+        public static string VideoOnString {
+            get {
+                return ResourceManager.GetString("VideoOnString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Включить веб-камеру.
+        /// </summary>
+        public static string VideoOnTooltip {
+            get {
+                return ResourceManager.GetString("VideoOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Наш ВК.
+        /// </summary>
+        public static string Vk {
+            get {
+                return ResourceManager.GetString("Vk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Голос и звук.
         /// </summary>
         public static string VoiceAndSoundBtn {
             get {
                 return ResourceManager.GetString("VoiceAndSoundBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Голосовой чат выключен.
+        /// </summary>
+        public static string VoiceChatOffString {
+            get {
+                return ResourceManager.GetString("VoiceChatOffString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выключить микрофон.
+        /// </summary>
+        public static string VoiceChatOffTooltip {
+            get {
+                return ResourceManager.GetString("VoiceChatOffTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Голосовой чат подключен.
+        /// </summary>
+        public static string VoiceChatOnString {
+            get {
+                return ResourceManager.GetString("VoiceChatOnString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Включить микрофон.
+        /// </summary>
+        public static string VoiceChatOnTooltip {
+            get {
+                return ResourceManager.GetString("VoiceChatOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Здравствуйте, .
+        /// </summary>
+        public static string WelcomeString {
+            get {
+                return ResourceManager.GetString("WelcomeString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Неверный логин или пароль..
+        /// </summary>
+        public static string WrongLogOrPassTooltip {
+            get {
+                return ResourceManager.GetString("WrongLogOrPassTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы не можете удалить чужую конференцию..
+        /// </summary>
+        public static string YouCannotDeleteThisRoom {
+            get {
+                return ResourceManager.GetString("YouCannotDeleteThisRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы не можете покинуть собственную конференцию..
+        /// </summary>
+        public static string YouCannotLeaveThisRoom {
+            get {
+                return ResourceManager.GetString("YouCannotLeaveThisRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы удалили конференцию .
+        /// </summary>
+        public static string YouDeletedRoom {
+            get {
+                return ResourceManager.GetString("YouDeletedRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вы покинули конференцию .
+        /// </summary>
+        public static string YouLeavedRoom {
+            get {
+                return ResourceManager.GetString("YouLeavedRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Наш Youtube.
+        /// </summary>
+        public static string YT {
+            get {
+                return ResourceManager.GetString("YT", resourceCulture);
             }
         }
     }
