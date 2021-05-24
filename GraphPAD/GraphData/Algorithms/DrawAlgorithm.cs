@@ -8,7 +8,45 @@ namespace GraphPAD
     
     public partial class MainPage : Window
     {
-        
+        private void StartAlgorithm(GraphX.Controls.VertexControl vc)
+        {
+            FixLabelsAndArrows();
+            if (isAlgorithmsOn)
+            {
+                switch (AlgorithmHelper.ChoosedAlgorithm)
+                {
+                    case "DFS":
+                        {
+                            CalculateDFS((GraphData.Model.DataVertex)vc.Vertex);
+                            break;
+                        }
+                    case "Dijkstra":
+                        {
+                            if(selectedVertex != null && selectedVertex != vc.Vertex)
+                            {
+                                CalculateDijkstra((GraphData.Model.DataVertex)vc.Vertex);
+                                
+                            }
+                            else
+                            {
+                                selectedVertex = (GraphData.Model.DataVertex)vc.Vertex;
+                                MessageBox.Show("Теперь выберите вторую вершину");
+                            }
+                            break;
+                        }
+                    case "": 
+                        {
+                            MessageBox.Show("Выберите алгоритм");
+                            break; 
+                        }
+                    default:
+                        {
+                            MessageBox.Show("Выберите алгоритм");
+                            break;
+                        }
+                }
+            }
+        }
         public async void DrawAlgorithm()
         {
             FixLabelsAndArrows();

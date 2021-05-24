@@ -21,6 +21,7 @@ namespace GraphPAD
     {
         #region Global Variables
         private string algorithmResult;
+        public DataVertex selectedVertex;
         /// <summary>
         /// Список ребер, которые необходимо "покрасить"
         /// </summary>
@@ -30,7 +31,6 @@ namespace GraphPAD
         /// Фабрика
         /// </summary>
         private Painter _creator;
-        static bool flagNegr = true;
         /// <summary>
         /// Строитель
         /// </summary>
@@ -223,6 +223,8 @@ namespace GraphPAD
             orientedCheckbox.Visibility = Visibility.Hidden;
 
             Chromium.settings.CefCommandLineArgs.Add("enable-media-stream", "1");
+            Chromium.settings.CefCommandLineArgs.Add("ignore-certificate-errors", string.Empty);
+            Chromium.settings.CefCommandLineArgs.Add("use-fake-ui-for-media-stream", string.Empty);
             CefSharp.Cef.Initialize(Chromium.settings);
             leaveButton.Click += (s, ea) =>
             {
@@ -318,13 +320,14 @@ namespace GraphPAD
         }
         private VertexControl CreateVertexControl(Point position)
         {
+            GraphData.Algorithms.AlgorithmHelper.VertexCount += 1;
             Random rnd = new Random();
             byte c1 = (byte)rnd.Next(0, 160);
             byte c2 = (byte)rnd.Next(0, 160);
             byte c3 = (byte)rnd.Next(0, 160);
 
             var vertexColor = new SolidColorBrush(Color.FromRgb(c1, c2, c3));
-            var data = new DataVertex((GraphArea.VertexList.Count + 1).ToString(), vertexColor) { };
+            var data = new DataVertex(GraphData.Algorithms.AlgorithmHelper.VertexCount.ToString(), vertexColor) { };
             var vc = new VertexControl(data);
             vc.SetPosition(position);
             GraphArea.AddVertexAndData(data, vc, true);
@@ -400,6 +403,11 @@ namespace GraphPAD
         {
             //remove vertex and all adjacent edges from layout and data graph
             GraphArea.RemoveVertexAndEdges(vc.Vertex as DataVertex);
+            if(GraphArea.VertexList.Count == 0)
+            {
+                GraphData.Algorithms.AlgorithmHelper.VertexCount = 0;
+            }
+          
         }
         void GraphArea_VertexSelected(object sender, GraphX.Controls.Models.VertexSelectedEventArgs args)
         {
@@ -424,21 +432,6 @@ namespace GraphPAD
             }            
         }
 
-        private void StartAlgorithm(VertexControl vc)
-        {
-            FixLabelsAndArrows();
-            if (isAlgorithmsOn)
-            {
-                string ChoosedAlgorithm = "test";
-                switch (ChoosedAlgorithm)
-                {
-                    case "test":
-                        CalculateDFS((DataVertex)vc.Vertex);
-                        break;
-                    default: break;
-                }
-            }
-        }
 
         void GraphArea_EdgeSelected(object sender, GraphX.Controls.Models.EdgeSelectedEventArgs args)
         {
@@ -950,8 +943,8 @@ namespace GraphPAD
             //Отображение веб-камер
             Chromium.SetSettings(roomId);
             var camera = Chromium.Connect();
-            camera.Height = 720;
-            camera.Width = 405;
+            camera.Height = VideoChatCanvas.ActualHeight;
+            camera.Width = VideoChatCanvas.ActualWidth;
 
             //Список конференций в левой части окна
             LobbysCanvas.Visibility = Visibility.Hidden;
@@ -1411,16 +1404,16 @@ namespace GraphPAD
                 showAnimatonButton.Visibility = Visibility.Visible;
                 algorithmsComboBox.Visibility = Visibility.Visible;
                 currentGraphMode.Text = Properties.Language.CurrentModeAlgorithms;
-                isAlgorithmsOn = true;
                 algorithmsBtn.ToolTip = Properties.Language.CurrentModeAlgorithmsOffTooltip;
                 _opMode = EditorOperationMode.Algorithm;
+
                 GraphArea.SetVerticesDrag(false);
-                flagNegr = false;
+                isAlgorithmsOn = true;
+
 
             }
             else
             {
-                flagNegr = true;
                 addVertexBtn.Visibility = Visibility.Visible;
                 deleteVertexBtn.Visibility = Visibility.Visible;
                 graphGeneratorBtn.Visibility = Visibility.Visible;
@@ -1430,9 +1423,10 @@ namespace GraphPAD
                 showAnimatonButton.Visibility = Visibility.Hidden;
                 algorithmsComboBox.Visibility = Visibility.Hidden;
                 currentGraphMode.Text = Properties.Language.CurrentModeMove;
-                isAlgorithmsOn = false;
                 algorithmsBtn.ToolTip = Properties.Language.CurrentModeAlgorithmsOnTooltip;
                 //DrawAlgorithm();
+                isAlgorithmsOn = false;
+                selectedVertex = null;
                 GraphArea.SetVerticesDrag(true);
             }
             Button btn = sender as Button;
@@ -1604,6 +1598,7 @@ namespace GraphPAD
         {
             try
             {
+                GraphData.Algorithms.AlgorithmHelper.VertexCount = 0;
                 Random rnd = new Random();
                 var condEdges = edgesAmountTextBox.Text != "";
                 var condVertices = vertexAmountTextBox.Text != "";
@@ -1807,6 +1802,7 @@ namespace GraphPAD
         private void ClearGraphs_Click(object sender, RoutedEventArgs e)
         {
             GraphArea.ClearLayout();
+            GraphData.Algorithms.AlgorithmHelper.VertexCount = 0;
         }
         private void ReorderGraph_Click(object sender, RoutedEventArgs e)
         {
@@ -1851,10 +1847,11 @@ namespace GraphPAD
         private void algorithmsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //Выбор Алгоритма
-            
-            //ComboBox comboBox = (ComboBox)sender;
-            //ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
+            ComboBox comboBox = (ComboBox)sender;
+            ComboBoxItem selectedItem = (ComboBoxItem)comboBox.SelectedItem;
             //MessageBox.Show(selectedItem.Content.ToString());
+            GraphData.Algorithms.AlgorithmHelper.ChoosedAlgorithm = selectedItem.Tag.ToString();
+            MessageBox.Show("Теперь выберите вершину для запуска алгоритма");
         }
         #endregion
         #region Paint panel
@@ -2177,5 +2174,10 @@ namespace GraphPAD
             RefreshRooms();
         }
         #endregion
+
+        private void GridSplitter_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+          //  Chromium.s
+        }
     }
 }

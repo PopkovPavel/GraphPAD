@@ -9,5 +9,7 @@ namespace GraphPAD.GraphData.Algorithms
     public abstract class AlgorithmHelper
     {
         public static int AlgorithmTime = 1500;
+        public static int VertexCount = 0;
+        public static string ChoosedAlgorithm = "";
     }
 }

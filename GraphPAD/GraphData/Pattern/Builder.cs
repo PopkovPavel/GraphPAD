@@ -67,6 +67,7 @@ namespace GraphPAD.GraphData.Pattern
                 var VertexColor = new SolidColorBrush(Color.FromRgb(c1, c2, c3));
               
                 var vertex = new DataVertex((i + 1).ToString(), VertexColor) { ID = i };
+                GraphData.Algorithms.AlgorithmHelper.VertexCount += 1;
                 vertices.Add(vertex);
             }
 

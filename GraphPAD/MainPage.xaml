@@ -44,8 +44,8 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="95"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="400"/>
+            <ColumnDefinition Width="805*"/>
+            <ColumnDefinition Width="400*"/>
         </Grid.ColumnDefinitions>
         <Grid x:Name="ConfGrid" Grid.Column="0" Background="#141424">
             <Grid.RowDefinitions>
@@ -236,8 +236,8 @@
                         <ComboBox.Resources>
                             <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FF0E0E19"/>
                         </ComboBox.Resources>
-                        <ComboBoxItem Content="item1"/>
-                        <ComboBoxItem Content="item2"/>
+                        <ComboBoxItem Content="Поиск в ширину" Tag="DFS"/>
+                        <ComboBoxItem Content="Алгоритм дейкстры" Tag="Dijkstra"/>
                         <ComboBoxItem Content="item3"/>
                         <ComboBoxItem Content="item4"/>
                         <ComboBoxItem Content="item5"/>
@@ -301,6 +301,7 @@
                 <Button x:Name="PaintModeChangerButton" Visibility="Hidden" Content="{x:Static resx:Language.PaintModeChangerBtn}" Click="FreeMode_Click" ToolTip="{x:Static resx:Language.PaintModeChangerBtnTooltip}" Width="100" BorderBrush="White" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,7.5,10,0"/>
             </Grid>
         </Grid>
+        <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" HorizontalAlignment="Right" ShowsPreview="True" DragCompleted="GridSplitter_DragCompleted"></GridSplitter>
         <Grid x:Name="chatGrid" Grid.Column="2" Background="#FF141424">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
@@ -326,7 +327,7 @@
                     <TextBox x:Name="ChatBox" Visibility="Visible" TextWrapping="Wrap" Text="" IsReadOnly="True" FontSize="20" TextAlignment="Left" IsTabStop="False" AllowDrop="False"/>
                 </ScrollViewer>
                 <!--Веб-камеры-->
-                <ScrollViewer x:Name="VideosScrollView" Visibility="Hidden" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0" Grid.Row="2" Foreground="White" Background="#00000000">
+                <ScrollViewer x:Name="VideosScrollView" Visibility="Visible" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="2" Foreground="White" Background="#00000000">
                     <Canvas x:Name="VideoChatCanvas" Visibility="Hidden" Grid.Row="1" Grid.RowSpan="2"/>
                 </ScrollViewer>
                 <!--Список участников-->
