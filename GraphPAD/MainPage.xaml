@@ -93,7 +93,7 @@
                     <TextBox x:Name="NewConferensionNameTextBox" Visibility="Hidden" HorizontalAlignment="Left" Height="33" TextWrapping="Wrap" materialDesign:HintAssist.Hint="{x:Static resx:Language.ConferenssionNameString}" Width="350" Foreground="White" FontSize="18" MaxLines="1" MaxLength="35" Background="Black" IsTabStop="False" HorizontalContentAlignment="Stretch" Padding="0" VerticalContentAlignment="Stretch" Canvas.Top="101"/>
                 </Canvas>
                 <!--Поля для графов и рисовалки-->
-                <graphx:ZoomControl x:Name="ZoomCtrl" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1" Background="White" VerticalContentAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" IsTabStop="False" TabIndex="0" MinZoom="0.1" MaxZoom="10" >
+                <graphx:ZoomControl x:Name="ZoomCtrl" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1" Background="White" VerticalContentAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" IsTabStop="False" TabIndex="0" MinZoom="0.1" MaxZoom="10" MouseWheelZoomingMode="Positional" ZoomSensitivity="25">
                     <model:GraphZone x:Name="GraphArea"/>
                 </graphx:ZoomControl>
                 <graphx:ZoomControl x:Name="PaintCanvasScroll" Grid.Column="1" BorderBrush="Transparent" BorderThickness="1" Background="Transparent" VerticalContentAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" >
@@ -139,30 +139,36 @@
 
                 <!--Панель для работы с графами-->
                 <Canvas x:Name="GraphControlCanvas" Visibility="Visible" Margin="315,7.5,10,7.5" Background="#FF0E0E19">
-                    <Button x:Name="addVertexBtn" Click="AddVertex_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.CurrentModeCreateOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="addVertexBtn" Click="AddVertex_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.CurrentModeCreateOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/add_vertex.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.CreateGraphBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="clearGraph" Click="ClearGraphs_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.ClearFIeldBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="clearGraph" Click="ClearGraphs_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.ClearFieldBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="63" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/clear.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.ClearFIeldBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.ClearFieldBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="reorderGraph" Click="ReorderGraph_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.ReorderBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="64" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="sendGraph" Click="SendGraph_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.SendGraphBtnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="63" Background="{x:Null}" IsTabStop="False">
+                        <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
+                            <Image Source="Resources/send_graph.png"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.SendGraphBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="reorderGraph" Click="ReorderGraph_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.ReorderBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="63" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/reorder.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.ReorderBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="saveGraph" Click="SaveGraph_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.SaveGraphToFileBtnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" BorderBrush="White" Canvas.Left="343" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="saveGraph" Click="SaveGraph_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.SaveGraphToFileBtnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="32" BorderBrush="White" Canvas.Left="343" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="32" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/save.png" Width="32"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="deleteVertexBtn" Click="RemoveVertex_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.CurrentModeDeleteOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="deleteVertexBtn" Click="RemoveVertex_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.CurrentModeDeleteOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/remove_vertex.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.DeleteGraphBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
@@ -174,7 +180,7 @@
                             <SolidColorBrush x:Key="MaterialDesignCheckBoxOff" Color="White"/>
                         </CheckBox.Resources>
                     </CheckBox>
-                    <Button x:Name="graphGeneratorBtn" Click="GraphGenerator_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.CurrentModeGraphGenOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="graphGeneratorBtn" Click="GraphGenerator_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.CurrentModeGraphGenOnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image x:Name="freeModeImage2" Source="Resources/graph_generator.png"/>
                             <TextBlock x:Name="freeModeTextBlock2" TextWrapping="NoWrap" Text="{x:Static resx:Language.GraphGenBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
@@ -220,19 +226,19 @@
                         </CheckBox.Resources>
                     </CheckBox>
                     <!--Алгоритмы-->
-                    <Button x:Name="animationSpeedButton" Tag="1" Click="animationSpeed_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.AnimationSpeedBtnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="animationSpeedButton" Tag="1" Click="animationSpeed_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.AnimationSpeedBtnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="21" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image x:Name="animationSpeedImage" Source="Resources/speed-1.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.AnimationSpeedBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="showAnimatonButton" Click="showAlgorithm_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.ShowAlgorithmTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="showAnimatonButton" Click="showAlgorithm_Click" Visibility="Hidden" ToolTip="{x:Static resx:Language.ShowAlgorithmTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/brush.png"/>
                             <TextBlock x:Name="showAnimationText" TextWrapping="NoWrap" Text="{x:Static resx:Language.ShowAlgorithm}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <ComboBox x:Name="algorithmsComboBox" Visibility="Visible" materialDesign:TextFieldAssist.HasClearButton="True" materialDesign:HintAssist.Hint="{x:Static resx:Language.ChooseAlgorithmComboBox}" MinWidth="128" Canvas.Left="10" Canvas.Top="23" Foreground="White" BorderBrush="White" Background="#FF0E0E19" Width="150" SelectionChanged="algorithmsComboBox_SelectionChanged">
+                    <ComboBox x:Name="algorithmsComboBox" Visibility="Hidden" materialDesign:TextFieldAssist.HasClearButton="True" materialDesign:HintAssist.Hint="{x:Static resx:Language.ChooseAlgorithmComboBox}" MinWidth="128" Canvas.Left="10" Canvas.Top="23" Foreground="White" BorderBrush="White" Background="#FF0E0E19" Width="150" SelectionChanged="algorithmsComboBox_SelectionChanged">
                         <ComboBox.Resources>
                             <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FF0E0E19"/>
                         </ComboBox.Resources>
@@ -273,10 +279,10 @@
                             <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.SelectionBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="ClearCanvasButton" Visibility="Visible" Click="ClearCanvasButton_Click" ToolTip="{x:Static resx:Language.ClearFIeldBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="108" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="ClearCanvasButton" Visibility="Visible" Click="ClearCanvasButton_Click" ToolTip="{x:Static resx:Language.ClearFieldBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="108" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/clear.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.ClearFIeldBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.ClearFieldBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
                     <Button x:Name="SaveToFileButton" Visibility="Visible" Click="SaveToFileButton_Click" ToolTip="{x:Static resx:Language.SaveToFileBtn}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="108" Background="{x:Null}" IsTabStop="False">

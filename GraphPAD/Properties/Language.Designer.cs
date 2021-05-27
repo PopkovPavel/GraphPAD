@@ -243,9 +243,9 @@ namespace GraphPAD.Properties {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Очистить поле.
         /// </summary>
-        public static string ClearFIeldBtn {
+        public static string ClearFieldBtn {
             get {
-                return ResourceManager.GetString("ClearFIeldBtn", resourceCulture);
+                return ResourceManager.GetString("ClearFieldBtn", resourceCulture);
             }
         }
         
@@ -712,6 +712,15 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Текущая громкость: .
+        /// </summary>
+        public static string CurrentVolume {
+            get {
+                return ResourceManager.GetString("CurrentVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Удалить Конференцию.
         /// </summary>
         public static string DeleteConferenssionBtn {
@@ -1155,6 +1164,15 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Громкость микрофона.
+        /// </summary>
+        public static string MicrophoneString {
+            get {
+                return ResourceManager.GetString("MicrophoneString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Мой Аккаунт.
         /// </summary>
         public static string MyAccountBtn {
@@ -1358,6 +1376,24 @@ namespace GraphPAD.Properties {
         public static string SelectionBtn {
             get {
                 return ResourceManager.GetString("SelectionBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отправить граф.
+        /// </summary>
+        public static string SendGraphBtn {
+            get {
+                return ResourceManager.GetString("SendGraphBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отправить граф другим участникам конференции.
+        /// </summary>
+        public static string SendGraphBtnTooltip {
+            get {
+                return ResourceManager.GetString("SendGraphBtnTooltip", resourceCulture);
             }
         }
         
@@ -1632,6 +1668,15 @@ namespace GraphPAD.Properties {
         public static string VoiceChatOnTooltip {
             get {
                 return ResourceManager.GetString("VoiceChatOnTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Громкость звука.
+        /// </summary>
+        public static string VolumeString {
+            get {
+                return ResourceManager.GetString("VolumeString", resourceCulture);
             }
         }
         

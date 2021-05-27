@@ -13,5 +13,7 @@
         public static string Role { get; set; }
 
         public static string Avatar { get; set; }
+
+        public static double MicVolume { get; set; }
     }
 }

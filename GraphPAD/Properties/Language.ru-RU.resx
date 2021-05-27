@@ -177,7 +177,7 @@
   <data name="ChooseNewAvatar" xml:space="preserve">
     <value>Выберите новый Аватар</value>
   </data>
-  <data name="ClearFIeldBtn" xml:space="preserve">
+  <data name="ClearFieldBtn" xml:space="preserve">
     <value>Очистить поле</value>
   </data>
   <data name="ColorPickerString" xml:space="preserve">
@@ -336,6 +336,9 @@
   <data name="CurrentModeSelectionOnTooltip" xml:space="preserve">
     <value>Включить режим Выделения</value>
   </data>
+  <data name="CurrentVolume" xml:space="preserve">
+    <value>Текущая громкость: </value>
+  </data>
   <data name="DeleteConferenssionBtn" xml:space="preserve">
     <value>Удалить Конференцию</value>
   </data>
@@ -485,6 +488,9 @@
   <data name="MessageBoxLanguageText" xml:space="preserve">
     <value>Изменения вступят в силу после перезапуска приложения.</value>
   </data>
+  <data name="MicrophoneString" xml:space="preserve">
+    <value>Громкость микрофона</value>
+  </data>
   <data name="MyAccountBtn" xml:space="preserve">
     <value>Мой Аккаунт</value>
   </data>
@@ -553,6 +559,12 @@
   </data>
   <data name="SelectionBtn" xml:space="preserve">
     <value>Выделение</value>
+  </data>
+  <data name="SendGraphBtn" xml:space="preserve">
+    <value>Отправить граф</value>
+  </data>
+  <data name="SendGraphBtnTooltip" xml:space="preserve">
+    <value>Отправить граф другим участникам конференции</value>
   </data>
   <data name="SendMessageYou" xml:space="preserve">
     <value>Вы: </value>
@@ -647,6 +659,9 @@
   </data>
   <data name="VoiceChatOnTooltip" xml:space="preserve">
     <value>Включить микрофон</value>
+  </data>
+  <data name="VolumeString" xml:space="preserve">
+    <value>Громкость звука</value>
   </data>
   <data name="WelcomeString" xml:space="preserve">
     <value>Здравствуйте, </value>

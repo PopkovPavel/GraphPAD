@@ -177,7 +177,7 @@
   <data name="ChooseNewAvatar" xml:space="preserve">
     <value>Choose new Avatar</value>
   </data>
-  <data name="ClearFIeldBtn" xml:space="preserve">
+  <data name="ClearFieldBtn" xml:space="preserve">
     <value>Clear Field</value>
   </data>
   <data name="ColorPickerString" xml:space="preserve">
@@ -336,6 +336,9 @@ Conference Name: </value>
   <data name="CurrentModeSelectionOnTooltip" xml:space="preserve">
     <value>Enable Selection Mode</value>
   </data>
+  <data name="CurrentVolume" xml:space="preserve">
+    <value>Current volume: </value>
+  </data>
   <data name="DeleteConferenssionBtn" xml:space="preserve">
     <value>Delete Conference</value>
   </data>
@@ -485,6 +488,9 @@ ID: </value>
   <data name="MessageBoxLanguageText" xml:space="preserve">
     <value>The changes will take effect after the application is restarted.</value>
   </data>
+  <data name="MicrophoneString" xml:space="preserve">
+    <value>Microphone volume</value>
+  </data>
   <data name="MyAccountBtn" xml:space="preserve">
     <value>My account</value>
   </data>
@@ -553,6 +559,12 @@ ID: </value>
   </data>
   <data name="SelectionBtn" xml:space="preserve">
     <value>Selection</value>
+  </data>
+  <data name="SendGraphBtn" xml:space="preserve">
+    <value>Send graph</value>
+  </data>
+  <data name="SendGraphBtnTooltip" xml:space="preserve">
+    <value>Send graph to other conference participants</value>
   </data>
   <data name="SendMessageYou" xml:space="preserve">
     <value>You: </value>
@@ -647,6 +659,9 @@ Minimum password length - 8 characters.</value>
   </data>
   <data name="VoiceChatOnTooltip" xml:space="preserve">
     <value>Turn ON microphone</value>
+  </data>
+  <data name="VolumeString" xml:space="preserve">
+    <value>Sound volume</value>
   </data>
   <data name="WelcomeString" xml:space="preserve">
     <value>Welcome, </value>
