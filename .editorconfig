@@ -5,3 +5,6 @@ dotnet_diagnostic.CS1998.severity = none
 
 # CS4014: Так как этот вызов не ожидается, выполнение существующего метода продолжается до тех пор, пока вызов не будет завершен
 dotnet_diagnostic.CS4014.severity = none
+
+# CS0472: Результат значения всегда одинаковый, так как значение этого типа никогда не равно NULL
+dotnet_diagnostic.CS0472.severity = none

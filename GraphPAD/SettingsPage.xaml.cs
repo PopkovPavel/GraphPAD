@@ -1,13 +1,15 @@
-﻿using GraphPAD.Data.JSON;
-using GraphPAD.Data.User;
+﻿using GraphPAD.Data.User;
 using Microsoft.Win32;
-using Newtonsoft.Json;
+using NAudio.CoreAudioApi;
+using NAudio.Wave;
 using RestSharp;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -18,15 +20,39 @@ namespace GraphPAD
     public partial class SettingsPage : Window
     {
         #region Global Variables
+        [DllImport("winmm.dll")]
+        public static extern int waveOutGetVolume(IntPtr h, out uint dwVolume);
+        [DllImport("winmm.dll")]
+        public static extern int waveOutSetVolume(IntPtr h, uint dwVolume);
 
         string avatarsFolder = Path.GetFullPath(@"Avatars\Avatar.png");
         string newAvatar;
         public ComboBoxItem selectedItem;
+        public int micSize;
+        public double volSize;
         #endregion
         #region Initialize
         public SettingsPage()
         {
             InitializeComponent();
+            var enumerator = new MMDeviceEnumerator();
+            foreach (var wasapi in enumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.All))
+            {
+                Console.WriteLine($"{wasapi.DataFlow} {wasapi.FriendlyName} {wasapi.DeviceFriendlyName} {wasapi.State}");
+            }
+            //Microphone settings
+            if (UserInfo.MicVolume != null)
+            {
+                MicSlider.Value = UserInfo.MicVolume;
+            }
+            else
+            {
+                MicSlider.Value = GetCurrentMicVolume();
+            }
+            micSize = Convert.ToInt32(MicSlider.Value);
+            micSliderTextBlock.Text = Properties.Language.CurrentVolume + (micSize).ToString() + "%";
+            
+            //Language settings
             if (Properties.Language.Culture?.Name == "ru-RU" || Properties.Language.Culture == null)
             {
                 countryFlag.Source = ImageSourceFromBitmap(Properties.Resources.russia);
@@ -35,6 +61,7 @@ namespace GraphPAD
             {
                 countryFlag.Source = ImageSourceFromBitmap(Properties.Resources.england);
             }
+
             DataContext = this;
             AccountCanvasScrollView.Visibility = Visibility.Visible;
             VoiceCanvas.Visibility = Visibility.Hidden;
@@ -167,7 +194,47 @@ namespace GraphPAD
         }
         #endregion
         #region Voice & Audio Settings
-        //aeee
+        private int GetCurrentMicVolume()
+        {
+            int volume = 0;
+            var enumerator = new MMDeviceEnumerator();
+
+            // Obtain audio input device
+            IEnumerable<MMDevice> captureDevices = enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active).ToArray();
+            if (captureDevices.Count() > 0)
+            {
+                MMDevice mMDevice = captureDevices.ToList()[0];
+                volume = (int)(mMDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100);
+                //MessageBox.Show(volume.ToString());
+            }
+            return volume;
+        }
+        private void SetCurrentMicVolume(int volume)
+        {
+            var enumerator = new MMDeviceEnumerator();
+            IEnumerable<MMDevice> captureDevices = enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active).ToArray();
+            if (captureDevices.Count() > 0)
+            {
+                MMDevice mMDevice = captureDevices.ToList()[0];
+                mMDevice.AudioEndpointVolume.MasterVolumeLevelScalar = volume / 100.0f;
+            }
+        }
+        private void MicSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            micSize = Convert.ToInt32(MicSlider.Value);
+            SetCurrentMicVolume(micSize);
+            micSliderTextBlock.Text = Properties.Language.CurrentVolume + (micSize).ToString() + "%";
+        }
+        private void VolSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            volSize = VolSlider.Value;
+            //waveOutSetVolume(IntPtr.Zero, Convert.ToUInt32(volSize*100)); //Изменение громкости окна
+            volSliderTextBlock.Text = Properties.Language.CurrentVolume + (volSize).ToString() + "%";
+        }
+        private void MicSlider_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            MicSlider.Value = GetCurrentMicVolume();
+        }
         #endregion
         #region Interface Settings
         private void languagesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

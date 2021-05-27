@@ -15,11 +15,11 @@
         <Style TargetType="ToolTip">
             <Setter Property="Background" Value="#22223d"></Setter>
             <Setter Property="Foreground" Value="White"></Setter>
-            
+
         </Style>
         <BitmapImage x:Key="countryImage" UriSource="Resources/russia.png" />
     </Window.Resources>
-    
+
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>
@@ -87,11 +87,19 @@
             </ScrollViewer>
 
             <!--Voice Canvas-->
-            <Canvas x:Name="VoiceCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="371" VerticalAlignment="Top" Width="474">
+            <Canvas x:Name="VoiceCanvas" Visibility="Visible" HorizontalAlignment="Left" Height="401" VerticalAlignment="Top" Width="574">
+                <Border CornerRadius="10" BorderThickness="1" HorizontalAlignment="Left" Height="240" VerticalAlignment="Top" Width="480" Canvas.Left="40" Canvas.Top="60" BorderBrush="#FF141424" Background="#FF141424"/>
                 <TextBlock Text="{x:Static resx:Language.VoiceAndSoundBtn}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" FontWeight="Bold" Height="30" Padding="5,1,0,0" FontSize="20" TextDecorations="{x:Null}" Margin="40,15,294,356"/>
+                <TextBlock Text="{x:Static resx:Language.MicrophoneString}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="220" Height="30" Padding="0,4,0,0" FontSize="16" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="80" FontWeight="Medium"/>
+                <TextBlock x:Name="micSliderTextBlock" Text="{x:Static resx:Language.CurrentVolume}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="220" Height="20" Padding="0,4,0,0" FontSize="10" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="110"/>
+                <Slider x:Name="MicSlider" Visibility="Visible" IsSnapToTickEnabled="True" Canvas.Left="60" Canvas.Top="130" Width="220" BorderBrush="White" Foreground="White" Minimum="0"  Maximum="100" BorderThickness="0" IsTabStop="False" SmallChange="0" LargeChange="0" Interval="1" ValueChanged="MicSlider_ValueChanged" Value="0" MouseEnter="MicSlider_MouseEnter"/>
+                <TextBlock Text="{x:Static resx:Language.VolumeString}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="220" Height="30" Padding="0,4,0,0" FontSize="16" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="180" FontWeight="Medium"/>
+                <TextBlock x:Name="volSliderTextBlock" Text="{x:Static resx:Language.CurrentVolume}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="220" Height="20" Padding="0,4,0,0" FontSize="10" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="210"/>
+                <Slider x:Name="VolSlider" Visibility="Visible" IsSnapToTickEnabled="True" Canvas.Left="60" Canvas.Top="230" Width="220" BorderBrush="White" Foreground="White" Minimum="0"  Maximum="100" Value="30" BorderThickness="0" IsTabStop="False" SmallChange="0" LargeChange="0" Interval="1" TickFrequency="10" ValueChanged="VolSlider_ValueChanged" TickPlacement="BottomRight"/>
+
             </Canvas>
             <!--Interface Canvas-->
-            <Canvas x:Name="InterfaceCanvas" Visibility="Visible" HorizontalAlignment="Left" Height="401" VerticalAlignment="Top" Width="574">
+            <Canvas x:Name="InterfaceCanvas" Visibility="Hidden" HorizontalAlignment="Left" Height="401" VerticalAlignment="Top" Width="574">
                 <Border CornerRadius="10" BorderThickness="1" HorizontalAlignment="Left" Height="240" VerticalAlignment="Top" Width="480" Canvas.Left="40" Canvas.Top="60" BorderBrush="#FF141424" Background="#FF141424"/>
                 <TextBlock Text="{x:Static resx:Language.InterfaceBtn}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="240" FontWeight="Bold" Height="30" Padding="5,1,0,0" FontSize="20" TextDecorations="{x:Null}" Margin="40,15,294,356"/>
                 <TextBlock Text="{x:Static resx:Language.InterfaceText}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="30" Padding="0,4,0,0" FontSize="16" TextDecorations="{x:Null}" Canvas.Left="60" Canvas.Top="80" FontWeight="SemiBold"/>

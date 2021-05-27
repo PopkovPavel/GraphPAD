@@ -4,10 +4,13 @@ using GraphPAD.GraphData.Model;
 using GraphPAD.GraphData.Pattern;
 using GraphX.Controls;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
+using NAudio.CoreAudioApi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -100,6 +103,7 @@ namespace GraphPAD
             //GraphPAD.Properties.Language.Culture = new System.Globalization.CultureInfo("ru-RU");
             //GraphPAD.Properties.Language.Culture = new System.Globalization.CultureInfo("en-US");
             InitializeComponent();
+            UserInfo.MicVolume = GetCurrentMicVolume();
             #region grapharea + zoom ctrl
             // ZoomCtrl.Visibility = Visibility.Visible;
             //Элементы на поле отрисовки графа
@@ -465,6 +469,31 @@ namespace GraphPAD
 
         #endregion
         #region Functions
+        private int GetCurrentMicVolume()
+        {
+            int volume = 0;
+            var enumerator = new MMDeviceEnumerator();
+
+            // Obtain audio input device
+            IEnumerable<MMDevice> captureDevices = enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active).ToArray();
+            if (captureDevices.Count() > 0)
+            {
+                MMDevice mMDevice = captureDevices.ToList()[0];
+                volume = (int)(mMDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100);
+                //MessageBox.Show(volume.ToString());
+            }
+            return volume;
+        }
+        private void SetCurrentMicVolume(int volume)
+        {
+            var enumerator = new MMDeviceEnumerator();
+            IEnumerable<MMDevice> captureDevices = enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active).ToArray();
+            if (captureDevices.Count() > 0)
+            {
+                MMDevice mMDevice = captureDevices.ToList()[0];
+                mMDevice.AudioEndpointVolume.MasterVolumeLevelScalar = volume / 100.0f;
+            }
+        }
         public static ImageSource NonBlockingLoad(string path)
         {
             var image = new System.Windows.Media.Imaging.BitmapImage();
@@ -506,17 +535,18 @@ namespace GraphPAD
             randomConnectedGraphButton.Background = Brushes.Transparent;
             addVertexBtn.IsEnabled = true;
             deleteVertexBtn.IsEnabled = true;
+            sendGraph.IsEnabled = true;
             edgesWeightTextBox.IsEnabled = true;
             orientedCheckbox.IsEnabled = true;
             graphGeneratorBtn.IsEnabled = true;
             algorithmsBtn.IsEnabled = true;
             reorderGraph.IsEnabled = true;
-            clearGraph.IsEnabled = true;
             randomTreeButton.IsEnabled = true;
             randomConnectedGraphButton.IsEnabled = true;
             addVertexBtn.Visibility = Visibility.Visible;
             deleteVertexBtn.Visibility = Visibility.Visible;
-            clearGraph.Visibility = Visibility.Visible;
+            clearGraph.Visibility = Visibility.Hidden;
+            sendGraph.Visibility = Visibility.Visible;
             reorderGraph.Visibility = Visibility.Visible;
             edgesWeightTextBox.Visibility = Visibility.Hidden;
             orientedCheckbox.Visibility = Visibility.Hidden;
@@ -1154,9 +1184,13 @@ namespace GraphPAD
                 voiceChatTextBlock.Foreground = Brushes.Red;
                 micButton.ToolTip = Properties.Language.VoiceChatOnTooltip;
                 isMicOn = false;
+
+                SetCurrentMicVolume(0);
+                nameString.Text = "Volume - " + GetCurrentMicVolume();
             }
             else
             {
+                var vol = Convert.ToInt32(UserInfo.MicVolume);
                 var path = "Resources/microphone_on.png";
                 ChangeImage(path, micButton);
                 voiceChatTextBlock.Text = Properties.Language.VoiceChatOnString;
@@ -1168,6 +1202,9 @@ namespace GraphPAD
                 ChangeImage(path, headphonesButton);
                 headphonesButton.ToolTip = Properties.Language.AudioOffTooltip;
                 isHeadPhonesOn = true;
+
+                SetCurrentMicVolume(vol);
+                nameString.Text = "Volume - " + GetCurrentMicVolume();
             }
         }
         #endregion
@@ -1194,9 +1231,12 @@ namespace GraphPAD
                 voiceChatTextBlock.Text = Properties.Language.VoiceChatOffString;
                 voiceChatTextBlock.Foreground = Brushes.Red;
                 micButton.ToolTip = Properties.Language.VoiceChatOnTooltip;
+                SetCurrentMicVolume(0);
+                nameString.Text = "Volume - " + GetCurrentMicVolume();
             }
             else
             {
+                var vol = Convert.ToInt32(UserInfo.MicVolume);
                 var path = "Resources/headphones_on.png";
                 ChangeImage(path, headphonesButton);
                 headphonesButton.ToolTip = Properties.Language.AudioOffTooltip;
@@ -1209,6 +1249,8 @@ namespace GraphPAD
                     voiceChatTextBlock.Foreground = greenbrush;
                     micButton.ToolTip = Properties.Language.VoiceChatOffTooltip;
                     isMicOn = true;
+                    SetCurrentMicVolume(vol);
+                    nameString.Text = "Volume - " + GetCurrentMicVolume();
                 }
                 else
                 {
@@ -1244,15 +1286,26 @@ namespace GraphPAD
         #region Settings
         private void SettingsButton_Clicked(object sender, RoutedEventArgs e)
         {
+            //UserInfo.MicVolume = GetCurrentMicVolume();
+            SetCurrentMicVolume(0);
             SettingsPage settingsPage = new SettingsPage();
-            settingsPage.ShowDialog(); //ShowDialog открывает окно поверх, блокируя основное
+            settingsPage.ShowDialog();
             Avatar.Source = NonBlockingLoad(UserInfo.Avatar);
+            if (isMicOn == false)
+            {
+                SetCurrentMicVolume(0);
+            }
+            else
+            {
+                UserInfo.MicVolume = GetCurrentMicVolume();
+            }
+            
         }
         private void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
             System.IO.File.Delete(@"Token.json");
             AuthPage authPage = new AuthPage();
-            this.Visibility = Visibility.Hidden; //Скрывает текущее окно
+            this.Visibility = Visibility.Hidden;
             authPage.Show();
         }
         #endregion
@@ -1293,7 +1346,8 @@ namespace GraphPAD
                 deleteVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
-                clearGraph.Visibility = Visibility.Hidden;
+                sendGraph.IsEnabled = false;
+                sendGraph.Visibility = Visibility.Hidden;
                 reorderGraph.Visibility = Visibility.Hidden;
                 edgesWeightTextBox.Visibility = Visibility.Visible;
                 orientedCheckbox.Visibility = Visibility.Visible;
@@ -1310,7 +1364,8 @@ namespace GraphPAD
                 deleteVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
-                clearGraph.Visibility = Visibility.Visible;
+                sendGraph.IsEnabled = true;
+                sendGraph.Visibility = Visibility.Visible;
                 reorderGraph.Visibility = Visibility.Visible;
                 edgesWeightTextBox.Visibility = Visibility.Hidden;
                 orientedCheckbox.Visibility = Visibility.Hidden;
@@ -1331,7 +1386,8 @@ namespace GraphPAD
             if (!isRemoveVertexOn)
             {
                 reorderGraph.IsEnabled = false;
-                clearGraph.IsEnabled = false;
+                sendGraph.Visibility = Visibility.Hidden;
+                clearGraph.Visibility = Visibility.Visible;
                 addVertexBtn.IsEnabled = false;
                 graphGeneratorBtn.IsEnabled = false;
                 algorithmsBtn.IsEnabled = false;
@@ -1347,7 +1403,8 @@ namespace GraphPAD
             else
             {
                 reorderGraph.IsEnabled = true;
-                clearGraph.IsEnabled = true;
+                sendGraph.Visibility = Visibility.Visible;
+                clearGraph.Visibility = Visibility.Hidden;
                 addVertexBtn.IsEnabled = true;
                 graphGeneratorBtn.IsEnabled = true;
                 algorithmsBtn.IsEnabled = true;
@@ -1369,8 +1426,8 @@ namespace GraphPAD
                 addVertexBtn.Visibility = Visibility.Hidden;
                 deleteVertexBtn.Visibility = Visibility.Hidden;
                 algorithmsBtn.Visibility = Visibility.Hidden;
-                clearGraph.Visibility = Visibility.Hidden;
                 reorderGraph.Visibility = Visibility.Hidden;
+                sendGraph.Visibility = Visibility.Hidden;
                 randomTreeButton.Visibility = Visibility.Visible;
                 randomConnectedGraphButton.Visibility = Visibility.Visible;
                 downloadGraphButton.Visibility = Visibility.Visible;
@@ -1384,8 +1441,8 @@ namespace GraphPAD
                 addVertexBtn.Visibility = Visibility.Visible;
                 deleteVertexBtn.Visibility = Visibility.Visible;
                 algorithmsBtn.Visibility = Visibility.Visible;
-                clearGraph.Visibility = Visibility.Visible;
                 reorderGraph.Visibility = Visibility.Visible;
+                sendGraph.Visibility = Visibility.Visible;
                 randomTreeButton.Visibility = Visibility.Hidden;
                 randomConnectedGraphButton.Visibility = Visibility.Hidden;
                 downloadGraphButton.Visibility = Visibility.Hidden;
@@ -1405,8 +1462,8 @@ namespace GraphPAD
                 addVertexBtn.Visibility = Visibility.Hidden;
                 deleteVertexBtn.Visibility = Visibility.Hidden;
                 graphGeneratorBtn.Visibility = Visibility.Hidden;
-                clearGraph.Visibility = Visibility.Hidden;
                 reorderGraph.Visibility = Visibility.Hidden;
+                sendGraph.Visibility = Visibility.Hidden;
                 animationSpeedButton.Visibility = Visibility.Visible;
                 showAnimatonButton.Visibility = Visibility.Visible;
                 algorithmsComboBox.Visibility = Visibility.Visible;
@@ -1424,8 +1481,8 @@ namespace GraphPAD
                 addVertexBtn.Visibility = Visibility.Visible;
                 deleteVertexBtn.Visibility = Visibility.Visible;
                 graphGeneratorBtn.Visibility = Visibility.Visible;
-                clearGraph.Visibility = Visibility.Visible;
                 reorderGraph.Visibility = Visibility.Visible;
+                sendGraph.Visibility = Visibility.Visible;
                 animationSpeedButton.Visibility = Visibility.Hidden;
                 showAnimatonButton.Visibility = Visibility.Hidden;
                 algorithmsComboBox.Visibility = Visibility.Hidden;
@@ -2177,5 +2234,10 @@ namespace GraphPAD
             RefreshRooms();
         }
         #endregion
+
+        private void SendGraph_Click(object sender, RoutedEventArgs e)
+        {
+            //ez
+        }
     }
 }
