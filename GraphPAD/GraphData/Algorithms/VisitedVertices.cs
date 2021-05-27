@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace GraphPAD.GraphData.Algorithms
 {
-    class MyTuple
+    class VisitedVertices
     {
         public DataVertex Vertex { get; set; }
         public bool Visited { get; set; }
-        public MyTuple(DataVertex vertex, bool visited)
+        public VisitedVertices(DataVertex vertex, bool visited)
         {
             Vertex = vertex;
             Visited = visited;

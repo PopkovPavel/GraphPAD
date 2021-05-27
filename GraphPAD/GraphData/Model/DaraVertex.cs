@@ -8,8 +8,20 @@ namespace GraphPAD.GraphData.Model
     public class DataVertex : VertexBase, ICloneable
     {
         public string Text { get; set; }
-
-        public SolidColorBrush VertexColor { get; set; }
+        private SolidColorBrush _vertexColor;
+        public readonly SolidColorBrush OriginalColor;
+        public SolidColorBrush VertexColor
+        {
+            get
+            {
+                return _vertexColor;
+            }
+            set
+            {
+                _vertexColor = value;
+                OnPropertyChanged("VertexColor");
+            }
+        }
 
         /// <summary>
         /// Степень
@@ -46,14 +58,23 @@ namespace GraphPAD.GraphData.Model
             byte c3 = (byte)rnd.Next(0, 160);
 
             VertexColor = new SolidColorBrush(Color.FromRgb(c1, c2, c3));
+            OriginalColor = VertexColor;
         }
 
         public DataVertex(string text = "", SolidColorBrush solidColorBrush = null)
         {
             VertexColor = solidColorBrush;
+            OriginalColor = VertexColor;
             Text = string.IsNullOrEmpty(text) ? "New Vertex" : text;
         }
 
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged(string name)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(name));
+        }
 
     }
 }
