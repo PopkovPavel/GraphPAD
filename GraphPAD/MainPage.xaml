@@ -39,13 +39,13 @@
             <Setter Property="Foreground" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
         </Style>
-
+       
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="95"/>
-            <ColumnDefinition Width="805*"/>
-            <ColumnDefinition Width="400*"/>
+            <ColumnDefinition Width="75"/>
+            <ColumnDefinition Width="805*" MinWidth="700"/>
+            <ColumnDefinition Width="400*" MinWidth="400"/>
         </Grid.ColumnDefinitions>
         <Grid x:Name="ConfGrid" Grid.Column="0" Background="#141424">
             <Grid.RowDefinitions>
@@ -59,12 +59,12 @@
 
             </Grid>
             <Grid Grid.Row="1" Background="#FF171720">
-                <Button Click="RefreshRoomsList" BorderThickness="2" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Center" Margin="22,35,23,15" VerticalAlignment="Center" Width="50" Height="50" BorderBrush="White" IsTabStop="False" ToolTip="{x:Static resx:Language.ConferencesUpdateBtnTooltip}">
+                <Button Click="RefreshRoomsList" BorderThickness="2" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" HorizontalAlignment="Center" Margin="0,30,0,0" VerticalAlignment="Center" Width="50" Height="50" BorderBrush="White" IsTabStop="False" ToolTip="{x:Static resx:Language.ConferencesUpdateBtnTooltip}">
                     <Button.Background>
                         <ImageBrush ImageSource="Resources/refresh.png"/>
                     </Button.Background>
                 </Button>
-                <TextBlock x:Name="ConferensionsCountTextBlock" Text="" TextAlignment="Center" Foreground="White" Margin="0,10,0,70" TextDecorations="{x:Null}" FontSize="10" FontWeight="Bold"/>
+                <TextBlock x:Name="ConferensionsCountTextBlock" Text="" TextAlignment="Center" Foreground="White" Margin="0,10,0,65" TextDecorations="{x:Null}" FontSize="10" FontWeight="Bold" TextWrapping="Wrap"/>
             </Grid>
         </Grid>
         <Grid x:Name="BGgrid" Grid.Column="1" Background="#FF555593">
@@ -229,24 +229,19 @@
                     <Button x:Name="showAnimatonButton" Click="showAlgorithm_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.ShowAlgorithmTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="10" Canvas.Top="107" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/brush.png"/>
-                            <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.ShowAlgorithm}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
+                            <TextBlock x:Name="showAnimationText" TextWrapping="NoWrap" Text="{x:Static resx:Language.ShowAlgorithm}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
                     <ComboBox x:Name="algorithmsComboBox" Visibility="Visible" materialDesign:TextFieldAssist.HasClearButton="True" materialDesign:HintAssist.Hint="{x:Static resx:Language.ChooseAlgorithmComboBox}" MinWidth="128" Canvas.Left="10" Canvas.Top="23" Foreground="White" BorderBrush="White" Background="#FF0E0E19" Width="150" SelectionChanged="algorithmsComboBox_SelectionChanged">
                         <ComboBox.Resources>
                             <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FF0E0E19"/>
                         </ComboBox.Resources>
-                        <ComboBoxItem Content="Поиск в ширину" Tag="DFS"/>
+                        <ComboBoxItem Content="Поиск в ширину" Tag="BFS"/>
+                        <ComboBoxItem Content="Поиск в глубину" Tag="DFS"/>
                         <ComboBoxItem Content="Алгоритм дейкстры" Tag="Dijkstra"/>
-                        <ComboBoxItem Content="item3"/>
-                        <ComboBoxItem Content="item4"/>
-                        <ComboBoxItem Content="item5"/>
-                        <ComboBoxItem Content="item6"/>
-                        <ComboBoxItem Content="item7"/>
-                        <ComboBoxItem Content="item8"/>
-                        <ComboBoxItem Content="item9"/>
-                        <ComboBoxItem Content="item10"/>
-                        
+                        <ComboBoxItem Content="Поиск минимального остовного дерева" Tag="MST"/>
+
+
                     </ComboBox>
                     <!--<ProgressBar x:Name="progressBar" Height="10" Canvas.Left="10" Canvas.Top="54" Width="150" Value="0"/>-->
                 </Canvas>
@@ -301,7 +296,7 @@
                 <Button x:Name="PaintModeChangerButton" Visibility="Hidden" Content="{x:Static resx:Language.PaintModeChangerBtn}" Click="FreeMode_Click" ToolTip="{x:Static resx:Language.PaintModeChangerBtnTooltip}" Width="100" BorderBrush="White" Background="{x:Null}" IsTabStop="False" BorderThickness="1,0,0,1" Padding="0" FontSize="12" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,7.5,10,0"/>
             </Grid>
         </Grid>
-        <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" HorizontalAlignment="Right" ShowsPreview="True" DragCompleted="GridSplitter_DragCompleted"></GridSplitter>
+        <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" HorizontalAlignment="Right" ShowsPreview="True"  BorderBrush="Black" BorderThickness="5"  ></GridSplitter>
         <Grid x:Name="chatGrid" Grid.Column="2" Background="#FF141424">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
@@ -324,11 +319,11 @@
             <Grid Grid.Row="2">
                 <!--Чат со сообщениями-->
                 <ScrollViewer x:Name="ChatsScrollView" Visibility="Visible" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0" Grid.Row="2" Foreground="White">
-                    <TextBox x:Name="ChatBox" Visibility="Visible" TextWrapping="Wrap" Text="" IsReadOnly="True" FontSize="20" TextAlignment="Left" IsTabStop="False" AllowDrop="False"/>
+                    <TextBox x:Name="ChatBox" Visibility="Visible" TextWrapping="Wrap" Text="" IsReadOnly="True" FontSize="20" Padding="5" TextAlignment="Left" IsTabStop="False" AllowDrop="False"/>
                 </ScrollViewer>
                 <!--Веб-камеры-->
-                <ScrollViewer x:Name="VideosScrollView" Visibility="Visible" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="2" Foreground="White" Background="#00000000">
-                    <Canvas x:Name="VideoChatCanvas" Visibility="Hidden" Grid.Row="1" Grid.RowSpan="2"/>
+                <ScrollViewer x:Name="VideosScrollView" Visibility="Visible" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="2" Grid.RowSpan="2" Foreground="White" SizeChanged="VideosScrollView_SizeChanged" Background="#00000000">
+                    <Canvas x:Name="VideoChatCanvas" Visibility="Hidden"/>
                 </ScrollViewer>
                 <!--Список участников-->
                 <ScrollViewer x:Name="ParticipantsScrollView" Visibility="Hidden" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0" Grid.Row="2" Foreground="White">
