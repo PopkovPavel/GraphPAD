@@ -79,6 +79,15 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Алгоритм завершил работу за: .
+        /// </summary>
+        public static string AlgorithmTimeMessage {
+            get {
+                return ResourceManager.GetString("AlgorithmTimeMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Скорость анимации.
         /// </summary>
         public static string AnimationSpeedBtn {
@@ -232,11 +241,38 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Выберите алгоритм.
+        /// </summary>
+        public static string ChooseAlgorithmMessage {
+            get {
+                return ResourceManager.GetString("ChooseAlgorithmMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выберите вершину для запуска алгоритма.
+        /// </summary>
+        public static string ChooseFirstVertex {
+            get {
+                return ResourceManager.GetString("ChooseFirstVertex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Выберите новый Аватар.
         /// </summary>
         public static string ChooseNewAvatar {
             get {
                 return ResourceManager.GetString("ChooseNewAvatar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Теперь выберите вторую вершину.
+        /// </summary>
+        public static string ChooseNextVertex {
+            get {
+                return ResourceManager.GetString("ChooseNextVertex", resourceCulture);
             }
         }
         
@@ -1371,6 +1407,15 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на сек..
+        /// </summary>
+        public static string Seconds {
+            get {
+                return ResourceManager.GetString("Seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Выделение.
         /// </summary>
         public static string SelectionBtn {
@@ -1466,6 +1511,24 @@ namespace GraphPAD.Properties {
         public static string SomethingWentWrong {
             get {
                 return ResourceManager.GetString("SomethingWentWrong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Остановить.
+        /// </summary>
+        public static string StopAlgorithm {
+            get {
+                return ResourceManager.GetString("StopAlgorithm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Остановить работу алгоритма.
+        /// </summary>
+        public static string StopAlgorithmToolTip {
+            get {
+                return ResourceManager.GetString("StopAlgorithmToolTip", resourceCulture);
             }
         }
         

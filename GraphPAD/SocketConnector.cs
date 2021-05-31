@@ -78,9 +78,20 @@ namespace GraphPAD
 
             client.EmitAsync("update-paint-canvas", jSONstroke);
         }
-        public static void SendGraph(string graph)
+        public static void SendGraph(GraphData.Model.GraphZone graph)
         {
-            client.EmitAsync("send-graph", graph);
+            var Graph = new QuickGraph.BidirectionalGraph<GraphData.Model.DataVertex, GraphData.Model.DataEdge>();
+            var edges = graph.EdgesList;
+            var vertices = graph.VertexList;
+            foreach (var v in vertices.Keys)
+            {
+                Graph.AddVertex(v);
+            }
+            foreach (var e in edges.Keys)
+            {
+                Graph.AddEdge(e);
+            }
+            client.EmitAsync("send-graph", Graph);
         }
     }
 }

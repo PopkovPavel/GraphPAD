@@ -123,6 +123,9 @@
   <data name="AlgorithmsBtn" xml:space="preserve">
     <value>Алгоритмы</value>
   </data>
+  <data name="AlgorithmTimeMessage" xml:space="preserve">
+    <value>Алгоритм завершил работу за: </value>
+  </data>
   <data name="AnimationSpeedBtn" xml:space="preserve">
     <value>Скорость анимации</value>
   </data>
@@ -174,8 +177,17 @@
   <data name="ChooseAlgorithmComboBox" xml:space="preserve">
     <value>Выберите алгоритм</value>
   </data>
+  <data name="ChooseAlgorithmMessage" xml:space="preserve">
+    <value>Выберите алгоритм</value>
+  </data>
+  <data name="ChooseFirstVertex" xml:space="preserve">
+    <value>Выберите вершину для запуска алгоритма</value>
+  </data>
   <data name="ChooseNewAvatar" xml:space="preserve">
     <value>Выберите новый Аватар</value>
+  </data>
+  <data name="ChooseNextVertex" xml:space="preserve">
+    <value>Теперь выберите вторую вершину</value>
   </data>
   <data name="ClearFieldBtn" xml:space="preserve">
     <value>Очистить поле</value>
@@ -557,6 +569,9 @@
   <data name="SaveToFileBtn" xml:space="preserve">
     <value>Сохранить в файл</value>
   </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>сек.</value>
+  </data>
   <data name="SelectionBtn" xml:space="preserve">
     <value>Выделение</value>
   </data>
@@ -589,6 +604,12 @@
   </data>
   <data name="SomethingWentWrong" xml:space="preserve">
     <value>Что-то пошло не так.</value>
+  </data>
+  <data name="StopAlgorithm" xml:space="preserve">
+    <value>Остановить</value>
+  </data>
+  <data name="StopAlgorithmToolTip" xml:space="preserve">
+    <value>Остановить работу алгоритма</value>
   </data>
   <data name="SuccessPasswordChange" xml:space="preserve">
     <value>Пароль успешно изменён.</value>

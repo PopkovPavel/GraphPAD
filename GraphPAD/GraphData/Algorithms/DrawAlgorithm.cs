@@ -1,12 +1,10 @@
 ﻿using GraphPAD.GraphData.Algorithms;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
 namespace GraphPAD
 {
-
     public partial class MainPage : Window
     {
         private void StartAlgorithm(GraphX.Controls.VertexControl vc, GraphData.Model.GraphZone graph)
@@ -43,13 +41,13 @@ namespace GraphPAD
                             else
                             {
                                 selectedVertex = (GraphData.Model.DataVertex)vc.Vertex;
-                                MessageBox.Show("Теперь выберите вторую вершину");
+                                MessageBox.Show(Properties.Language.ChooseNextVertex, Properties.Language.Caption);
                             }
                             break;
                         }
                     default:
                         {
-                            MessageBox.Show("Выберите алгоритм");
+                            MessageBox.Show(Properties.Language.ChooseAlgorithmMessage, Properties.Language.Caption);
                             break;
                         }
                 }
@@ -60,25 +58,20 @@ namespace GraphPAD
                     thread.Start();
                     thread.Join();
                     sw.Stop();
-                    ChatBox.AppendText($"Вы: {algorithmResult}\n\n");
+                    ChatBox.AppendText(Properties.Language.SendMessageYou + algorithmResult + "\n\n");
                     chatCount += 1;
                     ChatsScrollView.ScrollToBottom();
                     SocketConnector.SendMessage(algorithmResult);
-                    System.Windows.MessageBox.Show($"Алгоритм завершил работу за {sw.Elapsed.TotalSeconds}с");
-
+                    System.Windows.MessageBox.Show(Properties.Language.AlgorithmTimeMessage + sw.Elapsed.TotalSeconds + Properties.Language.Seconds, Properties.Language.Caption);
                 }
-
-
             }
-        }
-        
+        } 
         public async void DrawAlgorithm()
         {
             isDrawing = true;
             FixLabelsAndArrows();
             try
             {
-                   
                 foreach (var item in algorithmEdgesList)
                 {
                     await Task.Delay(AlgorithmHelper.AlgorithmTime, source);
@@ -96,13 +89,13 @@ namespace GraphPAD
                             break;
                         }
                     }
-                   //item.Source.VertexColor = Brushes.Red;
+                    //item.Source.VertexColor = Brushes.Red;
                     //item.Target.VertexColor = Brushes.Red;
                     item.EdgeBrush = Brushes.Red;
                     item.ArrowBrush = Brushes.Red;
-
                 }
-                showAnimationText.Text = "Запустить";
+                showAnimationText.Text = Properties.Language.ShowAlgorithm;
+                showAnimatonButton.ToolTip = Properties.Language.ShowAlgorithmTooltip;
                 isDrawing = false;
             }
             catch

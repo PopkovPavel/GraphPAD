@@ -123,6 +123,9 @@
   <data name="AlgorithmsBtn" xml:space="preserve">
     <value>Algorithms</value>
   </data>
+  <data name="AlgorithmTimeMessage" xml:space="preserve">
+    <value>Algorithms finished in </value>
+  </data>
   <data name="AnimationSpeedBtn" xml:space="preserve">
     <value>Animation speed</value>
   </data>
@@ -174,8 +177,17 @@
   <data name="ChooseAlgorithmComboBox" xml:space="preserve">
     <value>Select Algorithm</value>
   </data>
+  <data name="ChooseAlgorithmMessage" xml:space="preserve">
+    <value>Choose algorithm</value>
+  </data>
+  <data name="ChooseFirstVertex" xml:space="preserve">
+    <value>Select a vertex to run algorithm</value>
+  </data>
   <data name="ChooseNewAvatar" xml:space="preserve">
     <value>Choose new Avatar</value>
+  </data>
+  <data name="ChooseNextVertex" xml:space="preserve">
+    <value>Now select second vertex</value>
   </data>
   <data name="ClearFieldBtn" xml:space="preserve">
     <value>Clear Field</value>
@@ -557,6 +569,9 @@ ID: </value>
   <data name="SaveToFileBtn" xml:space="preserve">
     <value>Save to File</value>
   </data>
+  <data name="Seconds" xml:space="preserve">
+    <value>sec.</value>
+  </data>
   <data name="SelectionBtn" xml:space="preserve">
     <value>Selection</value>
   </data>
@@ -589,6 +604,12 @@ ID: </value>
   </data>
   <data name="SomethingWentWrong" xml:space="preserve">
     <value>Something went wrong.</value>
+  </data>
+  <data name="StopAlgorithm" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="StopAlgorithmToolTip" xml:space="preserve">
+    <value>Stop the algorithm</value>
   </data>
   <data name="SuccessPasswordChange" xml:space="preserve">
     <value>Password changed successfully.</value>

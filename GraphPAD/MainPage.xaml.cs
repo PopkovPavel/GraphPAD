@@ -4,13 +4,11 @@ using GraphPAD.GraphData.Model;
 using GraphPAD.GraphData.Pattern;
 using GraphX.Controls;
 using MaterialDesignThemes.Wpf;
-using Microsoft.Win32;
 using NAudio.CoreAudioApi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -269,7 +267,6 @@ namespace GraphPAD
         }
         private void ZoomCtrl_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
             //create vertices and edges only in Edit mode
             if (e.LeftButton == MouseButtonState.Pressed)
             {
@@ -352,7 +349,6 @@ namespace GraphPAD
                 HighlightBehaviour.SetHighlighted(_ecFrom, true);
                 return;
             }
-             
             if (_ecFrom == vc) return;
             var weightText = edgesWeightTextBox.Text != "";
             int weight = weightText ? int.Parse(edgesWeightTextBox.Text) : 1;
@@ -366,12 +362,10 @@ namespace GraphPAD
                     edgesToDelete.Add(edge.Key);
                 }
             }
-
             foreach(var temp in edgesToDelete)
             {
                 GraphArea.RemoveEdge(temp, true);
-            }               
-
+            }
             if (orientedCheckbox.IsChecked == false)
             {
                 color = Brushes.Transparent;
@@ -404,7 +398,6 @@ namespace GraphPAD
             {
                 GraphArea.InsertEdgeAndData(data, ec, 0, true);
             }
-
             HighlightBehaviour.SetHighlighted(_ecFrom, false);
             _ecFrom = null;
             _editorManager.DestroyVirtualEdge();
@@ -443,8 +436,6 @@ namespace GraphPAD
                 }
             }            
         }
-
-
         void GraphArea_EdgeSelected(object sender, GraphX.Controls.Models.EdgeSelectedEventArgs args)
         {
             FixLabelsAndArrows();
@@ -465,10 +456,8 @@ namespace GraphPAD
                 {
                     GraphArea.RemoveEdge(temp, true);
                 }
-
             }
         }
-
         #endregion
         #region Functions
         private int GetCurrentMicVolume()
@@ -530,7 +519,6 @@ namespace GraphPAD
             addVertexBtn.Background = Brushes.Transparent;
             deleteVertexBtn.Background = Brushes.Transparent;
             edgesWeightTextBox.Background = Brushes.Transparent;
-
             graphGeneratorBtn.Background = Brushes.Transparent;
             algorithmsBtn.Background = Brushes.Transparent;
             randomTreeButton.Background = Brushes.Transparent;
@@ -896,11 +884,10 @@ namespace GraphPAD
                 }
                 else
                 {
-                    //MessageBox.Show(Properties.Language.EnterConferenssionMessage1 + _conferensionID + "\n" + Properties.Language.EnterConferenssionMessage2, Properties.Language.Caption);
+                    MessageBox.Show(Properties.Language.EnterConferenssionMessage1 + _conferensionID + "\n" + Properties.Language.EnterConferenssionMessage2, Properties.Language.Caption);
                     ConferensionIDTextBox.Text = "";
                     ConferensionIDTextBox.BorderBrush = Brushes.Transparent;
                     ConferensionIDTextBox.ToolTip = null;
-                    //ez
                     LobbyEnter_ClickAsync(_conferensionID, "");
                 }
             }
@@ -1018,6 +1005,7 @@ namespace GraphPAD
             ParticipantsBox.Visibility = Visibility.Hidden;
             ParticipantsString.Visibility = Visibility.Hidden;
             ParticipantsScrollView.Visibility = Visibility.Hidden;
+            VideosScrollView.Visibility = Visibility.Hidden;
 
             //Отображение участников конференции
             int participants = 0;
@@ -1058,17 +1046,23 @@ namespace GraphPAD
 
                         await Dispatcher.BeginInvoke((Action)(() => PaintCanvas.Strokes.Add(stroke))); 
                     });
+                    SocketConnector.client.On("graph-data", async response =>
+                    {
+                        //StylusPointCollection
+                        var graphZone = Newtonsoft.Json.JsonConvert.DeserializeObject<QuickGraph.BidirectionalGraph<GraphData.Model.DataVertex, GraphData.Model.DataEdge>[]>(response.ToString());
+
+                        await Dispatcher.BeginInvoke((Action)(() => GraphArea.GenerateGraph(graphZone[0])));
+                    });
                     chatTextBox.IsReadOnly = (SocketConnector.IsConnected) ? false : true;
                 }
                 catch { }
             }
             else
             {
-                MessageBox.Show("negri");
+                MessageBox.Show(Properties.Language.SomethingWentWrong, Properties.Language.Error);
             }
             ButtonsFix();
             GraphArea.ClearLayout();
-
         }
         #endregion
         #region Lobby Leave
@@ -1190,7 +1184,7 @@ namespace GraphPAD
                 isMicOn = false;
 
                 SetCurrentMicVolume(0);
-                nameString.Text = "Volume - " + GetCurrentMicVolume();
+                //nameString.Text = "Volume - " + GetCurrentMicVolume();
             }
             else
             {
@@ -1208,7 +1202,7 @@ namespace GraphPAD
                 isHeadPhonesOn = true;
 
                 SetCurrentMicVolume(vol);
-                nameString.Text = "Volume - " + GetCurrentMicVolume();
+                //nameString.Text = "Volume - " + GetCurrentMicVolume();
             }
         }
         #endregion
@@ -1236,7 +1230,7 @@ namespace GraphPAD
                 voiceChatTextBlock.Foreground = Brushes.Red;
                 micButton.ToolTip = Properties.Language.VoiceChatOnTooltip;
                 SetCurrentMicVolume(0);
-                nameString.Text = "Volume - " + GetCurrentMicVolume();
+                //nameString.Text = "Volume - " + GetCurrentMicVolume();
             }
             else
             {
@@ -1254,7 +1248,7 @@ namespace GraphPAD
                     micButton.ToolTip = Properties.Language.VoiceChatOffTooltip;
                     isMicOn = true;
                     SetCurrentMicVolume(vol);
-                    nameString.Text = "Volume - " + GetCurrentMicVolume();
+                    //nameString.Text = "Volume - " + GetCurrentMicVolume();
                 }
                 else
                 {
@@ -1693,7 +1687,7 @@ namespace GraphPAD
                 }
                 if(Data2D?.Length != null)
                 {
-                    MessageBox.Show(Data2D.Length.ToString());
+                    //MessageBox.Show(Data2D.Length.ToString());
                     _commands.Clear();
                     _commandCounter = -1;
 
@@ -1764,12 +1758,6 @@ namespace GraphPAD
         }
         private void PaintCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            //var strokeJSON = JsonConvert.SerializeObject(PaintCanvas.Strokes.Last().StylusPoints.ToList());
-            //var stroke2 = JsonConvert.DeserializeObject<StylusPointCollection>(strokeJSON);
-            //var drawingAttributes = new DrawingAttributes() { Color = Colors.Red,
-            //FitToCurve = true};
-            //var stroke = new Stroke(stroke2,drawingAttributes);
-            //PaintCanvas.Strokes.Add(stroke);
             if (PaintCanvas.EditingMode == InkCanvasEditingMode.Ink)
             {
                 if (!(PaintCanvas.Strokes.Count == 0))
@@ -1820,7 +1808,8 @@ namespace GraphPAD
             if (isDrawing)
             {
                 isDrawing = false;
-                showAnimationText.Text = "Запустить";
+                showAnimationText.Text = Properties.Language.ShowAlgorithm;
+                showAnimatonButton.ToolTip = Properties.Language.ShowAlgorithmTooltip;
                 var btn = (Button)sender;
                 btn.IsEnabled = false; //Disable button.
                 var fooTimer = new System.Timers.Timer(2500); //Exceute after 2500 milliseconds
@@ -1837,10 +1826,10 @@ namespace GraphPAD
             }
             else
             {
-                showAnimationText.Text = "Остановить";
+                showAnimationText.Text = Properties.Language.StopAlgorithm;
+                showAnimatonButton.ToolTip = Properties.Language.StopAlgorithmToolTip;
                 DrawAlgorithm();
             }
-
         }
         private void algorithmsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1853,22 +1842,22 @@ namespace GraphPAD
             {
                 case "DFS":
                     {
-                        MessageBox.Show("Теперь выберите вершину для запуска алгоритма");
+                        MessageBox.Show(Properties.Language.ChooseFirstVertex, Properties.Language.Caption);
                         break;
                     }
                 case "BFS":
                     {
-                        MessageBox.Show("Теперь выберите вершину для запуска алгоритма");
+                        MessageBox.Show(Properties.Language.ChooseFirstVertex, Properties.Language.Caption);
                         break;
                     }
                 case "Dijkstra":
                     {
-                        MessageBox.Show("Теперь выберите вершину для запуска алгоритма");
+                        MessageBox.Show(Properties.Language.ChooseFirstVertex, Properties.Language.Caption);
                         break;
                     }
                 case "MST":
                     {
-                        MessageBox.Show("Теперь выберите вершину для запуска алгоритма");
+                        MessageBox.Show(Properties.Language.ChooseFirstVertex, Properties.Language.Caption);
                         break;
                     }
                 case null:
@@ -2063,7 +2052,6 @@ namespace GraphPAD
             {
                 try
                 {
-
                     string filepath = dlg.FileName;
                     System.Windows.Media.Imaging.RenderTargetBitmap rtb = new System.Windows.Media.Imaging.RenderTargetBitmap((int)PaintCanvas.ActualWidth, (int)PaintCanvas.ActualHeight, 96d, 96d, PixelFormats.Default);
                     rtb.Render(PaintCanvas);
@@ -2138,12 +2126,6 @@ namespace GraphPAD
                 ColorPicker.SetValue(Canvas.LeftProperty, 180.0);
             }
         }
-        private void PaintCanvas_MouseMove(object sender, MouseEventArgs e)
-        {
-            //Координаты мыши на paint-канвасе
-            //Point p = Mouse.GetPosition(PaintCanvas);
-            //currentPaintMode.Text = p.ToString();
-        }
         #endregion
         #region Closing
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
@@ -2200,9 +2182,7 @@ namespace GraphPAD
             RefreshRooms();
         }
         #endregion
-
-        
-
+        #region Etc.
         private void VideosScrollView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             try
@@ -2218,10 +2198,10 @@ namespace GraphPAD
 
             }
         }
-
+        #endregion
         private void SendGraph_Click(object sender, RoutedEventArgs e)
         {
-            //ez
+            SocketConnector.SendGraph(GraphArea);
         }
     }
 }

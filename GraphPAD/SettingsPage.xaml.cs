@@ -35,11 +35,6 @@ namespace GraphPAD
         public SettingsPage()
         {
             InitializeComponent();
-            var enumerator = new MMDeviceEnumerator();
-            foreach (var wasapi in enumerator.EnumerateAudioEndPoints(DataFlow.All, DeviceState.All))
-            {
-                Console.WriteLine($"{wasapi.DataFlow} {wasapi.FriendlyName} {wasapi.DeviceFriendlyName} {wasapi.State}");
-            }
             //Microphone settings
             if (UserInfo.MicVolume != null)
             {

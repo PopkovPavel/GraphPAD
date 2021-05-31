@@ -19,20 +19,6 @@
             <Setter Property="Background" Value="#22223d"></Setter>
             <Setter Property="Foreground" Value="White"></Setter>
         </Style>
-        <!--<Style TargetType="{x:Type ComboBox}">
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="IsDropDownOpen" Value="true"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>-->
-        <!--<Style TargetType="ScrollBar">
-            <Setter Property="Background" Value="#FF141424"/>
-            <Setter Property="Foreground" Value="Red"/>
-            <Setter Property="BorderBrush" Value="Gray"/>
-            <Setter Property="BorderThickness" Value="1"/>
-        </Style>-->
-
         <Style TargetType="RepeatButton">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -96,12 +82,9 @@
                 <graphx:ZoomControl x:Name="ZoomCtrl" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1" Background="White" VerticalContentAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" IsTabStop="False" TabIndex="0" MinZoom="0.1" MaxZoom="10" MouseWheelZoomingMode="Positional" ZoomSensitivity="25">
                     <model:GraphZone x:Name="GraphArea"/>
                 </graphx:ZoomControl>
-                <graphx:ZoomControl x:Name="PaintCanvasScroll" Grid.Column="1" BorderBrush="Transparent" BorderThickness="1" Background="Transparent" VerticalContentAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" >
-                    <InkCanvas x:Name="PaintCanvas"  Background="White"  EditingMode="{Binding EditingMode}" ClipToBounds="True" DefaultDrawingAttributes="{Binding DrawingAttributes}" MouseMove="PaintCanvas_MouseMove" MouseUp="PaintCanvas_MouseUp"/>
+                <graphx:ZoomControl x:Name="PaintCanvasScroll" Grid.Column="1" BorderBrush="Transparent" BorderThickness="1" Background="Transparent" VerticalContentAlignment="Center" VerticalAlignment="Center" Visibility="Hidden">
+                    <InkCanvas x:Name="PaintCanvas" Background="White" EditingMode="{Binding EditingMode}" ClipToBounds="True" DefaultDrawingAttributes="{Binding DrawingAttributes}" MouseUp="PaintCanvas_MouseUp"/>
                 </graphx:ZoomControl>
-                <!--<ScrollViewer x:Name="PaintCanvasScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Visibility="Hidden">
-                    <InkCanvas x:Name="PaintCanvas"  Background="White" Margin="0,0,0,0" EditingMode="{Binding EditingMode}" ClipToBounds="True" DefaultDrawingAttributes="{Binding DrawingAttributes}" MouseMove="PaintCanvas_MouseMove" MouseUp="PaintCanvas_MouseUp"/>
-                </ScrollViewer>-->
             </Grid>
             <Grid Grid.Row="1" Background="#22223d">
                 <!--Нижняя часть интерфейса-->
@@ -151,7 +134,7 @@
                             <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.ClearFieldBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="sendGraph" Click="SendGraph_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.SendGraphBtnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="63" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="sendGraph" Click="SendGraph_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.SendGraphBtnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="65" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/send_graph.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.SendGraphBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
@@ -311,16 +294,21 @@
                 <RowDefinition Height="165"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
                 <!--Верхние кнопки-->
-                <Button Click="TextChatButton_Clicked" Content="{x:Static resx:Language.TextChatBtn}" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatAccentButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
-                <Button Click="VideoChatButton_Clicked" Content="{x:Static resx:Language.VideoChatBtn}" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
-                <Button Click="ParticipantsButton_Clicked" Content="{x:Static resx:Language.ParticipantsBtn}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="130" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
+                <Button Click="TextChatButton_Clicked" Grid.Column="0" Content="{x:Static resx:Language.TextChatBtn}" Height="30" Style="{StaticResource MaterialDesignFlatAccentButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
+                <Button Click="VideoChatButton_Clicked" Grid.Column="1" Content="{x:Static resx:Language.VideoChatBtn}" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False" Margin="2,0,2,0"/>
+                <Button Click="ParticipantsButton_Clicked" Grid.Column="2" Content="{x:Static resx:Language.ParticipantsBtn}" Height="30" Style="{StaticResource MaterialDesignFlatButton}" Foreground="White" Background="#FF232E4A" IsTabStop="False"/>
             </Grid>
             <Grid Grid.Row="1">
                 <!--Верхняя Строка-->
-                <TextBlock x:Name="ConferensionString" Visibility="Visible" Padding="0,8,0,0" Text="{x:Static resx:Language.ConferenceChatString}" Height="50" FontSize="20" TextDecorations="{x:Null}" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" TextTrimming="CharacterEllipsis" Width="400" Canvas.Top="5" TextAlignment="Center" FontWeight="Bold"/>
-                <TextBlock x:Name="VideoString" Visibility="Hidden" Padding="0,8,0,0" Text="{x:Static resx:Language.ConferenceVideoChatString}" Height="50" FontSize="20" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="CharacterEllipsis" Width="400" Canvas.Top="5"/>
-                <TextBlock x:Name="ParticipantsString" Visibility="Hidden" Padding="0,8,0,0" Text="{x:Static resx:Language.ConferenceParticipantsString}" Height="50" FontSize="20" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="CharacterEllipsis" Width="400" Canvas.Top="5"/>
+                <TextBlock x:Name="ConferensionString" Visibility="Visible" Padding="0,8,0,0" Text="{x:Static resx:Language.ConferenceChatString}" Height="50" FontSize="20" TextDecorations="{x:Null}" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" TextTrimming="CharacterEllipsis" Canvas.Top="5" TextAlignment="Center" FontWeight="Bold"/>
+                <TextBlock x:Name="VideoString" Visibility="Hidden" Padding="0,8,0,0" Text="{x:Static resx:Language.ConferenceVideoChatString}" Height="50" FontSize="20" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="CharacterEllipsis" Canvas.Top="5"/>
+                <TextBlock x:Name="ParticipantsString" Visibility="Hidden" Padding="0,8,0,0" Text="{x:Static resx:Language.ConferenceParticipantsString}" Height="50" FontSize="20" TextDecorations="{x:Null}" TextAlignment="Center" TextWrapping="Wrap" Margin="0" Background="#FF0F0F19" Foreground="White" FontWeight="Bold" TextTrimming="CharacterEllipsis" Canvas.Top="5"/>
             </Grid>
             <Grid Grid.Row="2">
                 <!--Чат со сообщениями-->
