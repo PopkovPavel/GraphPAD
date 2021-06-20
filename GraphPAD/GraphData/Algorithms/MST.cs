@@ -33,10 +33,10 @@ namespace GraphPAD.GraphData.Algorithms
             {
                 if (MainPage.isAlgorithmsOn == false) return;
                 List<DataEdge> connectedEdges = new List<DataEdge>();
-                foreach(var e in edgesList)
+                foreach (var e in edgesList)
                 {
-                    if (visitedVertices.Contains(e.Source) 
-                        && !result.Contains(e) 
+                    if (visitedVertices.Contains(e.Source)
+                        && !result.Contains(e)
                         && !visitedVertices.Contains(e.Target))
                     {
                         connectedEdges.Add(e);
@@ -55,14 +55,14 @@ namespace GraphPAD.GraphData.Algorithms
                 visitedVertices.Add(nonSelectedVertex);
                 verticesList.Remove(nonSelectedVertex);
                 edgesList.Remove(minEdge);
-                 //добавление этой точки в финальный граф
+                //добавление этой точки в финальный граф
                 MainPage.algorithmResult += $"\n{minEdge.Source.Text}--({minEdge.Weight})-->{minEdge.Target.Text}";
                 MainPage.algorithmEdgesList.Add(minEdge);
                 //minimalTree = selectedEdges;
             }
 
         }
-         
+
         public static void CalculateMST(DataVertex start, GraphZone graph)
         {
             MainPage.algorithmEdgesList.Clear();

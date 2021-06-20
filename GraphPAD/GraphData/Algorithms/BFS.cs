@@ -2,50 +2,56 @@
 using System.Collections.Generic;
 
 namespace GraphPAD.GraphData.Algorithms
-{   /// <summary>
-    /// BreadthFirstSearch
+{
+    /// <summary>
+    /// Breadth First Search abstract class
     /// </summary>
     public abstract class BFS
     {
-        private static void BFSUtil(DataVertex vertex, GraphZone graph)
+        private static void BFSUtility(DataVertex vertex, GraphZone graph)
         {
-            HashSet<DataVertex> visited = new HashSet<DataVertex>();
+            HashSet<DataVertex> visitedVertices = new HashSet<DataVertex>();
             var queue = new Queue<DataVertex>();
             queue.Enqueue(vertex);
+            visitedVertices.Add(vertex);
             if (MainPage.isAlgorithmsOn == false) return;
-
             while (queue.Count > 0)
             {
                 var vertexTemp = queue.Dequeue();
-                if (visited.Contains(vertexTemp)) continue;
-                visited.Add(vertexTemp);
-                foreach(var edge in graph.EdgesList.Keys)
+                // if (visitedVertices.Contains(vertexTemp)) continue;
+                //visitedVertices.Add(vertexTemp);
+                foreach (var edge in graph.EdgesList.Keys)
                 {
-                    if (edge.Source == vertexTemp 
-                        && !visited.Contains(edge.Target))
+                    if (edge.Source == vertexTemp
+                        && !visitedVertices.Contains(edge.Target))
                     {
                         queue.Enqueue(edge.Target);
-                        MainPage.algorithmEdgesList.Add(edge);                       
-                        MainPage.algorithmResult += $"({vertex.Text}->{edge.Target.Text})";
+                        visitedVertices.Add(edge.Target);
+                        MainPage.algorithmEdgesList.Add(edge);
+                        MainPage.algorithmResult += $"{vertex.Text}--({edge.Weight})-->{edge.Target.Text})";
                     }
                 }
 
             }
         }
-        public static void CalculateBFS(DataVertex start,GraphZone graph) 
+        /// <summary>
+        /// Найти путь алгоритма "Поиск в ширину"
+        /// </summary>
+        /// <param name="start">Начальная вершина</param>
+        /// <param name="graph">Изначальный граф</param>
+        public static void CalculateBFS(DataVertex start, GraphZone graph)
         {
             MainPage.algorithmEdgesList.Clear();
             try
             {
-                MainPage.algorithmResult = $"Результат поиска в ширину из вершины \"{start.Text}\":\n";
+                MainPage.algorithmResult = $"GraphPAD.Properties.Language.ResultBFS(Результат поиска в ширину из точки) (\"{start.Text}\"):\n";
                 HashSet<DataVertex> visitedList = new HashSet<DataVertex>();
-                BFSUtil(start, graph);
-                
+                BFSUtility(start, graph);
             }
             catch (System.Exception ex)
             {
                 System.Windows.MessageBox.Show(ex.ToString());
             }
-}
+        }
     }
 }

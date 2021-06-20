@@ -4,41 +4,45 @@ using System.Collections.Generic;
 
 namespace GraphPAD.GraphData.Algorithms
 {
+    /// <summary>
+    /// Depth First Search abstract class
+    /// </summary>
     public abstract class DFS
     {
-        private static void DFSUtil(DataVertex vertex, HashSet<DataVertex> visited, GraphZone graph)
+        private static void DFSUtility(DataVertex vertex, HashSet<DataVertex> visited, GraphZone graph)
         {
             if (MainPage.isAlgorithmsOn == false) return;
-            // if (visited.Find(item => item.Item1 == vertex && item.Item2 == true) != null) return;
-            //Dispatcher.Invoke(() => progressBar.Value = 100/(GraphArea.VertexList.Count-test+1));
-            if (visited.Contains(vertex)) return; 
+            if (visited.Contains(vertex)) return;
             else visited.Add(vertex);
-            foreach (var edge in graph.EdgesList.Keys)
+            foreach (var edge in graph.EdgesList)
             {
-                if (edge.Source == vertex
-                    && !visited.Contains(edge.Target))
+                if (edge.Key.Source == vertex
+                    && !visited.Contains(edge.Key.Target))
                 {
-                    MainPage.algorithmEdgesList.Add(edge);
-                    MainPage.algorithmResult += $"({vertex.Text}->{edge.Target.Text})";
-                    DFSUtil(edge.Target, visited, graph);
+                    MainPage.algorithmEdgesList.Add(edge.Key);//$"\n{minEdge.Source.Text}--({minEdge.Weight})-->{minEdge.Target.Text}"//
+                    MainPage.algorithmResult += $"\n{vertex.Text}--({edge.Key.Weight})-->{edge.Key.Target.Text}";
+                    DFSUtility(edge.Key.Target, visited, graph);
                 }
             }
         }
+        /// <summary>
+        /// Поиск пути алгоритма "Поиск в глубину"
+        /// </summary>
+        /// <param name="start">Начальная вершина</param>
+        /// <param name="graph">Изначальный граф</param>
         public static void CalculateDFS(DataVertex start, GraphZone graph)
         {
             MainPage.algorithmEdgesList.Clear();
             try
             {
-                MainPage.algorithmResult = $"Результат поиска в глубину из вершины \"{start.Text}\":\n";
+                MainPage.algorithmResult = $"GraphPAD.Properties.Language.ResultDFS(Результат поиска в глубину из точки) \"{start.Text}\":\n";
                 HashSet<DataVertex> visitedList = new HashSet<DataVertex>();
-                DFSUtil(start, visitedList, graph);
-
+                DFSUtility(start, visitedList, graph);
             }
             catch (System.Exception ex)
             {
                 System.Windows.MessageBox.Show(ex.ToString());
             }
         }
-
     }
 }

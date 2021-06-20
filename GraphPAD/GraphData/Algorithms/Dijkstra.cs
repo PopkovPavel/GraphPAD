@@ -9,58 +9,52 @@ namespace GraphPAD
     /// Информация о вершине в алгоритме Дейкстры
     /// </summary>
     public class DijkstraVertexInfo
-    {/// <summary>
-     /// Вершина
-     /// </summary>
+    {   /// <summary>
+        /// Вершина
+        /// </summary>
         public DataVertex Vertex { get; set; }
-
         /// <summary>
         /// Непосещенная вершина
         /// </summary>
-        public bool IsUnvisited { get; set; }
-
+        public bool IsVisited { get; set; }
         /// <summary>
         /// Сумма весов ребер
         /// </summary>
-        public int EdgesWeightSum { get; set; }
-
+        public int WeightMark { get; set; }
         /// <summary>
         /// Предыдущая вершина
         /// </summary>
         public DataVertex PreviousVertex { get; set; }
-
         /// <summary>
         /// Конструктор
         /// </summary>
         /// <param name="vertex">Вершина</param>
         public DijkstraVertexInfo(DataVertex vertex)
         {
-            Vertex = vertex;
-            IsUnvisited = true;
-            EdgesWeightSum = int.MaxValue;
             PreviousVertex = null;
+            IsVisited = false;
+            WeightMark = int.MaxValue;
+            Vertex = vertex;
         }
     }
     public abstract class Dijkstra
     {
-
         /// <summary>
         /// Поиск непосещенной вершины с минимальным значением суммы
         /// </summary>
         /// <returns>Информация о вершине</returns>      
-        private static DijkstraVertexInfo FindUnvisitedVertexWithMinSum(List<DijkstraVertexInfo> infos)
+        private static DijkstraVertexInfo FindUnvisitedVertexWithMinMark(List<DijkstraVertexInfo> infos)
         {
             var minValue = int.MaxValue;
             DijkstraVertexInfo minVertexInfo = null;
             foreach (var i in infos)
             {
-                if (i.IsUnvisited && i.EdgesWeightSum < minValue)
+                if (!i.IsVisited && i.WeightMark < minValue)
                 {
                     minVertexInfo = i;
-                    minValue = i.EdgesWeightSum;
+                    minValue = i.WeightMark;
                 }
             }
-
             return minVertexInfo;
         }
         /// <summary>
@@ -77,9 +71,9 @@ namespace GraphPAD
                 }
                 return verticesList;
             }
-            catch
+            catch (System.Exception ex)
             {
-                MessageBox.Show("Произошла ошибка, возможно граф был изменен");
+                MessageBox.Show(ex.ToString(), "InitInfo ERROR");
             }
             return null;
         }
@@ -106,61 +100,59 @@ namespace GraphPAD
         /// <param name="startVertex">Стартовая вершина</param>
         /// <param name="finishVertex">Финишная вершина</param>
         /// <returns>Кратчайший путь</returns>
-        private static void FindShortestPath(DataVertex startVertex, DataVertex finishVertex, List<DijkstraVertexInfo> verticesInfo, GraphZone graph)
+        private static void DijkstraUtility(DataVertex startVertex, DataVertex finishVertex, List<DijkstraVertexInfo> verticesInfo, GraphZone graph)
         {
             try
             {
                 var first = GetVertexInfo(startVertex, verticesInfo);
-                first.EdgesWeightSum = 0;
+                first.WeightMark = 0;
                 while (true)
                 {
                     if (MainPage.isAlgorithmsOn == false) return;
-                    var current = FindUnvisitedVertexWithMinSum(verticesInfo);
+                    var current = FindUnvisitedVertexWithMinMark(verticesInfo);
                     if (current == null)
                     {
                         break;
                     }
 
-                    SetSumToNextVertex(current, verticesInfo, graph);
+                    SetMarkToNextVertex(current, verticesInfo, graph);
                 }
                 MainPage.selectedVertex = null;
                 GetDijkstraPath(startVertex, finishVertex, verticesInfo, graph);
             }
-            catch
+            catch (System.Exception ex)
             {
-                MessageBox.Show("Произошла ошибка, возможно граф был изменен", "FindShortestPath ERROR");
+                MessageBox.Show(ex.ToString(), "FindShortestPath ERROR");
             }
         }
-
         /// <summary>
         /// Вычисление суммы весов ребер для следующей вершины
         /// </summary>
         /// <param name="info">Информация о текущей вершине</param>
-        private static void SetSumToNextVertex(DijkstraVertexInfo info, List<DijkstraVertexInfo> verticesInfo, GraphZone graph)
+        private static void SetMarkToNextVertex(DijkstraVertexInfo info, List<DijkstraVertexInfo> verticesInfo, GraphZone graph)
         {
             try
             {
-                info.IsUnvisited = false;
+                info.IsVisited = true;
                 foreach (var e in graph.EdgesList.Keys)
                 {
                     if (info.Vertex == e.Source)
                     {
                         var nextInfo = GetVertexInfo(e.Target, verticesInfo);
-                        var sum = info.EdgesWeightSum + (int)e.Weight;
-                        if (sum < nextInfo.EdgesWeightSum)
+                        var sum = info.WeightMark + (int)e.Weight;
+                        if (sum < nextInfo.WeightMark)
                         {
-                            nextInfo.EdgesWeightSum = sum;
+                            nextInfo.WeightMark = sum;
                             nextInfo.PreviousVertex = info.Vertex;
                         }
                     }
                 }
             }
-            catch
+            catch (System.Exception ex)
             {
-                MessageBox.Show("Произошла ошибка, возможно граф был изменен", "SetSumToNextVertex ERROR");
+                MessageBox.Show(ex.ToString(), "SetSumToNextVertex ERROR");
             }
         }
-
         /// <summary>
         /// Формирование пути
         /// </summary>
@@ -204,15 +196,13 @@ namespace GraphPAD
         {
             try
             {
-                MainPage.algorithmResult = $"Результат поиска кратчайшего пути из вершины " +
-                    $"\"{start.Text}\" в вершину \"{end.Text}\":\n";
+                MainPage.algorithmResult = $"{{GraphPAD.Properties.Language.DijkstraResult(Результат поиска кратчайшего пути из точки)}}\"{start.Text}\" {{GraphPAD.Properties.Language.DijkstraResult2(в точку )}}\"{end.Text}\":\n";
                 var verticesInfo = InitInfo(graph);
-                FindShortestPath(start, end, verticesInfo,graph);
-               
+                DijkstraUtility(start, end, verticesInfo, graph);
             }
-            catch
+            catch (System.Exception ex)
             {
-                MessageBox.Show("Произошла ошибка, возможно граф был изменен", "CalculateDijkstra ERROR");
+                MessageBox.Show(ex.ToString(), "CalculateDijkstra ERROR");
             }
         }
     }
