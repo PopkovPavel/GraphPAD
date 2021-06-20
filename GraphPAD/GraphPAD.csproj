@@ -185,6 +185,9 @@
     <Compile Include="NameEnterPage.xaml.cs">
       <DependentUpon>NameEnterPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PasswordRestorePage.xaml.cs">
+      <DependentUpon>PasswordRestorePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Language.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -227,6 +230,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="NameEnterPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PasswordRestorePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

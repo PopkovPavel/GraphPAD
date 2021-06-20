@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace GraphPAD
@@ -43,7 +44,13 @@ namespace GraphPAD
             {
                 Process.GetCurrentProcess().Kill();
             }
-
+        }
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.AuthButtonNoAcc.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+            }
         }
     }
 }

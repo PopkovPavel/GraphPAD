@@ -165,12 +165,18 @@ namespace GraphPAD
                 }
             }
         }
-        private void OpenMainPageGuest(object sender, RoutedEventArgs e) //Открытие главного окна без входа в аккаунт ("Гостевой Профиль")
+        private void OpenMainPageGuest_Clicked(object sender, RoutedEventArgs e) //Открытие главного окна без входа в аккаунт ("Гостевой Профиль")
         {
             NameEnterPage nameEnterPage = new NameEnterPage();
             this.Visibility = Visibility.Hidden;
             nameEnterPage.Show();
             //MessageBox.Show(Properties.Language.GuestAccsNotWork, Properties.Language.Caption);
+        }
+        private void PasswordRestore_Clicked(object sender, RoutedEventArgs e)
+        {
+            PasswordRestorePage passwordRestorePage = new PasswordRestorePage();
+            this.Visibility = Visibility.Hidden;
+            passwordRestorePage.Show();
         }
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs) //Подтверждения выхода из программы
         {

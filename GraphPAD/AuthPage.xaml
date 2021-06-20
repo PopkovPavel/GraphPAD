@@ -20,12 +20,13 @@
                 <PasswordBox x:Name="passwordboxPassword" materialDesign:HintAssist.Hint="{x:Static resx:Language.PasswordString}" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" MaxLength="40"/>
                 <CheckBox x:Name="checkboxRemember" IsChecked="False" Content="{x:Static resx:Language.RememberMeCheckBox}" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,-10" VerticalContentAlignment="Bottom" Height="25" Width="280"/>
                 <Button x:Name="authButton" Content="{x:Static resx:Language.AuthBtn}" Margin="0 20" Click="AuthButton_Clicked"/>
-                <Grid Margin="0 -15 0 0" Height="70">
+                <Grid Margin="0 -15 0 0" Height="100">
                     <TextBlock HorizontalAlignment="Left" Text="{x:Static resx:Language.NoAccount}" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" Margin="0,6,0,0" Width="180"/>
                     <Button HorizontalAlignment="Right" VerticalAlignment="Top" Content="{x:Static resx:Language.CreateAccBtn}" FontSize="16" Click="OpenRegPage" Style="{StaticResource MaterialDesignFlatButton}" Width="160" Padding="0,4"/>
                     <!--<TextBlock HorizontalAlignment="Left" Text="Forget your password?" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="0,40,0,34" Width="130" />
                     <Button HorizontalAlignment="Right" VerticalAlignment="Center" Content="Восстановить" FontSize="12" Click="OpenRegPage" Style="{StaticResource MaterialDesignFlatButton}" Width="110" Padding="0,4" Height="22" Margin="0,34,20,34"/>-->
-                    <Button VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="0 0 0 0" Content="{x:Static resx:Language.GuestModeBtn}" FontSize="12" Click="OpenMainPageGuest" Style="{StaticResource MaterialDesignFlatButton}" Foreground="Black" Width="180"/>
+                    <Button VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="0 0 0 0" Content="{x:Static resx:Language.GuestModeBtn}" FontSize="12" Click="OpenMainPageGuest_Clicked" Style="{StaticResource MaterialDesignFlatButton}" Foreground="Black" Width="180" Margin="87,0,87,42" Height="25"/>
+                    <Button VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="0 0 0 0" Content="{x:Static resx:Language.ForgоtPasswordBtn}" FontSize="12" Click="PasswordRestore_Clicked" Style="{StaticResource MaterialDesignFlatButton}" Foreground="#FF6C41BA" Width="180" Margin="87,0,87,17" Height="25"/>
                 </Grid>
             </StackPanel>
         </Border>

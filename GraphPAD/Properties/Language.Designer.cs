@@ -1001,6 +1001,15 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Забыли пароль?.
+        /// </summary>
+        public static string ForgоtPasswordBtn {
+            get {
+                return ResourceManager.GetString("ForgоtPasswordBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Создать граф.
         /// </summary>
         public static string GenGraphBtn {
@@ -1299,6 +1308,16 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Инструкция по восстановлению пароля выслана на почту.
+        ///Если письмо не приходит, проверьте папку спама..
+        /// </summary>
+        public static string PasswordRestoreMessage {
+            get {
+                return ResourceManager.GetString("PasswordRestoreMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Пароли не совпадают..
         /// </summary>
         public static string PasswordsDontMatchTooltip {
@@ -1421,6 +1440,15 @@ namespace GraphPAD.Properties {
         public static string SelectionBtn {
             get {
                 return ResourceManager.GetString("SelectionBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отправить.
+        /// </summary>
+        public static string SendBtn {
+            get {
+                return ResourceManager.GetString("SendBtn", resourceCulture);
             }
         }
         

@@ -433,6 +433,9 @@ ID: </value>
   <data name="ExitAppMessage" xml:space="preserve">
     <value>Are you sure you want to quit?</value>
   </data>
+  <data name="ForgоtPasswordBtn" xml:space="preserve">
+    <value>Forgot your password?</value>
+  </data>
   <data name="GenGraphBtn" xml:space="preserve">
     <value>Create Graph</value>
   </data>
@@ -533,6 +536,10 @@ ID: </value>
   <data name="PasswordAndAuth" xml:space="preserve">
     <value>Password and Authentication</value>
   </data>
+  <data name="PasswordRestoreMessage" xml:space="preserve">
+    <value>Password recovery instructions have been sent to the e-mail.
+If the email does not arrive, check your spam folder.</value>
+  </data>
   <data name="PasswordsDontMatchTooltip" xml:space="preserve">
     <value>Passwords do not match.</value>
   </data>
@@ -574,6 +581,9 @@ ID: </value>
   </data>
   <data name="SelectionBtn" xml:space="preserve">
     <value>Selection</value>
+  </data>
+  <data name="SendBtn" xml:space="preserve">
+    <value>Send E-Mail</value>
   </data>
   <data name="SendGraphBtn" xml:space="preserve">
     <value>Send graph</value>

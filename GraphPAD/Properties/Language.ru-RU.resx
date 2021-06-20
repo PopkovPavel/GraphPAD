@@ -433,6 +433,9 @@
   <data name="ExitAppMessage" xml:space="preserve">
     <value>Вы действительно хотите выйти?</value>
   </data>
+  <data name="ForgоtPasswordBtn" xml:space="preserve">
+    <value>Забыли пароль?</value>
+  </data>
   <data name="GenGraphBtn" xml:space="preserve">
     <value>Создать граф</value>
   </data>
@@ -533,6 +536,10 @@
   <data name="PasswordAndAuth" xml:space="preserve">
     <value>Пароль и аутентификация</value>
   </data>
+  <data name="PasswordRestoreMessage" xml:space="preserve">
+    <value>Инструкция по восстановлению пароля выслана на почту.
+Если письмо не приходит, проверьте папку спама.</value>
+  </data>
   <data name="PasswordsDontMatchTooltip" xml:space="preserve">
     <value>Пароли не совпадают.</value>
   </data>
@@ -574,6 +581,9 @@
   </data>
   <data name="SelectionBtn" xml:space="preserve">
     <value>Выделение</value>
+  </data>
+  <data name="SendBtn" xml:space="preserve">
+    <value>Отправить</value>
   </data>
   <data name="SendGraphBtn" xml:space="preserve">
     <value>Отправить граф</value>

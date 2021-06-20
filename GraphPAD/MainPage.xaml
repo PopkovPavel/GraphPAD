@@ -134,7 +134,7 @@
                             <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.ClearFieldBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
                         </StackPanel>
                     </Button>
-                    <Button x:Name="sendGraph" Click="SendGraph_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.SendGraphBtnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="65" Background="{x:Null}" IsTabStop="False">
+                    <Button x:Name="sendGraph" Click="SendGraph_Click" Visibility="Visible" ToolTip="{x:Static resx:Language.SendGraphBtnTooltip}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" BorderBrush="White" Canvas.Left="181" Canvas.Top="63" Background="{x:Null}" IsTabStop="False">
                         <StackPanel Margin="-20" Width="150" Height="30" Orientation="Horizontal">
                             <Image Source="Resources/send_graph.png"/>
                             <TextBlock TextWrapping="NoWrap" Text="{x:Static resx:Language.SendGraphBtn}" TextAlignment="Center" Canvas.Top="118" Foreground="White" Height="20" Width="115" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,1,0,0" UseLayoutRounding="True"/>
