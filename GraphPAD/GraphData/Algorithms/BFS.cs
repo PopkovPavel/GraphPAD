@@ -28,7 +28,7 @@ namespace GraphPAD.GraphData.Algorithms
                         queue.Enqueue(edge.Target);
                         visitedVertices.Add(edge.Target);
                         MainPage.algorithmEdgesList.Add(edge);
-                        MainPage.algorithmResult += $"{vertex.Text}--({edge.Weight})-->{edge.Target.Text})";
+                        MainPage.algorithmResult += $"\n{vertex.Text}--({edge.Weight})-->{edge.Target.Text}";
                     }
                 }
 
@@ -44,7 +44,7 @@ namespace GraphPAD.GraphData.Algorithms
             MainPage.algorithmEdgesList.Clear();
             try
             {
-                MainPage.algorithmResult = $"GraphPAD.Properties.Language.ResultBFS(Результат поиска в ширину из точки) (\"{start.Text}\"):\n";
+                MainPage.algorithmResult = "\n" + Properties.Language.ResultBFS + $"\"{start.Text}\":";
                 HashSet<DataVertex> visitedList = new HashSet<DataVertex>();
                 BFSUtility(start, graph);
             }

@@ -68,7 +68,7 @@ namespace GraphPAD.GraphData.Algorithms
             MainPage.algorithmEdgesList.Clear();
             try
             {
-                MainPage.algorithmResult = $"Результат поиска в глубину из вершины \"{start.Text}\":\n";
+                MainPage.algorithmResult = "\n" + Properties.Language.ResultMST + $"\"{start.Text}\":";
                 HashSet<DataVertex> visitedList = new HashSet<DataVertex>();
                 MSTUtil(start, graph);
 

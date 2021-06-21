@@ -225,12 +225,10 @@
                         <ComboBox.Resources>
                             <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FF0E0E19"/>
                         </ComboBox.Resources>
-                        <ComboBoxItem Content="Поиск в ширину" Tag="BFS"/>
-                        <ComboBoxItem Content="Поиск в глубину" Tag="DFS"/>
-                        <ComboBoxItem Content="Алгоритм дейкстры" Tag="Dijkstra"/>
-                        <ComboBoxItem Content="Поиск минимального остовного дерева" Tag="MST"/>
-
-
+                        <ComboBoxItem Content="{x:Static resx:Language.SelectBFS}" Tag="BFS"/>
+                        <ComboBoxItem Content="{x:Static resx:Language.SelectDFS}" Tag="DFS"/>
+                        <ComboBoxItem Content="{x:Static resx:Language.SelectDijkstra}" Tag="Dijkstra"/>
+                        <ComboBoxItem Content="{x:Static resx:Language.SelectMST}" Tag="MST"/>
                     </ComboBox>
                     <!--<ProgressBar x:Name="progressBar" Height="10" Canvas.Left="10" Canvas.Top="54" Width="150" Value="0"/>-->
                 </Canvas>

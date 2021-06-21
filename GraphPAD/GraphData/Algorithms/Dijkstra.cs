@@ -180,7 +180,7 @@ namespace GraphPAD
                 }
                 else
                 {
-                    path = "Такого пути не существует";
+                    path = Properties.Language.PathNotExist;
                 }
             }
 
@@ -196,7 +196,7 @@ namespace GraphPAD
         {
             try
             {
-                MainPage.algorithmResult = $"{{GraphPAD.Properties.Language.DijkstraResult(Результат поиска кратчайшего пути из точки)}}\"{start.Text}\" {{GraphPAD.Properties.Language.DijkstraResult2(в точку )}}\"{end.Text}\":\n";
+                MainPage.algorithmResult = "\n" + Properties.Language.ResultDijkstra + $"\"{start.Text}\"" + Properties.Language.ResultDijkstra2 + $"\"{end.Text}\":\n";
                 var verticesInfo = InitInfo(graph);
                 DijkstraUtility(start, end, verticesInfo, graph);
             }

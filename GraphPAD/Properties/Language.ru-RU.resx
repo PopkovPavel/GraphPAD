@@ -546,6 +546,9 @@
   <data name="PasswordString" xml:space="preserve">
     <value>Введите пароль</value>
   </data>
+  <data name="PathNotExist" xml:space="preserve">
+    <value>Такого пути не существует</value>
+  </data>
   <data name="ProfileSettings" xml:space="preserve">
     <value>Настройки пользователя</value>
   </data>
@@ -564,6 +567,21 @@
   <data name="ReorderBtn" xml:space="preserve">
     <value>Упорядочить граф</value>
   </data>
+  <data name="ResultBFS" xml:space="preserve">
+    <value>Результат поиска в ширину из точки </value>
+  </data>
+  <data name="ResultDFS" xml:space="preserve">
+    <value>Результат поиска в глубину из точки </value>
+  </data>
+  <data name="ResultDijkstra" xml:space="preserve">
+    <value>Результат поиска кратчайшего пути из точки </value>
+  </data>
+  <data name="ResultDijkstra2" xml:space="preserve">
+    <value> в точку </value>
+  </data>
+  <data name="ResultMST" xml:space="preserve">
+    <value>Результат поиска минимального остовного дерева из вершины </value>
+  </data>
   <data name="Russian" xml:space="preserve">
     <value>Русский</value>
   </data>
@@ -579,8 +597,20 @@
   <data name="Seconds" xml:space="preserve">
     <value>сек.</value>
   </data>
+  <data name="SelectBFS" xml:space="preserve">
+    <value>Поиск в ширину</value>
+  </data>
+  <data name="SelectDFS" xml:space="preserve">
+    <value>Поиск в глубину</value>
+  </data>
+  <data name="SelectDijkstra" xml:space="preserve">
+    <value>Алгоритм дейкстры</value>
+  </data>
   <data name="SelectionBtn" xml:space="preserve">
     <value>Выделение</value>
+  </data>
+  <data name="SelectMST" xml:space="preserve">
+    <value>Поиск минимального остовного дерева</value>
   </data>
   <data name="SendBtn" xml:space="preserve">
     <value>Отправить</value>

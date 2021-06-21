@@ -1336,6 +1336,15 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Такого пути не существует.
+        /// </summary>
+        public static string PathNotExist {
+            get {
+                return ResourceManager.GetString("PathNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Настройки пользователя.
         /// </summary>
         public static string ProfileSettings {
@@ -1390,6 +1399,51 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Результат поиска в ширину из точки .
+        /// </summary>
+        public static string ResultBFS {
+            get {
+                return ResourceManager.GetString("ResultBFS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Результат поиска в глубину из точки .
+        /// </summary>
+        public static string ResultDFS {
+            get {
+                return ResourceManager.GetString("ResultDFS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Результат поиска кратчайшего пути из точки .
+        /// </summary>
+        public static string ResultDijkstra {
+            get {
+                return ResourceManager.GetString("ResultDijkstra", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на  в точку .
+        /// </summary>
+        public static string ResultDijkstra2 {
+            get {
+                return ResourceManager.GetString("ResultDijkstra2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Результат поиска минимального остовного дерева из вершины .
+        /// </summary>
+        public static string ResultMST {
+            get {
+                return ResourceManager.GetString("ResultMST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Русский.
         /// </summary>
         public static string Russian {
@@ -1435,11 +1489,47 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Поиск в ширину.
+        /// </summary>
+        public static string SelectBFS {
+            get {
+                return ResourceManager.GetString("SelectBFS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Поиск в глубину.
+        /// </summary>
+        public static string SelectDFS {
+            get {
+                return ResourceManager.GetString("SelectDFS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Алгоритм дейкстры.
+        /// </summary>
+        public static string SelectDijkstra {
+            get {
+                return ResourceManager.GetString("SelectDijkstra", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Выделение.
         /// </summary>
         public static string SelectionBtn {
             get {
                 return ResourceManager.GetString("SelectionBtn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Поиск минимального остовного дерева.
+        /// </summary>
+        public static string SelectMST {
+            get {
+                return ResourceManager.GetString("SelectMST", resourceCulture);
             }
         }
         

@@ -854,41 +854,30 @@ namespace GraphPAD
             }
             else
             {
-                if (!isGuestConnected)
+                try
                 {
-                    try
+                    var client = new RestSharp.RestClient("https://testingwebrtc.herokuapp.com/room/" + _conferensionID + "/join");
+                    client.Timeout = -1;
+                    var request = new RestSharp.RestRequest(RestSharp.Method.POST);
+                    request.AddHeader("x-access-token", UserInfo.Token);
+                    RestSharp.IRestResponse response = client.Execute(request);
+                    if (response.IsSuccessful)
                     {
-                        var client = new RestSharp.RestClient("https://testingwebrtc.herokuapp.com/room/" + _conferensionID + "/join");
-                        client.Timeout = -1;
-                        var request = new RestSharp.RestRequest(RestSharp.Method.POST);
-                        request.AddHeader("x-access-token", UserInfo.Token);
-                        RestSharp.IRestResponse response = client.Execute(request);
-                        if (response.IsSuccessful)
-                        {
-                            MessageBox.Show(Properties.Language.EnterConferenssionMessage1 + _conferensionID + "\n" + Properties.Language.EnterConferenssionMessage2, Properties.Language.Caption);
-                            ConferensionIDTextBox.Text = "";
-                            ConferensionIDTextBox.BorderBrush = Brushes.Transparent;
-                            ConferensionIDTextBox.ToolTip = null;
-                            RefreshRooms();
-                        }
-                        else
-                        {
-                            MessageBox.Show(Properties.Language.EnterConferenssionErrorMessage, Properties.Language.Error, MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                        MessageBox.Show(Properties.Language.EnterConferenssionMessage1 + _conferensionID + "\n" + Properties.Language.EnterConferenssionMessage2, Properties.Language.Caption);
+                        ConferensionIDTextBox.Text = "";
+                        ConferensionIDTextBox.BorderBrush = Brushes.Transparent;
+                        ConferensionIDTextBox.ToolTip = null;
+                        RefreshRooms();
                     }
-                    catch
+                    else
                     {
-                        MessageBox.Show(Properties.Language.SomethingWentWrong, Properties.Language.Error, MessageBoxButton.OK, MessageBoxImage.Error);
-
+                        MessageBox.Show(Properties.Language.EnterConferenssionErrorMessage, Properties.Language.Error, MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                else
+                catch
                 {
-                    MessageBox.Show(Properties.Language.EnterConferenssionMessage1 + _conferensionID + "\n" + Properties.Language.EnterConferenssionMessage2, Properties.Language.Caption);
-                    ConferensionIDTextBox.Text = "";
-                    ConferensionIDTextBox.BorderBrush = Brushes.Transparent;
-                    ConferensionIDTextBox.ToolTip = null;
-                    LobbyEnter_ClickAsync(_conferensionID, "");
+                    MessageBox.Show(Properties.Language.SomethingWentWrong, Properties.Language.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+
                 }
             }
         }
@@ -1823,12 +1812,15 @@ namespace GraphPAD
                     });
                 };
                 fooTimer.Start();
+                algorithmsBtn.IsEnabled = true;
             }
             else
             {
                 showAnimationText.Text = Properties.Language.StopAlgorithm;
                 showAnimatonButton.ToolTip = Properties.Language.StopAlgorithmToolTip;
+                algorithmsBtn.IsEnabled = false;
                 DrawAlgorithm();
+                
             }
         }
         private void algorithmsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

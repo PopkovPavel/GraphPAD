@@ -546,6 +546,9 @@ If the email does not arrive, check your spam folder.</value>
   <data name="PasswordString" xml:space="preserve">
     <value>Enter password</value>
   </data>
+  <data name="PathNotExist" xml:space="preserve">
+    <value>This path does not exist</value>
+  </data>
   <data name="ProfileSettings" xml:space="preserve">
     <value>Profile settings</value>
   </data>
@@ -564,6 +567,21 @@ If the email does not arrive, check your spam folder.</value>
   <data name="ReorderBtn" xml:space="preserve">
     <value>Reorder Graph</value>
   </data>
+  <data name="ResultBFS" xml:space="preserve">
+    <value>Breadth first search result from point </value>
+  </data>
+  <data name="ResultDFS" xml:space="preserve">
+    <value>Depth first search result from point </value>
+  </data>
+  <data name="ResultDijkstra" xml:space="preserve">
+    <value>Result of finding the shortest path from point </value>
+  </data>
+  <data name="ResultDijkstra2" xml:space="preserve">
+    <value> to point </value>
+  </data>
+  <data name="ResultMST" xml:space="preserve">
+    <value>The result of finding the minimum spanning tree from the vertex </value>
+  </data>
   <data name="Russian" xml:space="preserve">
     <value>Russian</value>
   </data>
@@ -579,8 +597,20 @@ If the email does not arrive, check your spam folder.</value>
   <data name="Seconds" xml:space="preserve">
     <value>sec.</value>
   </data>
+  <data name="SelectBFS" xml:space="preserve">
+    <value>Breadth first search</value>
+  </data>
+  <data name="SelectDFS" xml:space="preserve">
+    <value>Depth first search</value>
+  </data>
+  <data name="SelectDijkstra" xml:space="preserve">
+    <value>Dijkstra's algorithm</value>
+  </data>
   <data name="SelectionBtn" xml:space="preserve">
     <value>Selection</value>
+  </data>
+  <data name="SelectMST" xml:space="preserve">
+    <value>Finding the minimum spanning tree</value>
   </data>
   <data name="SendBtn" xml:space="preserve">
     <value>Send E-Mail</value>

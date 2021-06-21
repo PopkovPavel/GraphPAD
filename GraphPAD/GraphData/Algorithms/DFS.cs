@@ -35,7 +35,7 @@ namespace GraphPAD.GraphData.Algorithms
             MainPage.algorithmEdgesList.Clear();
             try
             {
-                MainPage.algorithmResult = $"GraphPAD.Properties.Language.ResultDFS(Результат поиска в глубину из точки) \"{start.Text}\":\n";
+                MainPage.algorithmResult = "\n" + Properties.Language.ResultDFS + $"\"{start.Text}\":";
                 HashSet<DataVertex> visitedList = new HashSet<DataVertex>();
                 DFSUtility(start, visitedList, graph);
             }

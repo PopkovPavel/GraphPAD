@@ -94,6 +94,7 @@ namespace GraphPAD
                     item.EdgeBrush = Brushes.Red;
                     item.ArrowBrush = Brushes.Red;
                 }
+                algorithmsBtn.IsEnabled = true;
                 showAnimationText.Text = Properties.Language.ShowAlgorithm;
                 showAnimatonButton.ToolTip = Properties.Language.ShowAlgorithmTooltip;
                 isDrawing = false;
