@@ -359,11 +359,13 @@ namespace GraphPAD
                 if (edge.Key.Source == vc.Vertex && _ecFrom.Vertex == edge.Key.Target
                     || edge.Key.Target == vc.Vertex && _ecFrom.Vertex == edge.Key.Source)
                 {
+                    
                     edgesToDelete.Add(edge.Key);
                 }
             }
             foreach(var temp in edgesToDelete)
             {
+                
                 GraphArea.RemoveEdge(temp, true);
             }
             if (orientedCheckbox.IsChecked == false)
@@ -1651,8 +1653,8 @@ namespace GraphPAD
         #region Random graph
         private void createGraphButton_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            //try
+            //{
                 GraphData.Algorithms.AlgorithmHelper.VertexCount = 0;
                 Random rnd = new Random();
                 var condEdges = edgesAmountTextBox.Text != "";
@@ -1695,10 +1697,10 @@ namespace GraphPAD
 
                 ZoomCtrl.ZoomToFill();
 
-            } catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "");
-            }
+            //} catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.ToString(), "");
+            //}
         }
         public void FixLabelsAndArrows()
         {
@@ -1848,6 +1850,11 @@ namespace GraphPAD
                         break;
                     }
                 case "MST":
+                    {
+                        MessageBox.Show(Properties.Language.ChooseFirstVertex, Properties.Language.Caption);
+                        break;
+                    }
+                case "POC":
                     {
                         MessageBox.Show(Properties.Language.ChooseFirstVertex, Properties.Language.Caption);
                         break;

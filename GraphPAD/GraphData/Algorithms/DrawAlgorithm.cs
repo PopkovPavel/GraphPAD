@@ -45,6 +45,13 @@ namespace GraphPAD
                             }
                             break;
                         }
+                    case "POC":
+                        {
+                            System.Threading.CancellationTokenSource cts = new System.Threading.CancellationTokenSource();
+                            thread = new System.Threading.Thread(x => POC.CalculatePOC(graph));
+                            break;
+                        }
+
                     default:
                         {
                             MessageBox.Show(Properties.Language.ChooseAlgorithmMessage, Properties.Language.Caption);

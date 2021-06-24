@@ -181,6 +181,7 @@ namespace GraphPAD
                 else
                 {
                     path = Properties.Language.PathNotExist;
+                    break;
                 }
             }
 

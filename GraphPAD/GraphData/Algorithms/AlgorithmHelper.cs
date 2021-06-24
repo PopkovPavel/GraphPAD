@@ -190,6 +190,7 @@ namespace GraphPAD.GraphData.Algorithms
                                     {
                                         Data2D[ik, jk] = 1;
                                         Data2D[jk, ik] = 1;
+
                                         count--;
                                         tempFlag = true;
                                         break;

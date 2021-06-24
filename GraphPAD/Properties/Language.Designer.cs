@@ -1444,6 +1444,15 @@ namespace GraphPAD.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Вероятность связности графа.
+        /// </summary>
+        public static string ResultPOC {
+            get {
+                return ResourceManager.GetString("ResultPOC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Русский.
         /// </summary>
         public static string Russian {
@@ -1530,6 +1539,15 @@ namespace GraphPAD.Properties {
         public static string SelectMST {
             get {
                 return ResourceManager.GetString("SelectMST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Посчитать вероятность связности графа.
+        /// </summary>
+        public static string SelectPOC {
+            get {
+                return ResourceManager.GetString("SelectPOC", resourceCulture);
             }
         }
         

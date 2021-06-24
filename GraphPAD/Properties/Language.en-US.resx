@@ -582,6 +582,9 @@ If the email does not arrive, check your spam folder.</value>
   <data name="ResultMST" xml:space="preserve">
     <value>The result of finding the minimum spanning tree from the vertex </value>
   </data>
+  <data name="ResultPOC" xml:space="preserve">
+    <value>The graph connectivity probability</value>
+  </data>
   <data name="Russian" xml:space="preserve">
     <value>Russian</value>
   </data>
@@ -611,6 +614,9 @@ If the email does not arrive, check your spam folder.</value>
   </data>
   <data name="SelectMST" xml:space="preserve">
     <value>Finding the minimum spanning tree</value>
+  </data>
+  <data name="SelectPOC" xml:space="preserve">
+    <value>Connectivity probability</value>
   </data>
   <data name="SendBtn" xml:space="preserve">
     <value>Send E-Mail</value>

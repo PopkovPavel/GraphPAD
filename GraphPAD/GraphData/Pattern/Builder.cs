@@ -9,6 +9,7 @@ namespace GraphPAD.GraphData.Pattern
     abstract class Builder
     {
         public abstract void BuildMatrix(int[,] m);
+
         public abstract void BuildGraph();
 
         public abstract BidirectionalGraph<DataVertex, DataEdge> GetResult();
@@ -41,10 +42,25 @@ namespace GraphPAD.GraphData.Pattern
         /// <param name="m"></param>
         public override void BuildMatrix(int[,] m)
         {
-
+            //Random rnd = new Random();
             GraphMatrix = new int[,] { };
+           // ProbMatrix = new double[,] { };
             GraphMatrix = (int[,])m.Clone();
-
+            //for (var i = 0; i < GraphMatrix.GetLength(1); i++)
+            //{
+            //    for (var j = 0; j < i; j++)
+            //    {
+            //        if (GraphMatrix[i, j] != 0)
+            //        {
+            //            var temp = rnd.NextDouble();
+            //            ProbMatrix[i, j] = temp;
+            //            if (GraphMatrix[j, i] != 0)
+            //            {
+            //                ProbMatrix[j, i] = temp;
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         /// <summary>
@@ -80,7 +96,18 @@ namespace GraphPAD.GraphData.Pattern
                         var weight = GraphMatrix[i, j];
                         if (weight > 0)
                         {
-                            edges.Add(new DataEdge(vertices[i], vertices[j], weight, Brushes.Black));
+                            var randomReliability = rnd.NextDouble();
+
+                            randomReliability = edges.Find(x =>x.Source == vertices[j] && x.Target==vertices[i])?.Reliability ?? randomReliability;
+                            randomReliability = edges.Find(x => x.Source == vertices[i] && x.Target == vertices[j])?.Reliability ?? randomReliability;
+                            
+                            edges.Add(new DataEdge(
+                                source: vertices[i],
+                                target: vertices[j], 
+                                weight: weight,
+                                colorBrush: Brushes.Black,
+                                reliability: randomReliability
+                                ));
                             vertices[i].E++;
                             vertices[j].E++;
                         }

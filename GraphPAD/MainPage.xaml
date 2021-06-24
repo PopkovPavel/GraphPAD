@@ -229,6 +229,7 @@
                         <ComboBoxItem Content="{x:Static resx:Language.SelectDFS}" Tag="DFS"/>
                         <ComboBoxItem Content="{x:Static resx:Language.SelectDijkstra}" Tag="Dijkstra"/>
                         <ComboBoxItem Content="{x:Static resx:Language.SelectMST}" Tag="MST"/>
+                        <ComboBoxItem Content="{x:Static resx:Language.SelectPOC}" Tag="POC"/>
                     </ComboBox>
                     <!--<ProgressBar x:Name="progressBar" Height="10" Canvas.Left="10" Canvas.Top="54" Width="150" Value="0"/>-->
                 </Canvas>

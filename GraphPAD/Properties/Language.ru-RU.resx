@@ -582,6 +582,9 @@
   <data name="ResultMST" xml:space="preserve">
     <value>Результат поиска минимального остовного дерева из вершины </value>
   </data>
+  <data name="ResultPOC" xml:space="preserve">
+    <value>Вероятность связности графа</value>
+  </data>
   <data name="Russian" xml:space="preserve">
     <value>Русский</value>
   </data>
@@ -611,6 +614,9 @@
   </data>
   <data name="SelectMST" xml:space="preserve">
     <value>Поиск минимального остовного дерева</value>
+  </data>
+  <data name="SelectPOC" xml:space="preserve">
+    <value>Посчитать вероятность связности графа</value>
   </data>
   <data name="SendBtn" xml:space="preserve">
     <value>Отправить</value>

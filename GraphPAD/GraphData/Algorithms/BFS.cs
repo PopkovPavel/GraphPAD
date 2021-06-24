@@ -18,8 +18,7 @@ namespace GraphPAD.GraphData.Algorithms
             while (queue.Count > 0)
             {
                 var vertexTemp = queue.Dequeue();
-                // if (visitedVertices.Contains(vertexTemp)) continue;
-                //visitedVertices.Add(vertexTemp);
+
                 foreach (var edge in graph.EdgesList.Keys)
                 {
                     if (edge.Source == vertexTemp
@@ -31,7 +30,6 @@ namespace GraphPAD.GraphData.Algorithms
                         MainPage.algorithmResult += $"\n{vertex.Text}--({edge.Weight})-->{edge.Target.Text}";
                     }
                 }
-
             }
         }
         /// <summary>

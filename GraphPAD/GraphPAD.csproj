@@ -171,6 +171,7 @@
     <Compile Include="GraphData\Algorithms\Dijkstra.cs" />
     <Compile Include="GraphData\Algorithms\DrawAlgorithm.cs" />
     <Compile Include="GraphData\Algorithms\MST.cs" />
+    <Compile Include="GraphData\Algorithms\POC.cs" />
     <Compile Include="GraphData\Model\DaraVertex.cs" />
     <Compile Include="GraphData\Model\DataEdge.cs" />
     <Compile Include="GraphData\Model\EditorObjectManager.cs" />

@@ -11,7 +11,7 @@ namespace GraphPAD.GraphData.Model
     {
         public override Point[] RoutingPoints { get; set; }
 
-        public DataEdge(DataVertex source, DataVertex target, double weight = 1, Brush colorBrush = null, Brush edgeBrush = null)
+        public DataEdge(DataVertex source, DataVertex target, double weight = 1, Brush colorBrush = null, Brush edgeBrush = null, double reliability = 1)
             : base(source, target, weight)
         {
             if (colorBrush == null)
@@ -31,7 +31,17 @@ namespace GraphPAD.GraphData.Model
                 EdgeBrush = (SolidColorBrush)edgeBrush;
             }
             Angle = 90;
-            Text = weight.ToString();
+            Reliability = reliability;
+            if (Reliability != 1)
+            {
+                //Text = "W: " + weight.ToString() 
+                //  + "\nR:" + Math.Round(Probability,3).ToString();
+                Text = "P:"+Math.Round(Reliability, 5).ToString();
+            }
+            else
+            {
+                Text = "W:"+weight.ToString();
+            }
         }
 
         public DataEdge()
@@ -39,7 +49,8 @@ namespace GraphPAD.GraphData.Model
         {
             ArrowBrush = Brushes.Black;
             EdgeBrush = Brushes.Black;
-            Angle = 90; 
+            Angle = 90;
+            Reliability = 1;
         }
 
         public bool ArrowTarget { get; set; }
@@ -47,6 +58,26 @@ namespace GraphPAD.GraphData.Model
         public double Angle { get; set; }
         private SolidColorBrush _edgeBrush;
         private SolidColorBrush _arrowBrush;
+        private double _probability = 1;
+        public double Reliability
+        {
+            get
+            {
+                return _probability;
+            }
+            set
+            {
+                if (value < 0 || value > 1)
+                {
+                    _probability = 1;
+                }
+                else
+                {
+                    _probability = value;
+                }
+                OnPropertyChanged("Probability");
+            }
+        }
         public SolidColorBrush EdgeBrush { 
             get 
             {
